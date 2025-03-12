@@ -105,10 +105,10 @@
             <div class="col-md-3 side-menu">
                 {{if .IsIDPos }}
                 <a href="/cases/encounters/new/{{.Form.ID}}/0" class="menu-item">New Encounter</a>
+                <a href="/cases/discharge/{{.Form.ID}}" class="menu-item">Discharge</a>
                 <a href="/cases/patientreport/{{.Form.ID}}" class="menu-item">Report</a>
                 {{end}}
                 <a href="/patienthelp" class="menu-item">Help</a>
-                <button type="button" id="cancelButton" class="btn btn-sm btn-success mt-3">Close</button>
             </div>
 
             <!-- Main Content -->
@@ -302,7 +302,6 @@
                                                 <label class="col-sm-4 col-form-label col-form-label-sm" for="adm_date">Treatment Site</label>
                                                 <div class="col-sm-6">
                                                     {{ GetOptionField "facility" "site" "Treatment Site" "" .Form.Site.Int64 1 }}
-                                                    
                                                 </div>
                                             </div>
                                         </div>
@@ -587,6 +586,7 @@
 
                                     <button type="submit" id="submitButton" class="btn btn-sm btn-success mt-3">Save</button>
                                     <button type="button" id="save_cButton" class="btn btn-sm btn-success mt-3">Save & Close</button>
+                                    <button type="button" id="cancelButton" class="btn btn-sm btn-success mt-3">Cancel</button>
                                     <button type="button" id="helpButton"   class="btn btn-sm btn-success mt-3">Help</button>
                                 </form>
 
@@ -783,20 +783,11 @@
                             <hr width="100%">
                                 <button type="submit" id="discharge_Button" class="btn btn-sm btn-success mt-3">Save Discharge Details</button>
                                 <button type="button" id="print_Button" class="btn btn-sm btn-success mt-3">
+                                <input type="hidden" name="discharge_id" id="discharge_id" value="" />"
                                     Print Discharge Certificate
                                 </button>
-                                <input type="hidden" name="discharge_id" id="discharge_id" value="" />
                                 <script>
                                     document.getElementById("print_Button").addEventListener("click", function() {
-                                        let dischargeDate = document.getElementById("discharge_date").value; // Get discharge date value
-                                        let dischargeID = document.getElementById("discharge_id").value;
-                                        let who = "{{.Form.ID}}"; // Extracting the ID from template data
-
-                                        if (!dischargeDate && !dischargeID) {
-                                            alert("Please enter and save the discharge form including the discharge date before printing.");
-                                            return;
-                                        }
-
                                         window.open("/discharge/certificate/?who={{.Form.ID}}", "_blank");
                                     });
                                 </script>

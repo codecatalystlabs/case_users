@@ -17,6 +17,10 @@ import (
 	"github.com/skip2/go-qrcode"
 )
 
+func VerifyDischarge(c *fiber.Ctx, db *sql.DB, sl *slog.Logger, store *session.Store, config Config) error {
+	return nil
+}
+
 func Discharge(c *fiber.Ctx, db *sql.DB, sl *slog.Logger, store *session.Store, config Config) error {
 	//=================
 
@@ -136,29 +140,22 @@ func Certificate(c *fiber.Ctx, db *sql.DB, sl *slog.Logger, store *session.Store
 		c_id = 0
 	}
 
-	var discharge models.Discharge
-
-	discharge = models.Discharge{}
-	discharge.DischargeDate.Valid = true
-	discharge.DischargeDate.String = ""
-
-	disc, erx := models.DischargeByClientID(c.Context(), db, c_id)
+	discharge, erx := models.DischargeByClientID(c.Context(), db, c_id)
 	if erx != nil {
-		fmt.Println("discharge:" + erx.Error())
-	} else {
-		discharge = *disc
+		fmt.Println(erx.Error())
+		return nil
 	}
 
 	client, erx := models.ClientByID(c.Context(), db, c_id)
 	if erx != nil {
-		fmt.Println("client:" + erx.Error())
-		//return nil
+		fmt.Println(erx.Error())
+		return nil
 	}
 
 	facility, erx := models.FacilityByFacilityID(c.Context(), db, int(client.Site.Int64))
 	if erx != nil {
-		fmt.Println("facility:" + erx.Error())
-		//return nil
+		fmt.Println(erx.Error())
+		return nil
 	}
 
 	// Create a new PDF
@@ -166,49 +163,16 @@ func Certificate(c *fiber.Ctx, db *sql.DB, sl *slog.Logger, store *session.Store
 	pdf := gofpdf.New("L", "mm", "A4", "")
 	pdf.AddPage()
 
-	// Get page width and height (A4 landscape: 297mm x 210mm)
-	pageWidth, pageHeight := pdf.GetPageSize()
-
-	// Save default line settings
-	defaultLineWidth := pdf.GetLineWidth()
-	defaultDrawColorR, defaultDrawColorG, defaultDrawColorB := 0, 0, 0 // Default is black
-
-	// Define starting margin
-	borderMargin := 10.0
-
-	// 🖤 **Black Border (Outer)**
-	pdf.SetLineWidth(3)
-	pdf.SetDrawColor(0, 0, 0) // Black
-	pdf.Rect(borderMargin, borderMargin, pageWidth-2*borderMargin, pageHeight-2*borderMargin, "D")
-
-	// 💛 **Yellow Border (Middle, touching the black border)**
-	pdf.SetLineWidth(2.5)
-	pdf.SetDrawColor(255, 204, 0) // Yellow
-	pdf.Rect(borderMargin+1.5, borderMargin+1.5, pageWidth-2*(borderMargin+1.5), pageHeight-2*(borderMargin+1.5), "D")
-
-	// ❤️ **Red Border (Inner, touching the yellow border)**
-	pdf.SetLineWidth(2)
-	pdf.SetDrawColor(255, 0, 0) // Red
-	pdf.Rect(borderMargin+3, borderMargin+3, pageWidth-2*(borderMargin+3), pageHeight-2*(borderMargin+3), "D")
-
-	// 🔄 **Reset to Default Line Settings**
-	pdf.SetLineWidth(defaultLineWidth)                                        // Reset line width
-	pdf.SetDrawColor(defaultDrawColorR, defaultDrawColorG, defaultDrawColorB) // Reset line color to black
-
-	// 📝 **Example Certificate Text (Centered)**
-	pdf.SetFont("Arial", "B", 24)
-	pdf.SetTextColor(0, 0, 0)
-
 	// Load Fonts
 	pdf.SetFont("Arial", "B", 10)
 
 	// Add Ministry of Health Logo
 	logoPath := "../../ui/static/img/logo.png"
-	pdf.Image(logoPath, 20, 15, 30, 0, false, "", 0, "") // Centered Logo
-	//pdf.Ln(35)
+	pdf.Image(logoPath, 20, 10, 30, 0, false, "", 0, "") // Centered Logo
+	//pdf.Ln(35)                                           // Extra spacing after logo
 
 	// Generate QR Code
-	qrLink := "response.health.go.ug/verify/discharges/:" + strconv.Itoa(discharge.DischargeID) // Replace with the actual verification link
+	qrLink := "response.health.go.ug/discharge/verify" // Replace with the actual verification link
 	qrFile := "qrcode.png"
 	err := qrcode.WriteFile(qrLink, qrcode.Medium, 256, qrFile)
 	if err != nil {
@@ -217,11 +181,11 @@ func Certificate(c *fiber.Ctx, db *sql.DB, sl *slog.Logger, store *session.Store
 	}
 
 	// Add QR Code to PDF
-	pdf.Image(qrFile, 240, 15, 30, 30, false, "", 0, "")
+	pdf.Image(qrFile, 240, 10, 30, 30, false, "", 0, "")
 	_ = os.Remove(qrFile) // Cleanup QR Code file
 
 	// Ministry of Health Title
-	//pageWidth, _ := pdf.GetPageSize()
+	pageWidth, _ := pdf.GetPageSize()
 	fmt.Println(pageWidth)
 
 	logo_text := "Ministry of Health, Republic of Uganda"
@@ -262,12 +226,12 @@ func Certificate(c *fiber.Ctx, db *sql.DB, sl *slog.Logger, store *session.Store
 
 	// Rest of the Certification Text
 	pdf.SetFont("Arial", "", 12)
-	text1 := "At the date (" + discharge.DischargeDate.String + ") of issue of this certificate, does not present a risk of infecting other persons after testing negative for Ebola\nVirus Disease. The current state of health does not constitute a danger to the community and can therefore, return to his/her\nhousehold and professional environment to continue his/her normal daily activities"
+	text1 := "At the date (" + discharge.DischargeDate.String + ") of issue of this certificate, does not present a risk of infecting other persons after testing negative for Ebola\nVirus Disease. The current state of health does not constitute a danger to the community and can therefore, return to their\nhousehold and professional environment to continue their normal daily activities"
 	pdf.MultiCell(0, 6, text1, "", "C", false)
 	pdf.Ln(5)
 
 	pdf.SetFont("Arial", "", 12)
-	text2 := `The family, the community, and the authorities are requested to accept his/her in order to promote his/her social re-integration`
+	text2 := `The family, the community, and the authorities are requested to accept them in order to promote their social integration`
 	pdf.MultiCell(0, 10, text2, "", "C", false)
 	pdf.Ln(5)
 
@@ -290,18 +254,14 @@ func Certificate(c *fiber.Ctx, db *sql.DB, sl *slog.Logger, store *session.Store
 	pdf.Ln(10) // Line break after the text
 
 	// Signatures Section
+	pdf.SetFont("Arial", "B", 12)
+	pdf.CellFormat(260, 10, "_________________________", "0", 0, "C", false, 0, "")
+	pdf.Ln(7)
 
 	pdf.SetFont("Arial", "", 12)
-	pdf.CellFormat(140, 10, "___________________________", "0", 0, "C", false, 0, "")
-	pdf.CellFormat(140, 10, "___________________________", "0", 1, "C", false, 0, "")
-
-	pdf.CellFormat(140, 10, "Director General of Health Services", "0", 0, "C", false, 0, "")
-	pdf.CellFormat(140, 10, "Ebola Treatment Unit Manager", "0", 1, "C", false, 0, "")
-
-	pdf.CellFormat(140, 10, "Ministry of Health", "0", 0, "C", false, 0, "")
-	pdf.CellFormat(140, 10, facility.FacilityName.String, "0", 1, "C", false, 0, "")
-
-	pdf.Ln(25)
+	pdf.CellFormat(260, 10, "Ebola Treatment Unit Manager", "0", 1, "C", false, 0, "")
+	pdf.CellFormat(260, 10, facility.FacilityName.String, "0", 1, "C", false, 0, "")
+	pdf.Ln(15)
 
 	// Save PDF to Buffer (In-Memory)
 	var buf bytes.Buffer

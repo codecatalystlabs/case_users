@@ -596,7 +596,7 @@ func Get_Client_Optionz() (opt map[string]map[string]string) {
 	return
 }
 
-// {{ GetDBOptions "site" "" "" "employee" "Employee" .FormChild2.Hyperglycemia.Int64}}
+// {{ GetDBOptions "Employee" "" "" "employee", "Employee" .FormChild2.Hyperglycemia.Int64}}
 
 func GetDBOptions(table, cat, deflt, fld_name, fld_lab string, deflt_int int64) string {
 	sql := ""
