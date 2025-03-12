@@ -1,0 +1,81 @@
+{{ define "layout" }}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ios - Integrated Outbreak System</title>
+    <link href="/static/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #ffffff;
+            color: #333;
+            font-family: Arial, sans-serif;
+        }
+        .top-ribbon {
+            background-color: #f8f9fa;
+            border-bottom: 1px solid #e9ecef;
+            padding: 10px;
+        }
+        .side-menu {
+            background-color: #f8f9fa;
+            border-right: 1px solid #e9ecef;
+            height: 100vh;
+            padding-top: 20px;
+        }
+        .menu-item {
+            padding: 10px 20px;
+            display: block;
+            color: #333;
+            text-decoration: none;
+        }
+        .menu-item:hover {
+            background-color: #e9ecef;
+        }
+        .content {
+            padding: 20px;
+        }
+        .col-md-3 {
+            max-width: 200px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Top Ribbon -->
+    <div class="top-ribbon d-flex justify-content-between">
+        <div class="ms-3">
+            <a href="#" class="me-3">Home</a>
+            <a href="/about" class="me-3">About</a>
+            <a href="#">Contact</a>
+        </div>
+        <div class="me-3">
+            <a href="/logout" class="me-3">Logout</a>
+            <a href="#">My Account</a>
+        </div>
+    </div>
+
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Left-Hand Side Menu -->
+            <div class="col-md-3 side-menu">
+                <a href="/reports" class="menu-item">Generate Reports</a>
+                {{.Menuz}}
+                <a href="/help" class="menu-item">Help</a>
+            </div>
+
+            <!-- Main Content -->
+            <div class="col-md-9">
+                <div class="content">
+                    <h1>Welcome</h1>
+                    <p>This is a clean and minimalist webpage with a top ribbon and a left-hand side menu.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
+
+{{ end }}

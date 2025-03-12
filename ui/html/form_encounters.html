@@ -1,0 +1,923 @@
+{{ define "layout" }}
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Patient Form</title>
+    <link href="/static/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/static/app/cdn/css/flatpickr.min.css" type="text/css">
+    <style>
+        body {
+            background-color: #ffffff;
+            color: #333;
+            font-family: Arial, sans-serif;
+            padding: 20px;
+        }
+        
+        .table-container {
+            margin-top: 20px;
+        }
+        .table {
+            font-size: 0.85rem; /* Smaller font size */
+        }
+        .table th, .table td {
+            padding: 6px 8px; /* Reduce padding */
+        }
+        .btn-sm {
+            font-size: 0.75rem; /* Smaller buttons */
+            padding: 4px 6px;
+        }        
+        .action-btn {
+            display: inline-block;
+        }
+        .form-container {
+            margin: 20px auto;
+            padding: 20px;
+            border: 1px solid #e9ecef;
+            border-radius: 8px;
+            background-color: #f8f9fa;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .top-ribbon {
+            background-color: #f8f9fa;
+            border-bottom: 1px solid #e9ecef;
+            padding: 10px;
+        }
+        .side-menu {
+            background-color: #f8f9fa;
+            border-right: 1px solid #e9ecef;
+            height: 100vh;
+            padding-top: 20px;
+        }
+        .menu-item {
+            padding: 10px 20px;
+            display: block;
+            color: #333;
+            text-decoration: none;
+        }
+        .menu-item:hover {
+            background-color: #e9ecef;
+        }
+        .content {
+            padding: 20px;
+        }
+        .col-md-3 {
+            max-width: 200px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Top Ribbon -->
+    <div class="top-ribbon d-flex justify-content-between">
+        <div class="ms-3">
+            <a href="/" class="me-3">Home</a>
+            <a href="/about" class="me-3">About</a>
+            <a href="#">Contact</a>
+        </div>
+        <div class="me-3">
+            <a href="/logout" class="me-3">Logout</a>
+            <a href="#">My Account</a>
+        </div>
+    </div>
+
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Left-Hand Side Menu -->
+            <div class="col-md-3 side-menu">
+                {{.FormRef.Firstname.String }} <br/>
+                {{.FormRef.Lastname.String}}<br/>
+                <b>ETU #:</b>  <small>{{.FormRef.EtuNo.String}}</small><br/>
+                <b>Sex:</b>  <small>{{.FormRef.Gender.Int64}}</small><br/>
+                <b>DoB:</b>  <small>{{.FormRef.DateOfBirth.String}}</small><br/>
+                <b>Age:</b>  <small>{{.FormRef.Age.Float64}}</small><br/>
+
+               
+                    <br/>
+                    <a class="btn btn-sm btn-primary" href="/cases/new/{{.FormRef.ID}}">BACK</a>
+                
+            </div>
+
+            <!-- Main Content -->
+            <div class="col-md-9">
+                <form method="post" action="/cases/encounters/save" name="encounterForm" id="encounterForm">
+                <div class="container-fluid">
+                    
+                    <h1>Encounter Form</h1>
+
+                    <div class="row registration-input-row">    
+                        <div class="col-lg-4">
+                            <div class="row">
+                                <label class="col-sm-5 col-form-label col-form-label-sm" for="encounter_type">Encounter Type</label>
+                                <div class="col-sm-5">
+                                    {{ GetDBOptions "meta" "Encounter Type" "" "encounter_type" "Encounter Type" .Form.EncounterType.Int64}}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-4">
+                            <div class="row">
+                                <label class="col-sm-5 col-form-label col-form-label-sm" for="encounter_date">Encounter Date</label>
+                                <div class="col-sm-5">
+                                    <input class="form-control form-control-sm patient-input datetimepicker" value="{{.Form.EncounterDate.String}}" id="encounter_date" name="encounter_date" type="text" placeholder="yyyy-mm-dd" data-options='{"disableMobile":true,"dateFormat":"Y-m-d"}' />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-4">
+                            <div class="row">
+                                <label class="col-sm-5 col-form-label col-form-label-sm" for="encounter_time">Time</label>
+                                <div class="col-sm-5">
+                                    <input class="form-control form-control-sm patient-input" value="{{.Form.EncounterTime.String}}" id="encounter_time" name="encounter_time" type="text"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row registration-input-row">    
+                        <div class="col-lg-4">
+                            <div class="row">
+                                <label class="col-sm-5 col-form-label col-form-label-sm" for="managed_by">Clinician</label>
+                                <div class="col-sm-5">
+                                    {{ GetDBOptions "Employee" "" "" "managed_by" "Employee" .Form.ManagedBy.Int64}}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-4">
+                            <div class="row">
+                                <label class="col-sm-5 col-form-label col-form-label-sm" for=""></label>
+                                <div class="col-sm-5">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-4">
+                            <div class="row">
+                                <label class="col-sm-5 col-form-label col-form-label-sm" for="">.</label>
+                                <div class="col-sm-5">
+                                    .
+                                </div>
+                            </div>
+                            <div class="row">
+                                <label class="col-sm-5 col-form-label col-form-label-sm" for=""></label>
+                                <div class="col-sm-5">
+                                    
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <ul class="nav nav-tabs" id="myTab" role="tablist">
+                        <li class="nav-item">
+                            <a class="nav-link active" id="vitals-tab" data-toggle="tab" href="#vitals" role="tab" aria-controls="vitals" aria-selected="true">Vitals</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="symptoms-tab" data-toggle="tab" href="#symptoms" role="tab" aria-controls="symptoms" aria-selected="false">Symptoms</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="signs-tab" data-toggle="tab" href="#signs" role="tab" aria-controls="signs" aria-selected="false">Signs</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="complications-tab" data-toggle="tab" href="#complications" role="tab" aria-controls="complications" aria-selected="false">Complications</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="lab-tab" data-toggle="tab" href="#lab" role="lab" aria-controls="lab" aria-selected="false">Lab</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="treat-tab" data-toggle="tab" href="#treat" role="tab" aria-controls="treat" aria-selected="false">Treatment</a>
+                        </li>
+                    </ul>
+                    <div class="tab-content" id="myTabContent">
+                        <div class="tab-pane fade show active" id="vitals" role="tabpanel" aria-labelledby="vitals-tab"> 
+                            <p>.</p> 
+                            <div class="row registration-input-row">    
+                                <div class="col-lg-4">
+                                    <div class="row">
+                                        <label class="col-sm-6 col-form-label col-form-label-sm" for="heart_rate">Heart rate (bpm): <span class="text-danger">*</span></label>
+                                        <div class="col-sm-4">
+                                            <input class="form-control form-control-sm patient-input" value="{{ .FormChild2.HeartRate.Float64 }}" id="heart_rate" name="heart_rate" type="text" />
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <label class="col-sm-6 col-form-label col-form-label-sm" for="bp_systolic">BP (systolic) (mmHg): </label>
+                                        <div class="col-sm-4">
+                                            <input class="form-control form-control-sm patient-input" value="{{ .FormChild2.BpSystolic.Float64 }}" id="bp_systolic" name="bp_systolic" type="text" />
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <label class="col-sm-6 col-form-label col-form-label-sm" for="bp_diastolic">BP (diastolic) (mmHg): </label>
+                                        <div class="col-sm-4">
+                                            <input class="form-control form-control-sm patient-input" value="{{ .FormChild2.BpDiastolic.Float64 }}" id="bp_diastolic" name="bp_diastolic" type="text"/>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <label class="col-sm-6 col-form-label col-form-label-sm" for="capillary_refill">Capillary refill > 3 sec? </label>
+                                        <div class="col-sm-4">
+                                            <select class="form-control-sm patient-input form-select"  name="capillary_refill" id="capillary_refill" aria-label="Capillary refill" >
+                                                {{ range $key, $value := index .Optionz "yn" }}  
+                                                    <option value="{{ $key }}">{{ $value }}</option>
+                                                {{ end }}
+                                            </select>
+                                            <script>
+                                            document.addEventListener("DOMContentLoaded", function() {
+                                                document.getElementById("capillary_refill").value = "{{ .FormChild2.CapillaryRefill.Int64 }}";
+                                            });
+                                            </script>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-4">
+                                    <div class="row">
+                                        <label class="col-sm-6 col-form-label col-form-label-sm" for="respiratory_rate">Respiratory Rate (/min):</label>
+                                        <div class="col-sm-4">
+                                            <input class="form-control form-control-sm patient-input" value="{{ .FormChild2.RespiratoryRate.Float64 }}" id="respiratory_rate" name="respiratory_rate" type="text"/>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <label class="col-sm-6 col-form-label col-form-label-sm" for="saturation">O2 saturation room air (%):</label>
+                                        <div class="col-sm-4">
+                                            <input class="form-control form-control-sm patient-input" value="{{ .FormChild2.Saturation.Float64 }}" id="saturation" name="saturation" type="text"/>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <label class="col-sm-6 col-form-label col-form-label-sm" for="weight">Weight (kg): </label>
+                                        <div class="col-sm-4">
+                                            <input class="form-control form-control-sm patient-input" value="{{ .FormChild2.Weight.Float64 }}" id="weight" name="weight" type="text"/>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <label class="col-sm-6 col-form-label col-form-label-sm" for="height">Self-reported height (cm): </label>
+                                        <div class="col-sm-4">
+                                            <input class="form-control form-control-sm patient-input" value="{{ .FormChild2.Height.Float64 }}" id="height" name="height" type="text"/>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-4">
+                                    <div class="row">
+                                        <label class="col-sm-6 col-form-label col-form-label-sm" for="temperature">Temperature (°C): </label>
+                                        <div class="col-sm-4">
+                                            <input class="form-control form-control-sm patient-input" value="{{ .FormChild2.Temperature.Float64 }}" id="temperature" name="temperature" type="text"/>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <label class="col-sm-6 col-form-label col-form-label-sm" for="mental_status">Mental status: </label> 
+                                        <div class="col-sm-4">
+                                            <select class="form-control-sm patient-input form-select"  name="mental_status" id="mental_status" aria-label="Mental status" >
+                                                {{ range $key, $value := index .Optionz "mental" }}  
+                                                    <option value="{{ $key }}">{{ $value }}</option>
+                                                {{ end }}
+                                            </select>
+                                            <script>
+                                            document.addEventListener("DOMContentLoaded", function() {
+                                                document.getElementById("mental_status").value = "{{ .FormChild2.MentalStatus.String }}";
+                                            });
+                                            </script>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <label class="col-sm-6 col-form-label col-form-label-sm" for="muac">MUAC) (mm) </label>
+                                        <div class="col-sm-4">
+                                            <input class="form-control form-control-sm patient-input" value="{{ .FormChild2.Muac.Float64 }}" id="muac" name="muac" type="text"/>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <label class="col-sm-6 col-form-label col-form-label-sm" for="adm_from"></label>
+                                        <div class="col-sm-4">
+                                            .
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="tab-pane fade" id="symptoms" role="tabpanel" aria-labelledby="symptoms-tab">
+                            <p>.</p> 
+                            <div class="row registration-input-row"> 
+                                <div class="col-lg-4">
+                                    <div class="row">
+                                        <label class="col-sm-4 col-form-label col-form-label-sm" for="fever">Fever</label>
+                                        <div class="col-sm-6">
+                                            {{ GetOptionField "YN" "fever" "Fever" "" .FormChild1.Fever.Int64 1 }}
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <label class="col-sm-4 col-form-label col-form-label-sm" for="fever">Fatigue</label>
+                                        <div class="col-sm-6">
+                                            {{ GetOptionField "YN" "fatigue" "Fatigue" "" .FormChild1.Fatigue.Int64 1 }}
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <label class="col-sm-4 col-form-label col-form-label-sm" for="fever">Weaknesss</label>
+                                        <div class="col-sm-6">
+                                            {{ GetOptionField "YN" "weakness" "Weakness" "" .FormChild1.Weakness.Int64 1 }}
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <label class="col-sm-4 col-form-label col-form-label-sm" for="fever">Malaise</label>
+                                        <div class="col-sm-6">
+                                            {{ GetOptionField "YN" "malaise" "Malaise" "" .FormChild1.Malaise.Int64 1 }}
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <label class="col-sm-4 col-form-label col-form-label-sm" for="fever">Myalgia</label>
+                                        <div class="col-sm-6">
+                                            {{ GetOptionField "YN" "myalgia" "Myalgia" "" .FormChild1.Myalgia.Int64 1 }}
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <label class="col-sm-4 col-form-label col-form-label-sm" for="anorexia">Anorexia</label>
+                                        <div class="col-sm-6">
+                                            {{ GetOptionField "YN" "anorexia" "Anorexia" "" .FormChild1.Anorexia.Int64 1 }}
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <label class="col-sm-4 col-form-label col-form-label-sm" for="sore_throat">Sore Throat</label>
+                                        <div class="col-sm-6">
+                                            {{ GetOptionField "YN" "sore_throat" "Sore throat" "" .FormChild1.SoreThroat.Int64 1 }}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-4">
+                                    <div class="row">
+                                        <label class="col-sm-4 col-form-label col-form-label-sm" for="adm_date">Headache</label>
+                                        <div class="col-sm-6">
+                                            {{ GetOptionField "YN" "headache" "Headache" "" .FormChild1.Headache.Int64 1 }}
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <label class="col-sm-4 col-form-label col-form-label-sm" for="chest_pain">Nausea</label>
+                                        <div class="col-sm-6">
+                                            {{ GetOptionField "YN" "nausea" "Nausea" "" .FormChild1.Nausea.Int64 1 }}
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <label class="col-sm-4 col-form-label col-form-label-sm" for="chest_pain">Ches Pain</label>
+                                        <div class="col-sm-6">
+                                            {{ GetOptionField "YN" "chest_pain" "Chest Pain" "" .FormChild1.ChestPain.Int64 1 }}
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <label class="col-sm-4 col-form-label col-form-label-sm" for="chest_pain">Joint Pain</label>
+                                        <div class="col-sm-6">
+                                            {{ GetOptionField "YN" "joint_pain" "Chest Pain" "" .FormChild1.JointPain.Int64 1 }}
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <label class="col-sm-4 col-form-label col-form-label-sm" for="chest_pain">Hiccups</label>
+                                        <div class="col-sm-6">
+                                            {{ GetOptionField "YN" "hiccups" "Hiccups" "" .FormChild1.Hiccups.Int64 1 }}
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <label class="col-sm-4 col-form-label col-form-label-sm" for="chest_pain">Cough</label>
+                                        <div class="col-sm-6">
+                                            {{ GetOptionField "YN" "cough" "Cough" "" .FormChild1.Cough.Int64 1 }}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-4">
+                                    <div class="row">
+                                        <label class="col-sm-4 col-form-label col-form-label-sm" for="chest_pain">Difficulty breathing</label>
+                                        <div class="col-sm-6">
+                                            {{ GetOptionField "YN" "difficulty_breathing" "Difficulty Breathing" "" .FormChild1.DifficultyBreathing.Int64 1 }}
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <label class="col-sm-4 col-form-label col-form-label-sm" for="chest_pain">Difficulty swallowing</label>
+                                        <div class="col-sm-6">
+                                            {{ GetOptionField "YN" "difficulty_swallowing" "Difficulty Swallowing" "" .FormChild1.DifficultySwallowing.Int64 1 }}
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <label class="col-sm-4 col-form-label col-form-label-sm" for="chest_pain">Abdominal Pain</label>
+                                        <div class="col-sm-6">
+                                            {{ GetOptionField "YN" "abdominal_pain" "Abdominal Pain" "" .FormChild1.AbdominalPain.Int64 1 }}
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <label class="col-sm-4 col-form-label col-form-label-sm" for="chest_pain">Diarrhoea</label>
+                                        <div class="col-sm-6">
+                                            {{ GetOptionField "YN" "diarrhoea" "Diarrhoea" "" .FormChild1.Diarrhoea.Int64 1 }}
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <label class="col-sm-4 col-form-label col-form-label-sm" for="chest_pain">Vomiting</label>
+                                        <div class="col-sm-6">
+                                            {{ GetOptionField "YN" "vomiting" "Vomiting" "" .FormChild1.Vomiting.Int64 1 }}
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <label class="col-sm-4 col-form-label col-form-label-sm" for="chest_pain">Irritability/Confusion</label>
+                                        <div class="col-sm-6">
+                                            {{ GetOptionField "YN" "irritability" "Irritability/Confusion" "" .FormChild1.Irritability.Int64 1 }}
+                                        </div>
+                                    </div>
+                                    
+                                </div>
+                            </div>
+                        </div>
+                        <div class="tab-pane fade" id="signs" role="tabpanel" aria-labelledby="signs-tab">
+                            <p>.</p>
+                            <div class="row registration-input-row"> 
+                                <div class="col-lg-6">
+                                    <div class="row">
+                                        <label class="col-sm-4 col-form-label col-form-label-sm" for="pharyngeal_erythema">Pharyngeal erythema:</label>
+                                        <div class="col-sm-6">
+                                            {{ GetOptionField "YN" "pharyngeal_erythema" "PharyngealErythema" "" .FormChild1.PharyngealErythema.Int64 1 }}
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <label class="col-sm-4 col-form-label col-form-label-sm" for="pharyngeal_exudate">Pharyngeal exudate:</label>
+                                        <div class="col-sm-6">
+                                            {{ GetOptionField "YN" "pharyngeal_exudate" "PharyngealExudate" "" .FormChild1.PharyngealExudate.Int64 1 }}
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <label class="col-sm-4 col-form-label col-form-label-sm" for="conjunctival_injection">Conjunctival injection/bleeding:</label>
+                                        <div class="col-sm-6">
+                                            {{ GetOptionField "YN" "conjunctival_injection" "ConjunctivalInjection" "" .FormChild1.ConjunctivalInjection.Int64 1 }}
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <label class="col-sm-4 col-form-label col-form-label-sm" for="oedema_face">Oedema of face/neck:</label>
+                                        <div class="col-sm-6">
+                                            {{ GetOptionField "YN" "oedema_face" "OedemaFace" "" .FormChild1.OedemaFace.Int64 1 }}
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <label class="col-sm-4 col-form-label col-form-label-sm" for="tender_abdomen">Tender abdomen:</label>
+                                        <div class="col-sm-6">
+                                            {{ GetOptionField "YN" "tender_abdomen" "TenderAbdomen" "" .FormChild1.TenderAbdomen.Int64 1 }}
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <label class="col-sm-4 col-form-label col-form-label-sm" for="sunken_eyes">Sunken eyes or fontanelle:</label>
+                                        <div class="col-sm-6">
+                                            {{ GetOptionField "YN" "sunken_eyes" "SunkenEyes" "" .FormChild1.SunkenEyes.Int64 1 }}
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <label class="col-sm-4 col-form-label col-form-label-sm" for="tenting_skin">Tenting on skin pinch:</label>
+                                        <div class="col-sm-6">
+                                            {{ GetOptionField "YN" "tenting_skin" "TentingSkin" "" .FormChild1.TentingSkin.Int64 1 }}
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <label class="col-sm-4 col-form-label col-form-label-sm" for="palpable_liver">Palpable liver:</label>
+                                        <div class="col-sm-6">
+                                            {{ GetOptionField "YN" "palpable_liver" "PalpableLiver" "" .FormChild1.PalpableLiver.Int64 1 }}
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <label class="col-sm-4 col-form-label col-form-label-sm" for="palpable_spleen">Palpable spleen Rash:</label>
+                                        <div class="col-sm-6">
+                                            {{ GetOptionField "YN" "palpable_spleen" "PalpableSpleen" "" .FormChild1.PalpableSpleen.Int64 1 }}
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <label class="col-sm-4 col-form-label col-form-label-sm" for="jaundice">Jaundice:</label>
+                                        <div class="col-sm-6">
+                                            {{ GetOptionField "YN" "jaundice" "Jaundice" "" .FormChild1.Jaundice.Int64 1 }}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="row">
+                                        <label class="col-sm-4 col-form-label col-form-label-sm" for="enlarged_lymph_nodes">Enlarged lymph nodes:</label>
+                                        <div class="col-sm-6">
+                                            {{ GetOptionField "YN" "enlarged_lymph_nodes" "Enlarged lymph nodes" "" .FormChild1.EnlargedLymphNodes.Int64 1 }}
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <label class="col-sm-4 col-form-label col-form-label-sm" for="lower_extremity_oedema">Lower extremity oedema:</label>
+                                        <div class="col-sm-6">
+                                            {{ GetOptionField "YN" "lower_extremity_oedema" "Lower extremity oedema" "" .FormChild1.LowerExtremityOedema.Int64 1 }}
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <label class="col-sm-4 col-form-label col-form-label-sm" for="clinical_bleeding">Bleeding:</label>
+                                        <div class="col-sm-6">
+                                            {{ GetOptionField "YN" "clinical_bleeding" "Bleeding" "" .FormChild1.Bleeding.Int64 1 }}
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <label class="col-sm-4 col-form-label col-form-label-sm" for="bleeding_nose">:</label>
+                                        <div class="col-sm-6"><input type="checkbox" name="bleeding_nose" id="bleeding_nose" value="1" {{ if eq .FormChild1.BleedingNose.Int64 1 }}checked{{ end }}> Nose</div>
+                                    </div>
+                                    <div class="row">
+                                        <label class="col-sm-4 col-form-label col-form-label-sm" for="bleeding_mouth">:</label>
+                                        <div class="col-sm-6"><input type="checkbox" name="bleeding_mouth" id="bleeding_mouth" value="1" {{ if eq .FormChild1.BleedingMouth.Int64 1 }}checked{{ end }}> Mouth</div>
+                                    </div>
+                                    <div class="row">
+                                        <label class="col-sm-4 col-form-label col-form-label-sm" for="bleeding_vagina">:</label>
+                                        <div class="col-sm-6"><input type="checkbox" name="bleeding_vagina" id="bleeding_vagina" value="1" {{ if eq .FormChild1.BleedingVagina.Int64 1 }}checked{{ end }}> Vagina</div>
+                                    </div>
+                                    <div class="row">
+                                        <label class="col-sm-4 col-form-label col-form-label-sm" for="bleeding_rectum">:</label>
+                                        <div class="col-sm-6"><input type="checkbox" name="bleeding_rectum" id="bleeding_rectum" value="1" {{ if eq .FormChild1.BleedingRectum.Int64 1 }}checked{{ end }}> Rectum</div>
+                                    </div>
+                                    <div class="row">
+                                        <label class="col-sm-4 col-form-label col-form-label-sm" for="bleeding_sputum">:</label>
+                                        <div class="col-sm-6"><input type="checkbox" name="bleeding_sputum" id="bleeding_sputum" value="1" {{ if eq .FormChild1.BleedingSputum.Int64 1 }}checked{{ end }}> Sputum</div>
+                                    </div>
+                                    <div class="row">
+                                        <label class="col-sm-4 col-form-label col-form-label-sm" for="bleeding_urine">:</label>
+                                        <div class="col-sm-6"><input type="checkbox" name="bleeding_urine" id="bleeding_urine" value="1" {{ if eq .FormChild1.BleedingUrine.Int64 1 }}checked{{ end }}> Urine</div>
+                                    </div>
+                                    <div class="row">
+                                        <label class="col-sm-4 col-form-label col-form-label-sm" for="bleeding_iv_site">:</label>
+                                        <div class="col-sm-6"><input type="checkbox" name="bleeding_iv_site" id="bleeding_iv_site" value="1" {{ if eq .FormChild1.BleedingIvSite.Int64 1 }}checked{{ end }}> IV Site</div>
+                                    </div>
+                                    <div class="row">
+                                        <label class="col-sm-4 col-form-label col-form-label-sm" for="bleeding_other">:</label>
+                                        <div class="col-sm-6"><input type="checkbox" name="bleeding_other" id="bleeding_other" value="1" {{ if eq .FormChild1.BleedingOther.Int64 1 }}checked{{ end }}> Others</div>
+                                    </div>
+                                    <div class="row">
+                                        <label class="col-sm-4 col-form-label col-form-label-sm" for="bleeding_other_specif"></label>
+                                        <div class="col-sm-6">Specify<input class="form-control form-control-sm patient-input" value="{{ .FormChild1.BleedingOtherSpecif.String }}" id="bleeding_other_specif" name="bleeding_other_specif" type="text"/> </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="tab-pane fade" id="complications" role="tabpanel" aria-labelledby="complications-tab">
+                            <p>Complications</p>
+                            <div class="row registration-input-row"> 
+                                <div class="col-lg-6">
+                                    <div class="row">
+                                        <label class="col-sm-4 col-form-label col-form-label-sm" for="bleeding">Bleeding:</label>
+                                        <div class="col-sm-6">
+                                            {{ GetOptionField "YN" "bleeding" "Bleeding" "" .FormChild2.Bleeding.Int64 1 }}
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <label class="col-sm-4 col-form-label col-form-label-sm" for="shock">Shock:</label>
+                                        <div class="col-sm-6">
+                                            {{ GetOptionField "YN" "shock" "Shock" "" .FormChild2.Shock.Int64 1 }}
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <label class="col-sm-4 col-form-label col-form-label-sm" for="meningitis">Meningitis:</label>
+                                        <div class="col-sm-6">
+                                            {{ GetOptionField "YN" "meningitis" "Meningitis" "" .FormChild2.Meningitis.Int64 1 }}
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <label class="col-sm-4 col-form-label col-form-label-sm" for="confusion">Confusion:</label>
+                                        <div class="col-sm-6">
+                                            {{ GetOptionField "YN" "confusion" "Confusion" "" .FormChild2.Confusion.Int64 1 }}
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <label class="col-sm-4 col-form-label col-form-label-sm" for="seizure">Seizure:</label>
+                                        <div class="col-sm-6">
+                                            {{ GetOptionField "YN" "seizure" "Seizure" "" .FormChild2.Seizure.Int64 1 }}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="row">
+                                        <label class="col-sm-4 col-form-label col-form-label-sm" for="coma">Coma (P/U in AVPU scoring) :</label>
+                                        <div class="col-sm-6">
+                                            {{ GetOptionField "YN" "coma" "Coma (P/U in AVPU scoring) " "" .FormChild2.Coma.Int64 1 }}
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <label class="col-sm-4 col-form-label col-form-label-sm" for="bacteraemia">Bacteraemia:</label>
+                                        <div class="col-sm-6">
+                                            {{ GetOptionField "YN" "bacteraemia" "Bacteraemia" "" .FormChild2.Bacteraemia.Int64 1 }}
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <label class="col-sm-4 col-form-label col-form-label-sm" for="hyperglycemia">Hyperglycemia:</label>
+                                        <div class="col-sm-6">
+                                            {{ GetOptionField "YN" "hyperglycemia" "Hyperglycemia" "" .FormChild2.Hyperglycemia.Int64 1 }}
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <label class="col-sm-4 col-form-label col-form-label-sm" for="hypoglycemia">Hypoglycemia:</label>
+                                        <div class="col-sm-6">
+                                            {{ GetOptionField "YN" "hypoglycemia" "Hypoglycemia" "" .FormChild2.Hypoglycemia.Int64 1 }}
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <label class="col-sm-4 col-form-label col-form-label-sm" for="other">Other, Specify</label>
+                                        <div class="col-sm-6"><input class="form-control form-control-sm patient-input" value="{{ .FormChild2.Other.String }}" id="other" name="other" type="text"/> </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="tab-pane fade" id="lab" role="tabpanel" aria-labelledby="lab-tab">
+                            <p>Labs</p>
+                            <style>
+                                table {
+                                    width: 100%;
+                                    border: 1px solid lightgrey;
+                                    border-collapse: collapse;
+                                }
+                                th, td {
+                                    border: 1px solid lightgrey;
+                                    padding: 1px;
+                                    text-align: left;
+                                }
+                            </style>
+                            <table>
+                                <tr>
+                                   <td colspan="6">
+                                    <div class="row registration-input-row">
+                                        <div class="col-lg-6">
+                                            <div class="row">
+                                                <label class="col-sm-6 col-form-label col-form-label-sm" >Specimen collection done for EVD patients?</label> 
+                                                <div class="col-sm-6">
+                                                    {{ GetOptionField "yn" "specimen" "Specimen" "" .FormChild3.Specimen.Int64 1 }}
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-6">
+                                            <div class="row">
+                                                <label class="col-sm-6 col-form-label col-form-label-sm" >If yes, what samples?</label> 
+                                                <div class="col-sm-6">
+                                                    <input type="checkbox" value="1" name="sample_blood" id="sample_blood" {{ if eq .FormChild3.SampleBlood.Int64 1 }}checked{{ end }}  > Blood <br />	
+                                                    <input type="checkbox" value="1" name="sample_urine" id="sample_urine" {{ if eq .FormChild3.SampleUrine.Int64 1 }}checked{{ end }}  > Urine	 <br />	
+                                                    <input type="checkbox" value="1" name="sample_swab" id="sample_swab"   {{ if eq .FormChild3.SampleSwab.Int64 1 }}checked{{ end }}  > Buccal swab  <br />	
+                                                    Other	<input type="text" name="sample_aza" id="sample_aza"  value="{{ .FormChild3.SampleAza.String }}"> 
+                                                </div>
+                                                
+                                            </div>
+                                        </div>
+                                    </div>
+                                    </td> 
+                                </tr>
+                                <tr>
+                                    <th colspan="2">Ebola testing</th> 
+                                    <th>Collection date</th>
+                                    <th colspan="3">Result</th> 
+                                </tr>
+                                <tr>
+                                    <td colspan="2">
+                                        <div class="row">
+                                            <label class="col-sm-5 col-form-label col-form-label-sm">Ebola RDT: </label>
+                                            <div class="col-sm-5">{{ GetOptionField "e_rdt" "ebola_rdt" "EbolaRdt" "" 0 1 }}</div>
+                                        </div>
+                                        Other specify: <input type="text" name="ebola_rdt" id="ebola_rdt"  value="{{ .FormChild3.EbolaRdtAza.String }}">
+                                    </td> 
+                                    <td><input size="5" value="{{ .FormChild3.EbolaRdtDate.String }}" type="date" id="ebola_rdt_date" name="ebola_rdt_date"></td>
+                                    <td colspan="3"><div class="row"> <div class="col-sm-3">{{ GetOptionField "posx" "ebola_rdt_results" "EbolaRdtResults" "" .FormChild3.EbolaRdtResults.Int64 1 }}</div></div> </td>
+                                </tr>
+                                <tr>
+                                    <td rowspan="2" colspan="2">
+                                        <div class="row">
+                                            <label class="col-sm-5 col-form-label col-form-label-sm">Ebola PCR:</label>
+                                            <div class="col-sm-5">{{ GetOptionField "e_pcr" "ebola_pcr" "EbolaPcr" "" .FormChild3.EbolaPcr.Int64 1 }}</div>
+                                        </div>
+                                        Other specify: <input type="text" name="ebola_pcr_aza" id="ebola_pcr_aza" value="{{ .FormChild3.EbolaPcrAza.String }}">
+                                    </td> 
+                                    <td rowspan="2" ><input size="5" value="{{ .FormChild3.EbolaPcrDate.String }}" type="date" id="ebola_pcr_date" name="ebola_pcr_date"></td>
+                                    <td>GP</td>
+                                    <td>NP</td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <div class="row"> <div class="col-sm-6">{{ GetOptionField "po" "ebola_pcr_gp" "EbolaPcrGp" "" .FormChild3.EbolaPcrGp.Int64 1 }}</div></div>
+                                        <br /> CT: <input size="5" type="text" name="ebola_pcr_gp_ct" id="ebola_pcr_gp_ct" value="{{ .FormChild3.EbolaPcrGpCt.Float64 }}">
+                                    </td>
+                                    <td>
+                                        <div class="row"> <div class="col-sm-6">{{ GetOptionField "po" "ebola_pcr_np" "EbolaPcrNp" "" .FormChild3.EbolaPcrNp.Int64 1 }}</div></div>
+                                        <br /> CT: <input size="5" type="text" name="ebola_pcr_np_ct" id="ebola_pcr_np_ct" value="{{ .FormChild3.EbolaPcrNpCt.Float64 }}">
+                                    </td>
+                                    <td><input type="checkbox" value="1" name="ebola_pcr_indeterminate" id="ebola_pcr_indeterminate"  {{ if eq .FormChild3.EbolaPcrIndeterminate.Int64 1 }}checked{{ end }} >indeterminate</td>
+                                </tr>
+                                <tr>
+                                    <td colspan="2">Malaria RDT</td> 
+                                    <td><input size="5" type="date" name="malaria_rdt_date" id="malaria_rdt_date" value="{{ .FormChild3.BloodCultureDate.String }}"></td>
+                                    <td colspan="3"><div class="row"> <div class="col-sm-3">{{ GetOptionField "posx" "malaria_rdt_result" "MalariaRdtResult" "" .FormChild3.MalariaRdtResult.Int64 1 }}</div></div> </td> 
+                                </tr>
+                                <tr>
+                                    <td colspan="2">Blood culture</td> 
+                                    <td><input size="5" type="date" name="blood_culture_date" id="blood_culture_date" value="{{ .FormChild3.BloodCultureDate.String }}"></td>
+                                    <td colspan="3"><div class="row"> <div class="col-sm-3">{{ GetOptionField "posx" "blood_culture_result" "BloodCultureResult" "" .FormChild3.BloodCultureResult.Int64 1 }}</div></div> </td> 
+                                </tr>
+                                <tr>
+                                    <td colspan="6">
+                                        <div class="row">
+                                            <label class="col-sm-4 col-form-label col-form-label-sm" >Did patient test positive for any other infection?</label> 
+                                            <div class="col-sm-1">{{ GetOptionField "yn" "test_pos_infection" "TestPosInfection" "" .FormChild3.TestPosInfection.Int64 1 }}</div> 
+                                            <label class="col-sm-4 col-form-label col-form-label-sm" >If Yes, specify</label> 
+                                            <div class="col-sm-3"><input type="text" name="test_pos_infection_aza" id="test_pos_infection_aza" value="{{ .FormChild3.TestPosInfectionAza.String }}"></div>
+                                        </div>
+                                    </td> 
+                                </tr>
+                                <tr>
+                                    <td colspan="6">Other clinical laboratory tests done on admission (ND = not done)</td> 
+                                </tr>
+                                <tr>
+                                    <td colspan="2">Haemoglobinuria</td> 
+                                    <td>{{ GetOptionField "pos" "haemoglobinuria" "Haemoglobinuria" "" .FormChild3.Haemoglobinuria.Int64 1 }} </td>
+                                    <td>Blood Gas</td> 
+                                    <td>{{ GetOptionField "blood" "blood_gas" "BloodGas" "" .FormChild3.BloodGas.Int64 1 }} </td>
+                                    <td></td> 
+                                    
+                                </tr>
+                                <tr>
+                                    <td colspan="2">Proteinuria</td> 
+                                    <td>{{ GetOptionField "pos" "proteinuria" "Proteinuria" "" .FormChild3.Proteinuria.Int64 1 }} </td>
+                                    <td colspan="3">
+                                        Results: pH	<input type="text" size="5" name="ph" id="ph" value="{{ .FormChild3.Ph.Float64 }}">, 
+                                        pCO2	<input type="text" size="5" name="pco2" id="pco2" value="{{ .FormChild3.Pco2.Float64 }}">, 
+                                        PaO2 	<input type="text" size="5" name="pao2" id="pao2" value="{{ .FormChild3.Pao2.Float64 }}">,
+                                        HCO3<input type="text" size="5" name="hco3" id="hco3" value="{{ .FormChild3.Hco3.Float64 }}">
+                                    </td> 
+                                    
+                                </tr>
+                                <tr>
+                                    <td colspan="2">Hematuria</td> 
+                                    <td>{{ GetOptionField "pos" "hematuria" "Hematuria" "" .FormChild3.Hematuria.Int64 1 }} </td>
+                                    <td>Oxygen therapy at time of blood gas (L/min)</td> 
+                                    <td><input type="text" size="5" name="oxygen_therapy" id="oxygen_therapy" value="{{ .FormChild3.OxygenTherapy.Float64 }}"></td>
+                                    <td></td> 
+                                    
+                                </tr>
+                                <tr>
+                                    <td colspan="6">Laboratory tests on admission or Hospital Day 1(HD1). (ND = not done)</td> 
+                                </tr>
+                                <tr>
+                                    <td>Biochemistry</td>
+                                    <td>Values</td>
+                                    <td>Not Done</td>
+                                    <td>CBC & Clotting panel</td>
+                                    <td>Values</td>
+                                    <td>Not Done</td>
+                                </tr>
+                                <tr>
+                                    <td>ALT/SGPT (U/L)</td>
+                                    <td><input size="5" type="text" name="alt_sgpt" id="alt_sgpt" value="{{ .FormChild3.AltSgpt.Float64 }}"></td>
+                                    <td><input type="checkbox" value="1" name="alt_sgpt_nd" id="alt_sgpt_nd" {{ if eq .FormChild3.AltSgptNd.Int64 1 }}checked{{ end }} >DN</td>
+                                    <td>Glucose (mmol/L)</td>
+                                    <td><input size="5" type="text" name="glucose" id="glucose" value="{{ .FormChild3.Glucose.Float64 }}"></td>
+                                    <td><input type="checkbox" value="1" name="glucose_nd" id="glucose_nd" {{ if eq .FormChild3.GlucoseNd.Int64 1 }}checked{{ end }} >DN</td>
+                                </tr>
+                                <tr>
+                                    <td>AST/SGO (U/L)</td>
+                                    <td><input size="5" type="text" name="ast_sgo" id="ast_sgo" value="{{ .FormChild3.AstSgo.Float64 }}"></td>
+                                    <td><input type="checkbox" value="1" name="ast_sgo_nd" id="ast_sgo_nd" {{ if eq .FormChild3.AstSgoNd.Int64 1 }}checked{{ end }} >DN</td>
+                                    <td>Lactate (mmol/L)</td>
+                                    <td><input size="5" type="text" name="lactate" id="lactate" value="{{ .FormChild3.Lactate.Float64 }}"></td>
+                                    <td><input type="checkbox" value="1" name="lactate_nd" id="lactate_nd" {{ if eq .FormChild3.LactateNd.Int64 1 }}checked{{ end }} >DN</td>
+                                </tr>
+                                <tr>
+                                    <td>Creatinine (µmol/L)</td>
+                                    <td><input size="5" type="text" name="creatinine" id="creatinine" value="{{ .FormChild3.Creatinine.Float64 }}"></td>
+                                    <td><input type="checkbox" value="1" name="creatinine_nd" id="creatinine_nd" {{ if eq .FormChild3.CreatinineNd.Int64 1 }}checked{{ end }} >DN</td>
+                                    <td>Haemoglobin (g/L)</td>
+                                    <td><input size="5" type="text" name="haemoglobin" id="haemoglobin" value="{{ .FormChild3.Haemoglobin.Float64 }}"></td>
+                                    <td><input type="checkbox" value="1" name="haemoglobin_nd" id="haemoglobin_nd" {{ if eq .FormChild3.HaemoglobinNd.Int64 1 }}checked{{ end }} >DN</td>
+                                </tr>
+                                <tr>
+                                    <td>Potassium (mmol/L)</td>
+                                    <td><input size="5" type="text" name="potassium" id="potassium" value="{{ .FormChild3.Potassium.Float64 }}"></td>
+                                    <td><input type="checkbox" value="1" name="potassium_nd" id="potassium_nd" {{ if eq .FormChild3.PotassiumNd.Int64 1 }}checked{{ end }}  >DN</td>
+                                    <td>Total bilirubin (µmol/L)</td>
+                                    <td><input size="5" type="text" name="total_bilirubin" id="total_bilirubin" value="{{ .FormChild3.TotalBilirubin.Float64 }}"></td>
+                                    <td><input type="checkbox" value="1" name="total_bilirubin_nd" id="total_bilirubin_nd" {{ if eq .FormChild3.TotalBilirubinNd.Int64 1 }}checked{{ end }} >DN</td>
+                                </tr>
+                                <tr>
+                                    <td>Urea (mmol/L)</td>
+                                    <td><input size="5" type="text" name="urea" id="urea" value="{{ .FormChild3.Urea.Float64 }}"></td>
+                                    <td><input type="checkbox" value="1" name="urea_nd" id="urea_nd" {{ if eq .FormChild3.UreaNd.Int64 1 }}checked{{ end }} >DN</td>
+                                    <td>WBC count (x109/L)</td>
+                                    <td><input size="5" type="text" name="wbc_count" id="wbc_count" value="{{ .FormChild3.WbcCount.Float64 }}"></td>
+                                    <td><input type="checkbox" value="1" name="wbc_count_nd" id="wbc_count_nd" {{ if eq .FormChild3.WbcCountNd.Int64 1 }}checked{{ end }} >DN</td>
+                                </tr>
+                                <tr>
+                                    <td>Creatinine kinase (U/L)</td>
+                                    <td><input size="5" type="text" name="creatinine_kinase" id="creatinine_kinase" value="{{ .FormChild3.CreatinineKinase.Float64 }}"></td>
+                                    <td><input type="checkbox" value="1" name="creatinine_kinase_nd" id="creatinine_kinase_nd" {{ if eq .FormChild3.CreatinineKinaseNd.Int64 1 }}checked{{ end }} >DN</td>
+                                    <td>Platelets (x109/L)</td>
+                                    <td><input size="5" type="text" name="platelets" id="platelets" value="{{ .FormChild3.Platelets.Float64 }}"></td>
+                                    <td><input type="checkbox" value="1" name="platelets_nd" id="platelets_nd" {{ if eq .FormChild3.PlateletsNd.Int64 1 }}checked{{ end }} >DN</td>
+                                </tr>
+                                <tr>
+                                    <td>Calcium (mmol/L)</td>
+                                    <td><input size="5" type="text" name="calcium" id="calcium" value="{{ .FormChild3.Calcium.Float64 }}"></td>
+                                    <td><input type="checkbox" value="1" name="calcium_nd" id="calcium_nd" {{ if eq .FormChild3.CalciumNd.Int64 1 }}checked{{ end }} >DN</td>
+                                    <td>PT</td>
+                                    <td><input size="5" type="text" name="pt" id="pt" value="{{ .FormChild3.Pt.Float64 }}"></td>
+                                    <td><input type="checkbox" value="1" name="pt_nd" id="pt_nd" {{ if eq .FormChild3.PtNd.Int64 1 }}checked{{ end }} >DN</td>
+                                </tr>
+                                <tr>
+                                    <td>Sodium (mmol/L)</td>
+                                    <td><input size="5" type="text" name="sodium" id="sodium" value="{{ .FormChild3.Sodium.Float64 }}"></td>
+                                    <td><input type="checkbox" value="1" name="sodium_nd" id="sodium_nd" {{ if eq .FormChild3.SodiumNd.Int64 1 }}checked{{ end }} >DN</td>
+                                    <td>aPTT (seconds)</td>
+                                    <td><input size="5" type="text" name="aptt" id="aptt" value="{{ .FormChild3.Aptt.Float64 }}"></td>
+                                    <td><input type="checkbox" value="1" name="aptt_nd" id="aptt_nd" {{ if eq .FormChild3.ApttNd.Int64 1 }}checked{{ end }} >DN</td>
+                                </tr>
+                            </table>
+                        </div>
+                        <div class="tab-pane fade" id="treat" role="tabpanel" aria-labelledby="treat-tab">
+                            <p>Treatment</p>
+                        </div>
+
+                    </div>
+                   
+                </div> 
+                        
+                        <input type="hidden" name="clinical_id" id="clinical_id" value="{{ .FormChild1.ClinicalID }}">
+                        <input type="hidden" name="vitals_id"   id="vitals_id"   value="{{ .FormChild2.VitalsID }}"  >
+                        <input type="hidden" name="lab_id"      id="lab_id"      value="{{ .FormChild3.LabID }}">
+
+                        <input type="hidden" name="id" id="id" value="{{.Form.EncounterID}}">
+                        <input type="hidden" name="cid" id="cid" value="{{.Form.ClientID.Int64}}">
+                        <input type="hidden" name="from" id="from" value="">
+
+                        <button type="submit" id="submitButton" class="btn btn-sm btn-success mt-3">Save</button>
+                        <button type="button" id="save_cButton" class="btn btn-sm btn-success mt-3">Save & Close</button>
+                        <button type="button" id="cancelButton" class="btn btn-sm btn-success mt-3">Cancel</button>
+                        <button type="button" id="helpButton"   class="btn btn-sm btn-success mt-3">Help</button>
+                </form>               
+            </div>
+        </div>
+    </div>
+    <script src="/static/app/cdn/js/jquery-3.6.0.min.js"></script>
+    <script src="/static/js/bootstrap.bundle.min.js"></script>
+    <script src="/static/app/cdn/js/flatpickr.min.js"></script>
+    <script src="/static/app/cdn/js/select2.min.js"></script>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+
+            const today = new Date();
+            const formattedDate = today.toISOString().split('T')[0];
+
+            flatpickr(".datetimepicker", {
+                enableTime: false, 
+                dateFormat: "Y-m-d",
+                defaultDate: formattedDate,
+                disableMobile: true
+            });
+        });
+
+        document.addEventListener("DOMContentLoaded", function () {
+    const form = document.getElementById("encounterForm"); // Replace with your form ID
+    const submitButton = document.getElementById("submitButton"); // Replace with your submit button ID
+    const save_cButton = document.getElementById("save_cButton");
+    const helpButton   = document.getElementById("helpButton");
+    const cancelButton = document.getElementById("cancelButton"); // Replace with your cancel button ID
+
+    //console.log("Form Data as JSON:", formDataJSON);
+
+    if (submitButton) {
+        submitButton.addEventListener("click", function (event) {
+            event.preventDefault(); // Prevent default form submission
+            
+            if (validateForm()) {
+                form.submit(); // Submit the form only if validation passes
+            } else {
+                alert("Please fill out all required fields correctly.");
+            }
+        });
+    }
+
+    if (cancelButton) {
+        cancelButton.addEventListener("click", function () {
+            window.location.href = "/cases/new/{{.FormRef.ID}}"; // Replace with the correct URL
+        });
+    }
+
+    function validateForm() {
+        let isValid = true;
+        const requiredFields = document.querySelectorAll("input[required], select[required], textarea[required]");
+
+        requiredFields.forEach(function (field) {
+            if (!field.value.trim()) {
+                isValid = false;
+                field.classList.add("is-invalid"); // Bootstrap validation styling
+            } else {
+                field.classList.remove("is-invalid");
+            }
+        });
+
+        return isValid;
+    }
+
+    function getFormDataAsJSON(formElement) {
+        const formData = new FormData(formElement);
+        const jsonObject = {};
+
+        formData.forEach((value, key) => {
+            jsonObject[key] = value;
+        });
+
+        return jsonObject;
+    }
+});
+
+    </script>
+</body>
+</html>
+
+
+{{ end }}

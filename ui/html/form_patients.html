@@ -1,0 +1,1193 @@
+{{ define "layout" }}
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Patient Form</title>
+    <link href="/static/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/static/app/cdn/css/flatpickr.min.css" type="text/css">
+    <style>
+        body {
+            background-color: #ffffff;
+            color: #333;
+            font-family: Arial, sans-serif;
+            padding: 20px;
+        }
+        
+        .table-container {
+            margin-top: 20px;
+        }
+        .table {
+            font-size: 0.85rem; /* Smaller font size */
+        }
+        .table th, .table td {
+            padding: 6px 8px; /* Reduce padding */
+        }
+        .btn-sm {
+            font-size: 0.75rem; /* Smaller buttons */
+            padding: 4px 6px;
+        }        
+        .action-btn {
+            display: inline-block;
+        }
+        .form-container {
+            margin: 20px auto;
+            padding: 20px;
+            border: 1px solid #e9ecef;
+            border-radius: 8px;
+            background-color: #f8f9fa;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .top-ribbon {
+            background-color: #f8f9fa;
+            border-bottom: 1px solid #e9ecef;
+            padding: 10px;
+        }
+        .side-menu {
+            background-color: #f8f9fa;
+            border-right: 1px solid #e9ecef;
+            height: 100vh;
+            padding-top: 20px;
+        }
+        .menu-item {
+            padding: 10px 20px;
+            display: block;
+            color: #333;
+            text-decoration: none;
+        }
+        .menu-item:hover {
+            background-color: #e9ecef;
+        }
+        .content {
+            padding: 20px;
+        }
+        .col-md-3 {
+            max-width: 200px;
+        }
+        .paper-look {
+            font-family: "Courier New", Courier, monospace;
+            font-size: 12px;
+            background: #fff9e3;
+            border: 1px solid #e2c490;
+            padding: 10px;
+            margin: 10px 0;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            min-height: 150px; /* Adjust this value to set the minimum height */
+            max-height: 500px; /* Adjust this value as needed */
+            overflow-y: auto; /* This makes the div scrollable */
+        }
+        .full-width {
+            width: 100%;
+        }
+    </style>
+    
+</head>
+<body>
+    <!-- Top Ribbon -->
+    <div class="top-ribbon d-flex justify-content-between">
+        <div class="ms-3">
+            <a href="/" class="me-3">Home</a>
+            <a href="/about" class="me-3">About</a>
+            <a href="#">Contact</a>
+        </div>
+        <div class="me-3">
+            <a href="/logout" class="me-3">Logout</a>
+            <a href="#">My Account</a>
+        </div>
+    </div>
+
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Left-Hand Side Menu -->
+            <div class="col-md-3 side-menu">
+                {{if .IsIDPos }}
+                <a href="/cases/encounters/new/{{.Form.ID}}/0" class="menu-item">New Encounter</a>
+                <a href="/cases/patientreport/{{.Form.ID}}" class="menu-item">Report</a>
+                {{end}}
+                <a href="/patienthelp" class="menu-item">Help</a>
+                <button type="button" id="cancelButton" class="btn btn-sm btn-success mt-3">Close</button>
+            </div>
+
+            <!-- Main Content -->
+            <div class="col-md-9">
+                <div class="content">
+                    <h1>Patient Form</h1>
+
+                    <ul class="nav nav-tabs" id="myTab" role="tablist">
+                        <li class="nav-item">
+                            <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">General</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="encounter-tab" data-toggle="tab" href="#encounter" role="tab" aria-controls="encounter" aria-selected="false">Encounters</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="labs-tab" data-toggle="tab" href="#labs" role="tab" aria-controls="labs" aria-selected="false">Status</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="dis-tab" data-toggle="tab" href="#dis" role="tab" aria-controls="dis" aria-selected="false">Discharge</a>
+                        </li>
+                    </ul>
+                    <div class="tab-content" id="myTabContent">
+                        <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">                       
+
+
+                            <div class="form-container">
+                                <form method="post" action="/cases/save" id="caseForm">
+                                    <div class="row registration-input-row">    
+                                        <div class="col-lg-4">
+                                            <div class="row">
+                                                <label class="col-sm-3 col-form-label col-form-label-sm" for="firstname">First Name</label>
+                                                <div class="col-sm-7">
+                                                    <input class="form-control form-control-sm patient-input" value="{{.Form.Firstname.String}}" id="firstname" name="firstname" type="text" required/>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <label class="col-sm-3 col-form-label col-form-label-sm" for="lastname">Surname</label>
+                                                <div class="col-sm-7">
+                                                    <input class="form-control form-control-sm patient-input" value="{{.Form.Lastname.String}}" id="lastname" name="lastname" type="text" required/>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <label class="col-sm-3 col-form-label col-form-label-sm" for="othername">Other Name </label>
+                                                <div class="col-sm-7">
+                                                    <input class="form-control form-control-sm patient-input" value="{{.Form.Othername.String}}" id="othername" name="othername" type="text"/>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <label class="col-sm-3 col-form-label col-form-label-sm" for="gender">Gender </label>
+                                                <div class="col-sm-7">
+                                                    <select class="form-control-sm patient-input form-select"  name="gender" id="gender" aria-label="Gender" required>
+                                                        {{ range $key, $value := index .Optionz "sex" }}  
+                                                            <option value="{{ $key }}">{{ $value }}</option>
+                                                        {{ end }}
+                                                    </select>
+                                                    <script>
+                                                    document.addEventListener("DOMContentLoaded", function() {
+                                                        document.getElementById("gender").value = "{{.Form.Gender.Int64}}";
+                                                    });
+                                                    </script>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-4">
+                                            <div class="row">
+                                                <label class="col-sm-3 col-form-label col-form-label-sm" for="date_of_birth">Date of Birth</label>
+                                                <div class="col-sm-7">
+                                                    <input class="form-control form-control-sm patient-input datetimepicker" value="{{.Form.DateOfBirth.String}}" id="date_of_birth" name="date_of_birth" type="text" placeholder="yyyy-mm-dd" data-options='{"disableMobile":true,"dateFormat":"Y-m-d"}'/>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <label class="col-sm-3 col-form-label col-form-label-sm" for="age">Age</label>
+                                                <div class="col-sm-7">
+                                                    <input class="form-control form-control-sm patient-input" value="{{.Form.Age.Float64}}" id="age" name="age" type="text"/>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <label class="col-sm-3 col-form-label col-form-label-sm" for="marital">Marital State</label>
+                                                <div class="col-sm-7">
+                                                    <!--<input class="form-control form-control-sm patient-input" id="marital_status" name="marital_status" type="text"/>-->
+                                                    <select class="form-control-sm patient-input form-select"  name="marital" id="marital" aria-label="Marital Status">
+                                                        {{ range $key, $value := index .Optionz "marital" }}  
+                                                            <option value="{{ $key }}">{{ $value }}</option>
+                                                        {{ end }}
+                                                    </select>
+                                                    <script>
+                                                    document.addEventListener("DOMContentLoaded", function() {
+                                                        document.getElementById("marital").value = "{{ .Form.Marital.Int64 }}";
+                                                    });
+
+                                                    </script>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <label class="col-sm-3 col-form-label col-form-label-sm" for="nin">NIN</label>
+                                                <div class="col-sm-7">
+                                                    <input class="form-control form-control-sm patient-input" value="{{.Form.Nin.String}}" id="nin" name="nin" type="text"/>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-4">
+                                            <div class="row">
+                                                <label class="col-sm-3 col-form-label col-form-label-sm" for="nationality">Nationality</label>
+                                                <div class="col-sm-7">
+                                                    <select class="form-control-sm patient-input form-select" name="nationality" id="nationality" aria-label="Nationality">
+                                                    {{ range $key, $value := index .Optionz "nationality" }}  
+                                                        <option value="{{ $key }}">{{ $value }}</option>
+                                                    {{ end }}
+                                                    </select>
+                                                    <script>
+                                                    document.addEventListener("DOMContentLoaded", function() {
+                                                        document.getElementById("nationality").value = "{{.Form.Nationality.Int64}}";
+                                                    });
+
+                                                    </script>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <label class="col-sm-3 col-form-label col-form-label-sm" for="adm_date">Admin. Date</label>
+                                                <div class="col-sm-7">
+                                                    <input class="form-control form-control-sm patient-input datetimepicker" value="{{.Form.AdmDate.String}}" id="adm_date" name="adm_date" type="text" placeholder="yyyy-mm-dd" data-options='{"disableMobile":true,"dateFormat":"Y-m-d"}' required/>
+                                                
+                                                </div>
+                                            </div>
+                                            
+                                            <div class="row">
+                                                <label class="col-sm-3 col-form-label col-form-label-sm" for="transfer">Transfered?</label>
+                                                <div class="col-sm-7">
+                                                    <select class="form-control-sm patient-input form-select" name="transfer" id="transfer" aria-label="Transfer">
+                                                        {{ range $key, $value := index .Optionz "yn_extra" }}  
+                                                            <option value="{{ $key }}">{{ $value }}</option>
+                                                        {{ end }}
+                                                    </select>
+                                                    <script>
+                                                    document.addEventListener("DOMContentLoaded", function() {
+                                                        document.getElementById("transfer").value = "{{.Form.Transfer.Int64}}";
+                                                    });
+
+                                                    </script>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <label class="col-sm-3 col-form-label col-form-label-sm" for="adm_from">From.</label>
+                                                <div class="col-sm-7">
+                                                    <input class="form-control form-control-sm patient-input" value="{{.Form.AdmFrom.String}}" id="adm_from" name="adm_from" type="text"/>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <hr style="width: 100%;"/>
+                                    <div class="row registration-input-row">    
+                                        <div class="col-lg-3">
+                                            <div class="row">
+                                                <label class="col-sm-3 col-form-label col-form-label-sm" for="lab_no">Lab#</label>
+                                                <div class="col-sm-7">
+                                                    <input class="form-control form-control-sm patient-input" value="{{.Form.LabNo.String}}" id="lab_no" name="lab_no" type="text"/>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-3">
+                                            <div class="row">
+                                                <label class="col-sm-3 col-form-label col-form-label-sm" for="cif_no">CIF#</label>
+                                                <div class="col-sm-7">
+                                                    <input class="form-control form-control-sm patient-input" value="{{.Form.CifNo.String}}" id="cif_no" name="cif_no" type="text"/>
+                                                </div>
+                                            </div>                        
+                                        </div>
+                                        <div class="col-lg-3">
+                                            <div class="row">
+                                                <label class="col-sm-3 col-form-label col-form-label-sm" for="etu_no">ETU#</label>
+                                                <div class="col-sm-7">
+                                                    <input class="form-control form-control-sm patient-input" value="{{.Form.EtuNo.String}}" id="etu_no" name="etu_no" type="text"/>
+                                                </div>
+                                            </div>
+                                        
+                                        </div>
+                                        <div class="col-lg-3">
+                                            <div class="row">
+                                                <label class="col-sm-3 col-form-label col-form-label-sm" for="case_no">Case#</label>
+                                                <div class="col-sm-7">
+                                                    <input class="form-control form-control-sm patient-input" value="{{.Form.CaseNo.String}}" id="case_no" name="case_no" type="text"/>
+                                                </div>
+                                            </div>
+                                        
+                                        </div>
+                                    </div>
+                                    <hr style="width: 100%;"/>  
+                                    <div class="row registration-input-row">
+                                        <div class="col-lg-4">
+                                            <div class="row">
+                                                <label class="col-sm-4 col-form-label col-form-label-sm" for="adm_date">Treatment Site</label>
+                                                <div class="col-sm-6">
+                                                    {{ GetOptionField "facility" "site" "Treatment Site" "" .Form.Site.Int64 1 }}
+                                                    
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-4">
+                                            <div class="row">
+                                                <label class="col-sm-4 col-form-label col-form-label-sm" for="adm_date">Baseline Status</label>
+                                                <div class="col-sm-6">
+                                                    {{ GetOptionField "Status" "status" "Baseline Status" .Form.Status.String 0 1 }}
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-4">
+
+                                        </div>
+                                    </div>
+                                    <hr style="width: 100%;"/>              
+                                    <div class="row registration-input-row">
+                                        <div class="col-lg-4">
+                                            <div class="row">
+                                                <label class="col-sm-3 col-form-label col-form-label-sm" for="occupation">Occupation</label>
+                                                <div class="col-sm-7">
+                                                    <select class="form-control-sm patient-input form-select" name="occupation" id="occupation" aria-label="Occupation">
+                                                        {{ range $key, $value := index .Optionz "occup" }}  
+                                                            <option value="{{ $key }}">{{ $value }}</option>
+                                                        {{ end }}
+                                                    </select>
+                                                    <script>
+                                                    document.addEventListener("DOMContentLoaded", function() {
+                                                        document.getElementById("occupation").value = "{{.Form.Occupation.Int64}}";
+                                                    });
+
+                                                    </script>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <label class="col-sm-3 col-form-label col-form-label-sm" for="occupation_aza">Specify</label>
+                                                <div class="col-sm-7">
+                                                    <input class="form-control form-control-sm patient-input" value="{{.Form.OccupationAza.String}}" id="occupation_aza" name="occupation_aza" type="text"/>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-4">
+                                            <div class="row">
+                                                <label class="col-sm-5 col-form-label col-form-label-sm" for="date_symptom_onset">Date symptom onset</label>
+                                                <div class="col-sm-5">
+                                                    <input class="form-control form-control-sm patient-input datetimepicker" value="{{.Form.DateSymptomOnset.String}}" id="date_symptom_onset" name="date_symptom_onset" type="text" placeholder="yyyy-mm-dd" data-options='{"disableMobile":true,"dateFormat":"Y-m-d"}'/>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <label class="col-sm-5 col-form-label col-form-label-sm" for="date_isolation">Date Isolation</label>
+                                                <div class="col-sm-5">
+                                                    <input class="form-control form-control-sm patient-input datetimepicker" value="{{.Form.DateIsolation.String}}" id="date_isolation" name="date_isolation" type="text" placeholder="yyyy-mm-dd" data-options='{"disableMobile":true,"dateFormat":"Y-m-d"}'/>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-4">
+                                            <div class="row">
+                                                <label class="col-sm-5 col-form-label col-form-label-sm" for="pregnant">Pregnant?</label>
+                                                <div class="col-sm-5">
+                                                    <select class="form-control-sm patient-input form-select" name="pregnant" id="pregnant" aria-label="Pregnant">
+                                                        {{ range $key, $value := index .Optionz "preg" }}  
+                                                            <option value="{{ $key }}">{{ $value }}</option>
+                                                        {{ end }}
+                                                    </select>
+                                                    <script>
+                                                    document.addEventListener("DOMContentLoaded", function() {
+                                                        document.getElementById("pregnant").value = "{{.Form.Pregnant.Int64}}";
+                                                    });
+
+                                                    </script>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <label class="col-sm-5 col-form-label col-form-label-sm" for="adm_ward">Admis. Ward</label>
+                                                <div class="col-sm-5">
+                                                    <select class="form-control-sm patient-input form-select" name="adm_ward" id="adm_ward" aria-label="Adm Ward">
+                                                        {{ range $key, $value := index .Optionz "ward" }}  
+                                                            <option value="{{ $key }}">{{ $value }}</option>
+                                                        {{ end }}
+                                                    </select>
+                                                    <script>
+                                                    document.addEventListener("DOMContentLoaded", function() {
+                                                        document.getElementById("adm_ward").value = "{{.Form.AdmWard.String}}";
+                                                    });
+                                                    </script>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>    
+                                    <hr style="width: 100%;"/>
+                                    <div class="row registration-input-row">
+                                        <div class="col-lg-6">
+                                            <div class="row">
+                                                <label class="col-sm-5 col-form-label col-form-label-sm" >Comorbid conditions</label>
+                                            </div>
+                                            <div class="row">
+                                                <label class="col-sm-5 col-form-label col-form-label-sm" for="tb">Tuberculosis</label>
+                                                <div class="col-sm-5">
+                                                    <select class="form-control-sm patient-input form-select" name="tb" id="tb" aria-label="Tuberculosis">
+                                                        {{ range $key, $value := index .Optionz "yn_extra" }}  
+                                                            <option value="{{ $key }}">{{ $value }}</option>
+                                                        {{ end }}
+                                                    </select>
+                                                    <script>
+                                                    document.addEventListener("DOMContentLoaded", function() {
+                                                        document.getElementById("tb").value = "{{.Form.Tb.Int64}}";
+                                                    });
+                                                    </script>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <label class="col-sm-5 col-form-label col-form-label-sm" for="asplenia">Asplenia</label>
+                                                <div class="col-sm-5">
+                                                    <select class="form-control-sm patient-input form-select" name="asplenia" id="asplenia" aria-label="Asplenia">
+                                                        {{ range $key, $value := index .Optionz "yn_extra" }}  
+                                                            <option value="{{ $key }}">{{ $value }}</option>
+                                                        {{ end }}
+                                                    </select>
+                                                    <script>
+                                                    document.addEventListener("DOMContentLoaded", function() {
+                                                        document.getElementById("asplenia").value = "{{.Form.Asplenia.Int64}}";
+                                                    });
+                                                    </script>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <label class="col-sm-5 col-form-label col-form-label-sm" for="hep">Hepatitis</label>
+                                                <div class="col-sm-5">
+                                                    <select class="form-control-sm patient-input form-select" name="hep" id="hep" aria-label="Hepatitis">
+                                                        {{ range $key, $value := index .Optionz "yn_extra" }}  
+                                                            <option value="{{ $key }}">{{ $value }}</option>
+                                                        {{ end }}
+                                                    </select>
+                                                    <script>
+                                                    document.addEventListener("DOMContentLoaded", function() {
+                                                        document.getElementById("hep").value = "{{.Form.Hep.Int64}}";
+                                                    });
+                                                    </script>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <label class="col-sm-5 col-form-label col-form-label-sm" for="diabetes">Diabetes</label>
+                                                <div class="col-sm-5">
+                                                    <select class="form-control-sm patient-input form-select" name="diabetes" id="diabetes" aria-label="Diabetes">
+                                                        {{ range $key, $value := index .Optionz "yn_extra" }}  
+                                                            <option value="{{ $key }}">{{ $value }}</option>
+                                                        {{ end }}
+                                                    </select>
+                                                    <script>
+                                                    document.addEventListener("DOMContentLoaded", function() {
+                                                        document.getElementById("diabetes").value = "{{.Form.Diabetes.Int64}}";
+                                                    });
+                                                    </script>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <label class="col-sm-5 col-form-label col-form-label-sm" for="hiv">HIV</label>
+                                                <div class="col-sm-5">
+                                                    <select class="form-control-sm patient-input form-select" name="hiv" id="hiv" aria-label="Adm Ward">
+                                                        {{ range $key, $value := index .Optionz "yn_extra" }}  
+                                                            <option value="{{ $key }}">{{ $value }}</option>
+                                                        {{ end }}
+                                                    </select>
+                                                    <script>
+                                                    document.addEventListener("DOMContentLoaded", function() {
+                                                        document.getElementById("hiv").value = "{{.Form.Hiv.Int64}}";
+                                                    });
+                                                    </script>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <label class="col-sm-5 col-form-label col-form-label-sm" for="liver">Chronic Liver disease</label>
+                                                <div class="col-sm-5">
+                                                    <select class="form-control-sm patient-input form-select" name="liver" id="liver" aria-label="Adm Ward">
+                                                        {{ range $key, $value := index .Optionz "yn_extra" }}  
+                                                            <option value="{{ $key }}">{{ $value }}</option>
+                                                        {{ end }}
+                                                    </select>
+                                                    <script>
+                                                    document.addEventListener("DOMContentLoaded", function() {
+                                                        document.getElementById("liver").value = "{{.Form.Liver.Int64}}";
+                                                    });
+                                                    </script>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-6">
+                                            <div class="row">
+                                                <label class="col-sm-5 col-form-label col-form-label-sm" >.</label>
+                                                
+                                            </div>
+                                            <div class="row">
+                                                <label class="col-sm-5 col-form-label col-form-label-sm" for="malignancy">Malignancy/Chemotherapy</label>
+                                                <div class="col-sm-5">
+                                                    <select class="form-control-sm patient-input form-select" name="malignancy" id="malignancy" aria-label="Adm Ward">
+                                                        {{ range $key, $value := index .Optionz "yn_extra" }}  
+                                                            <option value="{{ $key }}">{{ $value }}</option>
+                                                        {{ end }}
+                                                    </select>
+                                                    <script>
+                                                    document.addEventListener("DOMContentLoaded", function() {
+                                                        document.getElementById("malignancy").value = "{{.Form.Malignancy.Int64}}";
+                                                    });
+                                                    </script>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <label class="col-sm-5 col-form-label col-form-label-sm" for="heart">Chronic heart failure</label>
+                                                <div class="col-sm-5">
+                                                    <select class="form-control-sm patient-input form-select" name="heart" id="heart" aria-label="Heart">
+                                                        {{ range $key, $value := index .Optionz "yn_extra" }}  
+                                                            <option value="{{ $key }}">{{ $value }}</option>
+                                                        {{ end }}
+                                                    </select>
+                                                    <script>
+                                                    document.addEventListener("DOMContentLoaded", function() {
+                                                        document.getElementById("heart").value = "{{.Form.Heart.Int64}}";
+                                                    });
+                                                    </script>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <label class="col-sm-5 col-form-label col-form-label-sm" >including congenital disease</label>                            
+                                            </div>
+                                            <div class="row">
+                                                <label class="col-sm-5 col-form-label col-form-label-sm" for="pulmonary">Chronic pulmonary disease</label>
+                                                <div class="col-sm-5">
+                                                    <select class="form-control-sm patient-input form-select" name="pulmonary" id="pulmonary" aria-label="Adm Ward">
+                                                        {{ range $key, $value := index .Optionz "yn_extra" }}  
+                                                            <option value="{{ $key }}">{{ $value }}</option>
+                                                        {{ end }}
+                                                    </select>
+                                                    <script>
+                                                    document.addEventListener("DOMContentLoaded", function() {
+                                                        document.getElementById("pulmonary").value = "{{.Form.Pulmonary.Int64}}";
+                                                    });
+                                                    </script>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <label class="col-sm-5 col-form-label col-form-label-sm" for="kidney">Chronic kidney disease</label>
+                                                <div class="col-sm-5">
+                                                    <select class="form-control-sm patient-input form-select" name="kidney" id="kidney" aria-label="Adm Ward">
+                                                        {{ range $key, $value := index .Optionz "yn_extra" }}  
+                                                            <option value="{{ $key }}">{{ $value }}</option>
+                                                        {{ end }}
+                                                    </select>
+                                                    <script>
+                                                    document.addEventListener("DOMContentLoaded", function() {
+                                                        document.getElementById("kidney").value = "{{.Form.Kidney.Int64}}";
+                                                    });
+                                                    </script>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <label class="col-sm-5 col-form-label col-form-label-sm" for="neurologic">Chronic neurologic condition</label>
+                                                <div class="col-sm-5">
+                                                    <select class="form-control-sm patient-input form-select" name="neurologic" id="neurologic" aria-label="Adm Ward">
+                                                        {{ range $key, $value := index .Optionz "yn_extra" }}  
+                                                            <option value="{{ $key }}">{{ $value }}</option>
+                                                        {{ end }}
+                                                    </select>
+                                                    <script>
+                                                    document.addEventListener("DOMContentLoaded", function() {
+                                                        document.getElementById("neurologic").value = "{{.Form.Neurologic.Int64}}";
+                                                    });
+                                                    </script>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <label class="col-sm-5 col-form-label col-form-label-sm" for="other">Others</label>
+                                                <div class="col-sm-5">
+                                                    <input class="form-control form-control-sm patient-input" value="{{.Form.Other.String}}" id="other" name="other" type="text"/>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <input type="hidden" name="csrf_token" id="csrf_token" value="">
+                                    <input type="hidden" name="id" id="id" value="{{.Form.ID}}">
+                                    <input type="hidden" name="from" id="from" value="">
+
+                                    <button type="submit" id="submitButton" class="btn btn-sm btn-success mt-3">Save</button>
+                                    <button type="button" id="save_cButton" class="btn btn-sm btn-success mt-3">Save & Close</button>
+                                    <button type="button" id="helpButton"   class="btn btn-sm btn-success mt-3">Help</button>
+                                </form>
+
+                                <hr style="width: 100%;"/>         
+                                                    
+                            </div>
+
+
+                        </div>
+                        <div class="tab-pane fade" id="encounter" role="tabpanel" aria-labelledby="encounter-tab">
+                            <div class="container-fluid">
+                                <div class="row">
+                                    <!-- Left Side: Scrollable Table -->
+                                    <div class="col-md-6">
+                                        <div class="card">
+                                            <div class="card-header">Encounter List</div>
+                                            <div class="card-body" style="max-height: 400px; overflow-y: auto;">
+                                                <table class="table table-striped">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>#</th>
+                                                            <th>Attending Clinician</th>
+                                                            <th>Date</th>
+                                                            <th>Time</th>
+                                                            <th>Type</th>
+                                                            <th>Action</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        
+                                                        <!-- Dynamically load encounter rows here -->
+                                                        {{ if .FormChild1 }}
+                                                            {{ range $key, $value := .FormChild1 }}
+                                                            <tr>
+                                                                <td> <button class="btn btn-warning btn-sm" id="fetchButton" data-id="{{ $value.EncounterID }}">Preview</button></td>
+                                                                <td>{{ $value.EmployeeFname }} {{ $value.EmployeeLname }}</td>
+                                                                <td>{{ $value.EncounterDate }}</td>
+                                                                <td>{{ $value.EncounterTime }}</td>
+                                                                <td>{{ $value.EncounterType }}</td>
+                                                                <td><button class="btn btn-primary btn-sm" onclick="window.location.href='/cases/encounters/new/{{ $value.ClientID}}/{{ $value.EncounterID }}'" >Edit</button></td>
+                                                            </tr>
+                                                            {{ end }}
+                                                        {{ end }}
+                                                    </tbody>
+                                                </table>
+                                                
+                                            </div>
+                                        </div>
+                                    </div>
+                            
+                                    <!-- Right Side: Encounter Form -->
+                                    <div class="col-md-6">
+                                        <div class="card">
+                                            <div class="card-header">Encounter Details</div>
+                                            <div class="card-body">
+                                                <div class="paper-look" id="result_encounter">
+                                                   
+                                                        
+                                                </div>                                                
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <div class="tab-pane fade" id="labs" role="tabpanel" aria-labelledby="labs-tab">
+                            <p>Status</p>
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Entered by</th>
+                                        <th>Date</th>
+                                        <th>Status</th>
+                                        <th>Remarks</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="status-table-body">
+                                    
+                                </tbody>
+                                <tfoot>
+                                    <tr>
+                                        <td colspan="6"></td>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+
+                        <div class="tab-pane fade" id="dis" role="tabpanel" aria-labelledby="dis-tab">
+                            <p>
+
+                            </p>
+                        <form action="#" method="post>
+                            <div class="container-fluid">
+                                <div class="row registration-input-row">
+                                    <div class="col-md-12">
+                                        <div class="row">
+                                            <label class="col-sm-5 col-form-label col-form-label-sm" for="discharge_date">
+                                                Date of Discharge/Transfer from Health Facility/Death
+                                            </label>
+                                            <div class="col-sm-5">
+                                                <input class="form-control form-control-sm" value="" id="discharge_date" name="discharge_date" type="date"/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <hr width="100%">
+                                <div class="row registration-input-row">
+                                    <div class="col-md-12">
+                                        <div class="row">
+                                            <label class="col-sm-5 col-form-label col-form-label-sm">Final Diagnosis:</label>
+                                            <div class="col-sm-5">
+                                                <label class="col-form-label col-form-label-sm"><input type="radio" name="final_diagnosis" value="Ebola virus disease"> Ebola virus disease</label>
+                                                <label class="col-form-label col-form-label-sm"><input type="radio" name="final_diagnosis" value="Others"> Others</label>
+                                                <br />
+                                                Specify: <input class="form-control form-control-sm" value="" id="final_diagnosis_other" name="final_diagnosis_other" type="text"/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <hr width="100%">
+                                <div class="row registration-input-row">
+                                    <div class="col-md-12">
+                                        <div class="row">
+                                            <label class="col-form-label col-form-label-sm">Outcome at Discharge:</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row registration-input-row">
+                                    <div class="col-md-12">
+                                        <div class="row">
+                                            <div class="col-sm-6">
+                                                <label class="col-form-label col-form-label-sm">
+                                                    <input type="radio" name="discharge_outcome" value="full_recovery_no_sequelae"> Full recovery WITHOUT sequelae</label> <br />
+                                                
+                                                <label class="col-form-label col-form-label-sm">
+                                                    <input type="radio" name="discharge_outcome" value="dead"> Dead</label> <br />
+                                                <label class="col-form-label col-form-label-sm">
+                                                    <input type="radio" name="discharge_outcome" value="referred"> Referred to another facility, specify                                                      
+                                                </label> <input class="form-control form-control-sm" type="text" id="discharge_facility" name="discharge_facility" value=""><br />
+                                                <label class="col-form-label col-form-label-sm">
+                                                    <input type="radio" name="discharge_outcome" value="left_ama"> Left against medical advice</label> <br />
+                                            </div>
+                                            <div class="col-sm-6">
+                                                <label class="col-form-label col-form-label-sm">
+                                                    <input type="radio" name="discharge_outcome" value="full_recovery_with_sequelae"> Full recovery WITH sequelae</label> <br />
+                                                <label class="col-form-label col-form-label-sm">
+                                                    Select all that apply: <br>
+                                                    <input type="checkbox" name="discharge_seq_heari" id="discharge_seq_heari" value="1"> hearing loss	<br />
+                                                    <input type="checkbox" name="discharge_seq_pregna" id="discharge_seq_pregn" value="1"> if pregnant, spontaneous abortion	<br />
+                                                    <input type="checkbox" name="discharge_seq_ocula" id="discharge_seq_ocula" value="1"> ocular complications <br />
+                                                    <input type="checkbox" name="discharge_seq_extre" id="discharge_seq_extre" value="1"> extreme fatigue <br />
+                                                    <input type="checkbox" name="discharge_seq_arthr" id="discharge_seq_arthr" value="1"> arthralgia	<br />
+                                                    <input type="checkbox" name="discharge_seq_neuro" id="discharge_seq_neuro" value="1"> neurologic complications, specify <input type="text"> <br />
+                                                    <input type="checkbox" name="discharge_seq_others" id="discharge_seq_others" value="1"> other: 
+                                                    <input type="text" name="discharge_seq_others_aza" id="discharge_seq_others_aza" value=""> <br />
+
+                                                </label>
+                                            </div>
+                                        </div>
+                                        
+                                    </div>
+                                </div>
+                                <hr width="100%">
+                                <div class="row registration-input-row">
+                                    <div class="col-md-12">
+                                        <div class="row">
+                                            <label class="col-sm-5 col-form-label col-form-label-sm" for="counselling_provided">Survivor Counselling Provided:</label>
+                                            <div class="col-sm-5">
+                                                <input class="form-control form-control-sm" value="" id="counselling_provided" name="counselling_provided" type="text"/>
+                                                
+                                            </div>
+                                        </div>
+                                        
+                                    </div>
+                                </div>
+                                <hr width="100%">
+                                <div class="row registration-input-row">
+                                    <div class="col-md-12">
+                                        <div class="row">
+                                            <label class="col-sm-5 col-form-label col-form-label-sm" for="discharging_officer">Discharging Officer:</label>
+                                            <div class="col-sm-5">
+                                                <input class="form-control form-control-sm" value="" id="discharging_officer" name="discharging_officer" type="text"/>
+                                            </div>
+                                        </row>                                        
+                                    </div>
+                                </div>
+                                
+
+                            </div>
+                            <hr width="100%">
+                                <button type="submit" id="discharge_Button" class="btn btn-sm btn-success mt-3">Save Discharge Details</button>
+                                <button type="button" id="print_Button" class="btn btn-sm btn-success mt-3">
+                                    Print Discharge Certificate
+                                </button>
+                                <input type="hidden" name="discharge_id" id="discharge_id" value="" />
+                                <script>
+                                    document.getElementById("print_Button").addEventListener("click", function() {
+                                        let dischargeDate = document.getElementById("discharge_date").value; // Get discharge date value
+                                        let dischargeID = document.getElementById("discharge_id").value;
+                                        let who = "{{.Form.ID}}"; // Extracting the ID from template data
+
+                                        if (!dischargeDate && !dischargeID) {
+                                            alert("Please enter and save the discharge form including the discharge date before printing.");
+                                            return;
+                                        }
+
+                                        window.open("/discharge/certificate/?who={{.Form.ID}}", "_blank");
+                                    });
+                                </script>
+                        </form>
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    
+</div>
+
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="/static/js/bootstrap.bundle.min.js"></script>
+    <script src="/static/app/cdn/js/flatpickr.min.js"></script>
+    <script src="/static/app/cdn/js/select2.min.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script>
+
+        $(document).ready(function() {
+            let clientId = $("#id").val(); 
+
+            if (!clientId) {
+                clientId = 0
+            }
+
+            // Function to load status records
+            function loadStatusRecords(clientId) {
+                
+                $.ajax({
+                    url: "/api/status/list",
+                    type: "GET",
+                    data: { client_id: clientId },
+                    dataType: "json",
+                    success: function(response) {
+                        
+                        if (Array.isArray(response)) {
+                            populateStatusTable(response);
+                        } else {
+                            console.error("Unexpected response format", response);
+                            showError("Invalid response from server.");
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        if (xhr.status === 401) {
+                            // Session expired, redirect to login
+                            alert("Session expired. Redirecting to login...");
+                            window.location.href = "/login";
+                        } else {
+                            // General error handling
+                            console.error("Fetch error:", error);
+                            showError("Failed to fetch status records. Please try again.");
+                        }
+                    }
+                });
+            }
+
+            // Load status records on page load
+            loadStatusRecords(clientId);            
+
+            // Handle row click to populate form
+            $(document).on("click", ".edit-btn", function() {
+                let row = $(this).closest("tr");
+
+                $("#status_id").val(row.data("id"));
+                $("#status_date").val(row.find("td:nth-child(3)").text());
+                $("#za_status").val(row.find("td:nth-child(4)").text());                
+                $("#status_notes").val(row.find("td:nth-child(5)").text());
+                
+            });
+
+            // Handle *New button click
+            $(document).on("click", "#new-btn", function() {
+                alert("clearly")
+                $("#status-form")[0].reset();
+                $("#status_id").val("");
+            });
+
+            $(document).on("click", "#save-btn", function() {
+                
+                let statusId = $("#status_id").val();
+                let statusDate = $("#status_date").val();
+                let zaStatus = $("#za_status").val();
+                let statusNotes = $("#status_notes").val();
+                let clientId = $("#id").val(); // Assuming `#id` is outside this form
+
+                // Construct object manually
+                let formData = {
+                    status_id: statusId,
+                    status_date: statusDate,
+                    status: zaStatus,
+                    status_notes: statusNotes,
+                    client_id: clientId
+                };
+
+                //let clientId = $("#id").val();  // Get client ID from hidden input
+                //console.log("Form Data:", formData); // Debugging
+                
+                $.ajax({
+                    url: "/api/status/save",
+                    type: "POST",
+                    //data: formData,
+                    contentType: "application/json",  // Send as JSON
+                    data: JSON.stringify(formData),  // Convert form data to JSON string
+                    success: function(response) {
+                        loadStatusRecords(clientId); // Refresh table with new data
+                        $("#status-form")[0].reset(); // Clear form after saving
+                    },
+                    error: function(xhr, status, error) {
+                        console.error("Error saving data:", error);
+                    }
+                });
+            });
+
+                   
+            // Attach click event to button
+            $('#fetchButton').on('click', function() {
+                let id = $(this).data('id'); // Get ID from button attribute
+                jQuery.ajax({
+                    url: '/api/encounter',  // Replace with your backend route
+                    type: 'GET',
+                    data: { id: id },
+                    success: function(response) {
+                        console.log('Response:', response);
+                        $('#result_encounter').html(response.message);
+                    },
+                    error: function(xhr, status, error) {
+                        console.error('Error:', error);
+                    }
+                });
+            });
+
+            // discharge
+            
+            // Populate the form when the client ID is provided
+            function populateDischargeForm(clientId) {
+                $.ajax({
+                    url: '/discharge/list', // Your backend endpoint to fetch client details
+                    type: 'GET',
+                    data: { client_id: clientId },
+                    success: function(response) {
+                        // Assuming response contains the necessary data to populate the fields
+                        console.log('Response:', response);
+                        $('#discharge_date').val(response.discharge_date ? response.discharge_date.String : "");
+                                                
+                        if (response.final_diagnosis === 1) {
+                            $('#final_diagnosis').prop('checked', true);
+                        } else {
+                            $('#final_diagnosis').prop('checked', false);
+                        }
+                        $('#final_diagnosis_other').val(response.final_diagnosis_other ? response.final_diagnosis_other.String : "");
+                        if (response.discharge_outcome === 1) {
+                            $('#discharge_outcome').prop('checked', true);
+                        } else {
+                            $('#discharge_outcome').prop('checked', false);
+                        }
+                        
+                        // Manually check/uncheck each checkbox based on the response values
+                        if (response.discharge_seq_heari === 1) {
+                            $('#discharge_seq_heari').prop('checked', true);
+                        } else {
+                            $('#discharge_seq_heari').prop('checked', false);
+                        }
+
+                        if (response.discharge_seq_pregn === 1) {
+                            $('#discharge_seq_pregn').prop('checked', true);
+                        } else {
+                            $('#discharge_seq_pregn').prop('checked', false);
+                        }
+
+                        if (response.discharge_seq_ocula === 1) {
+                            $('#discharge_seq_ocula').prop('checked', true);
+                        } else {
+                            $('#discharge_seq_ocula').prop('checked', false);
+                        }
+
+                        if (response.discharge_seq_extre === 1) {
+                            $('#discharge_seq_extre').prop('checked', true);
+                        } else {
+                            $('#discharge_seq_extre').prop('checked', false);
+                        }
+
+                        if (response.discharge_seq_arthr === 1) {
+                            $('#discharge_seq_arthr').prop('checked', true);
+                        } else {
+                            $('#discharge_seq_arthr').prop('checked', false);
+                        }
+
+                        if (response.discharge_seq_neuro === 1) {
+                            $('#discharge_seq_neuro').prop('checked', true);
+                        } else {
+                            $('#discharge_seq_neuro').prop('checked', false);
+                        }
+
+                        if (response.discharge_seq_others === 1) {
+                            $('#discharge_seq_others').prop('checked', true);
+                        } else {
+                            $('#discharge_seq_others').prop('checked', false);
+                        }                        
+
+
+
+                        $('#counselling_provided').val(response.counselling_provided.Valid ? response.counselling_provided.String : "");
+                        $('#discharging_officer').val(response.discharging_officer ? response.discharging_officer.String : "");
+                        $('#discharge_facility').val(response.discharge_facility ? response.discharge_facility.String : "");
+                        $('#discharge_seq_others_aza').val(response.discharge_seq_others_aza ? response.discharge_seq_others_aza.String : "");
+
+                        $('#discharge_id').val(response.discharge_id);
+                    },
+                    error: function() {
+                        alert("Error fetching discharge details.");
+                    }
+                });
+            }
+
+        // Handle form submission via AJAX
+        $('#discharge_Button').click(function(e) {
+            e.preventDefault();  // Prevent default form submission
+
+            var formData = {
+                discharge_date: $('#discharge_date').val(),
+                final_diagnosis: $('input[name="final_diagnosis"]:checked').val(),
+                final_diagnosis_other: $('#final_diagnosis_other').val(),
+                discharge_outcome: $('input[name="discharge_outcome"]:checked').val(),
+                discharge_seq_heari: $('#discharge_seq_heari').is(':checked') ? 1 : 0,
+                discharge_seq_pregn: $('#discharge_seq_pregn').is(':checked') ? 1 : 0,
+                discharge_seq_ocula: $('#discharge_seq_ocula').is(':checked') ? 1 : 0,
+                discharge_seq_extre: $('#discharge_seq_extre').is(':checked') ? 1 : 0,
+                discharge_seq_arthr: $('#discharge_seq_arthr').is(':checked') ? 1 : 0,
+                discharge_seq_neuro: $('#discharge_seq_neuro').is(':checked') ? 1 : 0,
+                discharge_seq_others: $('#discharge_seq_others').is(':checked') ? 1 : 0,
+                counselling_provided: $('#counselling_provided').val(),
+                discharging_officer: $('#discharging_officer').val(),
+                discharge_facility: $('#discharge_facility').val(),
+                discharge_seq_others_aza: $('#discharge_seq_others_aza').val(),
+                discharge_id: $('#discharge_id').val(),
+                client_id: $('#id').val()
+            };
+
+            $.ajax({
+                url: '/discharge/save',  // Your backend endpoint to save form data
+                type: 'POST',
+                //data: formData,
+                contentType: "application/json",  // Send as JSON
+                data: JSON.stringify(formData),  // Convert form data to JSON string
+                success: function(response) {
+                    alert('Discharge details saved successfully!');                    
+                },
+                error: function() {
+                    alert('Error submitting discharge details.');
+                }
+            });
+        });
+
+        // Example: Call this function with the client ID to populate the form
+       
+        populateDischargeForm(clientId);
+
+            //end discharge
+        });
+
+    // Function to populate the table with data
+    function populateStatusTable(data) {
+        let rows = `<tr>
+                        <form id="status-form">
+                            <td><input type="hidden" id="status_id" name="status_id"></td>
+                            <td>
+                                
+                            </td>
+                            <td><input type="date" id="status_date" name="status_date"></td>
+                            <td>
+                                <select id="za_status" name="za_status">
+                                    <option value="">-no status-</option>
+                                    <option value="Admitted">Admitted</option>
+                                    <option value="Cured">Cured</option>
+                                    <option value="Died">Died</option>
+                                    <option value="Run Away">Run Away</option>
+                                </select>
+                            </td>
+                            <td><input type="text" id="status_notes" name="status_notes"></td>
+                            <td>
+                                <button type="button" id="save-btn" class="btn btn-success btn-sm">Save</button>
+                                <button type="button" id="new-btn" class="btn btn-warning btn-sm">*New</button>
+                            </td>
+                        </form>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td colspan="5"></td>
+                    </tr>`;
+
+        if (data.length === 0) {
+            rows += `<tr><td colspan="6" class="text-center">No records found</td></tr>`;
+        } else {
+            data.forEach((item, index) => {
+                let status = item.ZeStatus;
+
+                rows += `
+                    <tr data-id="${status.status_id}">
+                        <td>${index + 1}</td>
+                        <td>${item.FName.Valid ? item.FName.String : ""} ${item.LName.Valid ? item.LName.String : ""}</td>
+                        <td>${status.status_date.Valid ? status.status_date.String : ""}</td>
+                        <td>${status.status.Valid ? status.status.String : ""}</td>
+                        <td>${status.status_notes.Valid ? status.status_notes.String : ""}</td>
+                        <td><button class="edit-btn btn btn-primary btn-sm">Edit</button></td>
+                    </tr>
+                `;
+            });
+        }
+        $("#status-table-body").html(rows);
+    }
+
+
+    // Function to display errors
+    function showError(message) {
+        $("#error-message").text(message).show();
+    }
+
+
+
+    document.addEventListener("DOMContentLoaded", function() {
+
+        const today = new Date();
+        const formattedDate = today.toISOString().split('T')[0];
+
+        flatpickr(".datetimepicker", {
+            enableTime: false, 
+            dateFormat: "Y-m-d",
+            defaultDate: formattedDate,
+            disableMobile: true
+        });
+    });
+
+    document.addEventListener("DOMContentLoaded", function () {
+        const form = document.getElementById("caseForm"); // Replace with your form ID
+        const submitButton = document.getElementById("submitButton"); // Replace with your submit button ID
+        const save_cButton = document.getElementById("save_cButton");
+        const helpButton   = document.getElementById("helpButton");
+        const cancelButton = document.getElementById("cancelButton"); // Replace with your cancel button ID
+        
+        //console.log("Form Data as JSON:", formDataJSON);
+
+        if (submitButton) {
+            submitButton.addEventListener("click", function (event) {
+                event.preventDefault(); // Prevent default form submission
+                
+                if (validateForm()) {
+                    form.submit(); // Submit the form only if validation passes
+                } else {
+                    alert("Please fill out all required fields correctly.");
+                }
+            });
+        }
+
+        if (cancelButton) {
+            cancelButton.addEventListener("click", function () {
+                window.location.href = "/cases"; // Replace with the correct URL
+            });
+        }
+
+        function validateForm() {
+            let isValid = true;
+            
+            return isValid;
+        }
+
+        function getFormDataAsJSON(formElement) {
+            const formData = new FormData(formElement);
+            const jsonObject = {};
+
+            formData.forEach((value, key) => {
+                jsonObject[key] = value;
+            });
+
+            return jsonObject;
+        }
+    
+     });
+
+
+</script>
+
+
+</body>
+</html>
+
+
+{{ end }}

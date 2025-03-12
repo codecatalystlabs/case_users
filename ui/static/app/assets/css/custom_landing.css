@@ -1,0 +1,99 @@
+
+.icon-btn{
+    min-width:8rem !important;
+    max-width:12rem;
+    border-right:1px solid #99BBE8;
+    border-left: 1px solid #F0F5FA;
+    background-repeat: no-repeat;
+    background-position-x: 14px;
+    background-position-y: center;
+    margin-top: 0.5rem;
+}
+
+
+.land-btn{
+    min-width:100% !important;
+    max-width:100% !important;
+    width:100%;
+    border-right:1px solid #99BBE8;
+    border-left: 1px solid #F0F5FA;
+    background-repeat: no-repeat;
+    background-position-x: center;
+    background-position-y: center;
+    margin-top: 0.5rem;
+}
+
+.toolbar-icon-btn{
+    min-width:1.4rem !important;
+    max-width:3rem !important;
+    border-right:1px solid #99BBE8;
+    border-left: 1px solid #F0F5FA;
+    background-repeat: no-repeat;
+    /*background-position-x: 12px;*/
+    background-position-y: center;
+    margin-right: 1px !important;
+    margin-left: 1px !important;
+    margin-top: 0.5rem;
+}
+
+.btn-img{
+    height:32px;
+    width:32px;
+}
+
+.me-24{
+    margin-left: 2rem;
+}
+
+.slim-box-shadow {
+    box-shadow: 0 2px 1px -1px #BFBFBF, 0 1px 1px 0 rgba(0,0,0,.14), 0 1px 3px 0 rgba(0,0,0,.12)
+}
+
+.card-landing{
+    background:linear-gradient(to bottom, #dce8fa 70px, #c6dbf7 6px, #dfe8f6); 
+    border-radius: 2px; 
+    border: 1px solid #F0F5FA"
+}
+
+.card-landing-ct{
+    display:flex;
+    height: 100% !important;
+}
+
+.card-row{
+    height:100% !important;
+    margin-bottom: 4px;
+    display: flex;
+    justify-content: center;
+}
+
+.btn-img-div{
+    height:100%;
+    width:100%;
+    padding-bottom: 3px;
+}
+
+.div-action-btn{
+    padding:0 !important;
+    margin-right:20px;
+    height:3rem !important;
+    max-height:3rem !important;
+    width: 6rem !important;
+    max-width: 6rem !important;
+    background-color: #fff;
+    /*background: linear-gradient(to bottom, #F2F2F2 31px, #DCDCDC 2px, #DEDEDE);*/
+    background:linear-gradient(to bottom, #e3ecfa 23px, #bfd5f2 2px, #dfe8f6);
+    /*border: 1px solid #F0F5FA;*/
+    padding:2px !important;
+    border:1px solid #a8c2e6;
+    border-radius: 2px;
+    /*opacity: 0.8;
+    transition: opacity 0.3s ease-in-out, color 0.3s ease-in-out;*/
+    transition: 0.3s ease-in-out, color 0.3s ease-in-out;
+}
+
+.div-action-btn:hover{
+    opacity: 1; /* Adjust the opacity level as needed */
+    border: 1px solid #a8c1e2;
+    background:linear-gradient(to bottom, #d2e0f5 23px, #a3c2eb 2px, #d0def5)
+}

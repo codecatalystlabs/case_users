@@ -1,0 +1,200 @@
+{{ define "layout" }}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Employee Form</title>
+    <link href="/static/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #ffffff;
+            color: #333;
+            font-family: Arial, sans-serif;
+            padding: 20px;
+        }
+        .form-container {
+            margin: 20px auto;
+            padding: 20px;
+            border: 1px solid #e9ecef;
+            border-radius: 8px;
+            background-color: #f8f9fa;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Employee Form</h1>
+        <div class="form-container">
+            <form method="post" action="/employees/save/" id="form_employee">
+                <div class="row registration-input-row">  
+                    <div class="col-lg-4">
+                        <div class="row">
+                            <label class="col-sm-3 col-form-label col-form-label-sm" for="employee_fname">First Name</label>
+                            <div class="col-sm-7">
+                                <input type="text" class="form-control" id="employee_fname" name="employee_fname" value="{{ .Form.EmployeeFname.String }}" placeholder="Enter firstname">
+                            </div>
+                        </div>    
+                    </div>
+                    <div class="col-lg-4">
+                        <div class="row">
+                            <label class="col-sm-3 col-form-label col-form-label-sm" for="employee_lname">Last Name</label>
+                            <div class="col-sm-7">
+                                <input type="text" class="form-control" id="employee_lname" name="employee_lname" value="{{ .Form.EmployeeLname.String }}" placeholder="Enter lastname">
+                            </div>
+                        </div>    
+                    </div>
+                    <div class="col-lg-4">
+                        <div class="row">
+                            <label class="col-sm-3 col-form-label col-form-label-sm" for="employee_sex">Sex</label>
+                            <div class="col-sm-7">
+                                <select class="form-control-sm patient-input form-select"  name="employee_sex" id="employee_sex" aria-label="Employee Sex" >
+                                    {{ range $key, $value := index .Optionz "sex2" }}  
+                                        <option value="{{ $key }}">{{ $value }}</option>
+                                    {{ end }}
+                                </select>
+                                <script>
+                                document.addEventListener("DOMContentLoaded", function() {
+                                    document.getElementById("employee_sex").value = "{{.Form.EmployeeSex.String}}";
+                                });
+                                </script>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row registration-input-row">  
+                    <div class="col-lg-4">
+                        <div class="row">
+                            <label class="col-sm-3 col-form-label col-form-label-sm" for="employee_phone">Phone</label>
+                            <div class="col-sm-7">
+                                <input type="text" class="form-control" id="employee_phone" name="employee_phone" value="{{ .Form.EmployeePhone.String }}" placeholder="Enter Phone">
+                            </div>                           
+                        </div>
+                    </div>
+                    <div class="col-lg-4">
+                        <div class="row">
+                            <label class="col-sm-3 col-form-label col-form-label-sm" for="employee_email">Email</label>
+                            <div class="col-sm-7">
+                                <input type="email" class="form-control" id="employee_email" name="employee_email" value="{{ .Form.EmployeeEmail.String }}" placeholder="Enter email">
+                            </div>                            
+                        </div>
+                    </div>
+                    <div class="col-lg-4">
+                        <div class="row">
+                            <label class="col-sm-3 col-form-label col-form-label-sm" for="employee_cadre">Cadre</label>
+                            <div class="col-sm-7">
+                                <input type="text" class="form-control" id="employee_cadre" name="employee_cadre" placeholder="Enter Cadre" value="{{ .Form.EmployeeCadre.String }}"  >
+                            </div>                            
+                        </div>
+                    </div>
+                    <div class="col-lg-4">
+                        <div class="row">
+                            <label class="col-sm-3 col-form-label col-form-label-sm" for="facility">Facility</label>
+                            <div class="col-sm-7">
+                                {{ GetOptionField "facility" "facility" "Facility" "" .Form.Facility.Int64 1 }}
+                            </div>
+                            
+                        </div>
+                    </div>
+                    <div class="col-lg-4"> </div>
+                    <div class="col-lg-4"> </div>
+                </div>
+                
+                <input type="hidden" name="id" id="id" value="{{.Form.EmployeeID}}">
+                <input type="hidden" name="from" id="from" value="">
+
+                <button type="submit" id="submitButton" class="btn btn-sm btn-success mt-3">Save</button>
+                <button type="button" id="save_cButton" class="btn btn-sm btn-success mt-3">Save & Close</button>
+                <button type="button" id="cancelButton" class="btn btn-sm btn-success mt-3">Cancel</button>
+                <button type="button" id="helpButton"   class="btn btn-sm btn-success mt-3">Help</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="/static/app/cdn/js/jquery-3.6.0.min.js"></script>
+    <script src="/static/js/bootstrap.bundle.min.js"></script>
+    <script src="/static/app/cdn/js/flatpickr.min.js"></script>
+    <script src="/static/app/cdn/js/select2.min.js"></script>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+
+            const today = new Date();
+            const formattedDate = today.toISOString().split('T')[0];
+
+            flatpickr(".datetimepicker", {
+                enableTime: false, 
+                dateFormat: "Y-m-d",
+                defaultDate: formattedDate,
+                disableMobile: true
+            });
+        });
+
+        document.addEventListener("DOMContentLoaded", function () {
+    const form = document.getElementById("form_employee"); // Replace with your form ID
+    const submitButton = document.getElementById("submitButton"); // Replace with your submit button ID
+    const save_cButton = document.getElementById("save_cButton");
+    const helpButton   = document.getElementById("helpButton");
+    const cancelButton = document.getElementById("cancelButton"); // Replace with your cancel button ID
+
+    
+    
+    //console.log("Form Data as JSON:", formDataJSON);
+
+    if (submitButton) {
+        submitButton.addEventListener("click", function (event) {
+            event.preventDefault(); // Prevent default form submission
+            
+            if (validateForm()) {
+                form.submit(); // Submit the form only if validation passes
+            } else {
+                alert("Please fill out all required fields correctly.");
+            }
+        });
+    }
+
+    if (cancelButton) {
+        cancelButton.addEventListener("click", function () {
+            window.location.href = "/employees"; // Replace with the correct URL
+        });
+    }
+
+    function validateForm() {
+        let isValid = true;
+        const requiredFields = document.querySelectorAll("input[required], select[required], textarea[required]");
+
+        requiredFields.forEach(function (field) {
+            if (!field.value.trim()) {
+                isValid = false;
+                field.classList.add("is-invalid"); // Bootstrap validation styling
+            } else {
+                field.classList.remove("is-invalid");
+            }
+        });
+
+        return isValid;
+    }
+
+    function getFormDataAsJSON(formElement) {
+        const formData = new FormData(formElement);
+        const jsonObject = {};
+
+        formData.forEach((value, key) => {
+            jsonObject[key] = value;
+        });
+
+        return jsonObject;
+    }
+});
+
+    </script>
+</body>
+</html>
+
+{{ end }}

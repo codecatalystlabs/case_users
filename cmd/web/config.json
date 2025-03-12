@@ -1,0 +1,12 @@
+{
+    "Port"           : "0.0.0.0:3000",
+    "ReadTimeout"    : 10,
+    "WriteTimeout"   : 600,
+    "Static"         : "public",
+    "Ux"             : "postgres",
+    "Px"             : "root",
+    "Dx"             : "cases",
+    "LogFile"        : "app.log",
+    "LogData"        : "data.log",
+    "Facility"       : "1"
+  }

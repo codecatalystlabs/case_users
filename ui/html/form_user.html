@@ -1,0 +1,267 @@
+{{ define "layout" }}
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Form</title>
+    <link href="/static/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/static/app/cdn/css/flatpickr.min.css" type="text/css">
+    <style>
+        body {
+            background-color: #ffffff;
+            color: #333;
+            font-family: Arial, sans-serif;
+            padding: 20px;
+        }
+        
+        .table-container {
+            margin-top: 20px;
+        }
+        .table {
+            font-size: 0.85rem; /* Smaller font size */
+        }
+        .table th, .table td {
+            padding: 6px 8px; /* Reduce padding */
+        }
+        .btn-sm {
+            font-size: 0.75rem; /* Smaller buttons */
+            padding: 4px 6px;
+        }        
+        .action-btn {
+            display: inline-block;
+        }
+        .form-container {
+            margin: 20px auto;
+            padding: 20px;
+            border: 1px solid #e9ecef;
+            border-radius: 8px;
+            background-color: #f8f9fa;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .top-ribbon {
+            background-color: #f8f9fa;
+            border-bottom: 1px solid #e9ecef;
+            padding: 10px;
+        }
+        .side-menu {
+            background-color: #f8f9fa;
+            border-right: 1px solid #e9ecef;
+            height: 100vh;
+            padding-top: 20px;
+        }
+        .menu-item {
+            padding: 10px 20px;
+            display: block;
+            color: #333;
+            text-decoration: none;
+        }
+        .menu-item:hover {
+            background-color: #e9ecef;
+        }
+        .content {
+            padding: 20px;
+        }
+        .col-md-3 {
+            max-width: 200px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Top Ribbon -->
+    <div class="top-ribbon d-flex justify-content-between">
+        <div class="ms-3">
+            <a href="/" class="me-3">Home</a>
+            <a href="/about" class="me-3">About</a>
+            <a href="#">Contact</a>
+        </div>
+        <div class="me-3">
+            <a href="/logout" class="me-3">Logout</a>
+            <a href="#">My Account</a>
+        </div>
+    </div>
+
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Left-Hand Side Menu -->
+            <div class="col-md-3 side-menu">
+                              
+                    <a class="btn btn-sm btn-primary" href="/users/">BACK</a>
+                
+            </div>
+
+            <!-- Main Content -->
+            <div class="col-md-9">
+                <div class="container-fluid">
+                    
+                    <h1>User Form</h1>
+                    <form method="post" action="/users/save" id="userForm">
+                        <div class="row registration-input-row">    
+                            <div class="col-lg-6">
+                                <div class="row">
+                                    <label class="col-sm-5 col-form-label col-form-label-sm" for="user_employee" required >Employee</label>
+                                    <div class="col-sm-5">
+                                        {{ GetDBOptions "Employee" "" "" "user_employee" "Employee" .Form.UserEmployee.Int64}}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="row">
+                                    <label class="col-sm-4 col-form-label col-form-label-sm" for="user_name">Username</label>
+                                    <div class="col-sm-6">
+                                        <input class="form-control form-control-sm patient-input" value="{{.Form.UserName.String}}" id="user_name" name="user_name" type="text" required/>
+                                    </div>
+                                </div>
+                            </div>                        
+                        </div>
+                        <div class="row registration-input-row"> 
+                            <div class="col-lg-12">
+                                <div class="row">
+                                    <label class="col-sm-4 col-form-label col-form-label-sm" for=""></label>
+                                    <div class="col-sm-6">
+                                    </div>
+                                </div> 
+
+                            </div>
+                        </div>
+                        
+                        <div class="row registration-input-row">
+                            <br>
+                            <table class="table table-bordered" border="1" cellspacing="0">
+                                <thead>
+                                    <tr>
+                                        <th>Function</th>
+                                        <th>Scope</th>
+                                        <th>View</th>
+                                        <th>Add</th>
+                                        <th>Edit</th>
+                                        <th>Execute</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {{ if .FormChild1 }}
+                                        {{ range $key, $value := .FormChild1 }}
+                                    
+                                        <tr>
+                                            <td>
+                                                {{ $value.MetaName }} 
+                                                <input type="hidden" name="input_fid_id_{{ $value.MetaName }}" value="{{ $value.FID.Int64 }}">
+                                                <input type="hidden" name="input_meta_id_{{ $value.MetaName }}" value="{{ $value.MetaID.Int64 }}">
+                                            </td>
+                                            {{ $inputName := printf "input_scope_%s" $value.MetaName }}
+                                            <td>{{ GetDBOptions "meta" "Function Scope" "" $inputName "Function Scope" $value.FScope.Int64 }}</td>
+                                            <td><input type="checkbox" {{ if eq $value.FView.Int64 1 }}checked{{ end }} name="input_view_{{ $value.MetaName }}" value="1"></td>
+                                            <td><input type="checkbox" {{ if eq $value.FCreate.Int64 1 }}checked{{ end }} name="input_add_{{ $value.MetaName }}" value="1"></td>
+                                            <td><input type="checkbox" {{ if eq $value.FEdit.Int64 1 }}checked{{ end }} name="input_edit_{{ $value.MetaName }}" value="1"></td>
+                                            <td><input type="checkbox" {{ if eq $value.FRemove.Int64 1 }}checked{{ end }} name="input_execute_{{ $value.MetaName }}" value="1"></td>
+                                        </tr>
+
+                                        {{ end }}
+                                    {{ end }}
+                                    
+                                    
+                                </tbody>
+                            </table>
+                        </div>  
+                        
+                        <input type="hidden" name="csrf_token" id="csrf_token" value="">
+                        <input type="hidden" name="id" id="id" value="{{.Form.UserID}}">
+                        <input type="hidden" name="from" id="from" value="">
+
+                        <button type="submit" id="submitButton" class="btn btn-sm btn-success mt-3">Save</button>
+                        <button type="button" id="save_cButton" class="btn btn-sm btn-success mt-3">Save & Close</button>
+                        <button type="button" id="cancelButton" class="btn btn-sm btn-success mt-3">Cancel</button>
+                        <button type="button" id="helpButton"   class="btn btn-sm btn-success mt-3">Help</button>
+                    </form>                    
+                </div>                
+            </div>
+        </div>
+    </div>
+    <script src="/static/app/cdn/js/jquery-3.6.0.min.js"></script>
+    <script src="/static/js/bootstrap.bundle.min.js"></script>
+    <script src="/static/app/cdn/js/flatpickr.min.js"></script>
+    <script src="/static/app/cdn/js/select2.min.js"></script>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+
+            const today = new Date();
+            const formattedDate = today.toISOString().split('T')[0];
+
+            flatpickr(".datetimepicker", {
+                enableTime: false, 
+                dateFormat: "Y-m-d",
+                defaultDate: formattedDate,
+                disableMobile: true
+            });
+        });
+
+        document.addEventListener("DOMContentLoaded", function () {
+    const form = document.getElementById("userForm"); // Replace with your form ID
+    const submitButton = document.getElementById("submitButton"); // Replace with your submit button ID
+    const save_cButton = document.getElementById("save_cButton");
+    const helpButton   = document.getElementById("helpButton");
+    const cancelButton = document.getElementById("cancelButton"); // Replace with your cancel button ID
+
+    
+    
+    //console.log("Form Data as JSON:", formDataJSON);
+
+    if (submitButton) {
+        submitButton.addEventListener("click", function (event) {
+            event.preventDefault(); // Prevent default form submission
+            
+            if (validateForm()) {
+                form.submit(); // Submit the form only if validation passes
+            } else {
+                alert("Please fill out all required fields correctly.");
+            }
+        });
+    }
+
+    if (cancelButton) {
+        cancelButton.addEventListener("click", function () {
+            window.location.href = "/users"; // Replace with the correct URL
+        });
+    }
+
+    function validateForm() {
+        let isValid = true;
+        const requiredFields = document.querySelectorAll("input[required], select[required], textarea[required]");
+
+        requiredFields.forEach(function (field) {
+            if (!field.value.trim()) {
+                isValid = false;
+                field.classList.add("is-invalid"); // Bootstrap validation styling
+            } else {
+                field.classList.remove("is-invalid");
+            }
+        });
+
+        return isValid;
+    }
+
+    function getFormDataAsJSON(formElement) {
+        const formData = new FormData(formElement);
+        const jsonObject = {};
+
+        formData.forEach((value, key) => {
+            jsonObject[key] = value;
+        });
+
+        return jsonObject;
+    }
+});
+
+    </script>
+</body>
+</html>
+
+
+{{ end }}

@@ -1,0 +1,114 @@
+{{ define "layout" }}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Employee Listing</title>
+    <link href="/static/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #ffffff;
+            color: #333;
+            font-family: Arial, sans-serif;
+            padding: 20px;
+        }
+        .table-container {
+            margin-top: 20px;
+        }
+        .action-btn {
+            display: inline-block;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Employee Listing</h1>
+        <div class="d-flex justify-content-between align-items-center my-3">
+            <button class="btn btn-sm btn-primary" onclick="location.href='/employees/new/0'">Add New Employee</button>
+        </div>
+        <div class="table-container">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Name</th>
+                        <th>Contact</th>
+                        <th>Cadre</th>
+                        <th>Facility</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    
+                    <!-- Add more rows as needed -->
+                    {{ if .Form }}
+                    {{ range $key, $value := .Form }}
+                    <tr  class="t-row-detailed">
+                        <td>{{ $key }}</td>
+                        <td>{{ $value.EmployeeFname.String }} {{ $value.EmployeeLname.String }}</td>
+                        <td>
+                            <p class="m-0 p-0">
+                                <small>
+                                  <span class="td-detail-param param-red">E-mail</span>: 
+                                  <span class="td-detail-val">{{ $value.EmployeeEmail.String }}</span>
+                                </small> 
+                            </p>
+                            <p class="m-0 p-0">
+                              <small>
+                                <span class="td-detail-param param-red">Phone #</span>: 
+                                <span class="td-detail-val"> {{ $value.EmployeePhone.String }}</span>
+                              </small> 
+                            </p>
+                            
+                        </td>
+                        <td>{{ $value.EmployeeCadre.String }}</td>
+                        <td>
+                            {{ GetDBLabel "facility" "facility_name" "facility_id" $value.Facility.Int64 }}
+                        </td>
+                        <td>
+                            <button class="btn btn-warning btn-sm" onclick="window.location.href='/employees/new/{{$value.EmployeeID}}'">Edit</button>
+                            <div class="btn-group action-btn">
+                                <button type="button" class="btn btn-secondary btn-sm dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                                    Actions
+                                </button>
+                                <ul class="dropdown-menu">
+                                    <li><a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#actionModal" data-action="delete">Delete</a></li>
+                                    <li><a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#actionModal" data-action="archive">Archive</a></li>
+                                </ul>
+                            </div>
+                        </td>
+                    </tr>
+                    {{ end}}
+                    {{ end}}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Action Modal -->
+    <div class="modal fade" id="actionModal" tabindex="-1" aria-labelledby="actionModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="actionModalLabel">Action Confirmation</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Please provide a reason for this action:</p>
+                    <textarea class="form-control" rows="4" placeholder="Enter your reason..."></textarea>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary">Submit</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
+
+{{ end }}

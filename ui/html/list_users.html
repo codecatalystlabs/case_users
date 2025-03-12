@@ -1,0 +1,172 @@
+{{ define "layout" }}
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Patient Listing</title>
+    <link href="/static/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+        background-color: #ffffff;
+        color: #333;
+        font-family: Arial, sans-serif;
+        padding: 20px;
+        }
+        .table-container {
+            margin-top: 20px;
+        }
+        .table {
+            font-size: 0.85rem; /* Smaller font size */
+        }
+        .table th, .table td {
+            padding: 6px 8px; /* Reduce padding */
+        }
+        .btn-sm {
+            font-size: 0.75rem; /* Smaller buttons */
+            padding: 4px 6px;
+        }        
+        .action-btn {
+            display: inline-block;
+        }
+        .top-ribbon {
+            background-color: #f8f9fa;
+            border-bottom: 1px solid #e9ecef;
+            padding: 10px;
+        }
+        .side-menu {
+            background-color: #f8f9fa;
+            border-right: 1px solid #e9ecef;
+            height: 100vh;
+            padding-top: 20px;
+        }
+        .menu-item {
+            padding: 10px 20px;
+            display: block;
+            color: #333;
+            text-decoration: none;
+        }
+        .menu-item:hover {
+            background-color: #e9ecef;
+        }
+        .content {
+            padding: 20px;
+        }
+        .col-md-3 {
+            max-width: 200px;
+        }
+    </style>
+</head>
+<body>
+     <!-- Top Ribbon -->
+     <div class="top-ribbon d-flex justify-content-between">
+        <div class="ms-3">
+            <a href="/" class="me-3">Home</a>
+            <a href="/about" class="me-3">About</a>
+            <a href="#">Contact</a>
+        </div>
+        <div class="me-3">
+            <a href="/logout" class="me-3">Logout</a>
+            <a href="#">My Account</a>
+        </div>
+    </div>
+    <div class="container">
+        <h1>User Listing</h1>
+        <div class="d-flex justify-content-between align-items-center my-3">
+            <button class="btn btn-sm btn-primary" onclick="location.href='/users/new/0'">Add New User</button>
+        </div>
+        <div class="table-container">
+            <table class="table table-striped">
+                <thead>
+                    <tr>  
+                        <th></th>                        
+                        <th>Username</th>                      
+                        <th>Employee</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{ if .Form }}
+                            {{ range $key, $value := .Form }}
+                                <tr  class="t-row-detailed"
+                                     onclick="highlightTableRow(this)"
+                                     ondblclick='window.location="/users/new/{{ $value.UserID }}"'
+                                     style="cursor: pointer;"
+                                >   <td></td>
+                                
+                                <td>
+                                    <div class="row p-0 td-detail-row col-1-margin">
+                                            {{ $value.UserName }}
+                                    </div>
+                                </td>
+                                    <td>
+                                        <div class="row p-0 td-detail-row col-1-margin">                                            
+                                            {{ $value.Lab }}
+                                        </div>
+                                    </td>                                    
+                                    <td>
+                                        <button class="btn btn-warning btn-sm" onclick="window.location.href='/users/new/{{$value.UserID}}'" >Edit</button>
+                                        <div class="btn-group action-btn">
+                                            <button type="button" class="btn btn-secondary btn-sm dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                                                Actions
+                                            </button>
+                                            <ul class="dropdown-menu">
+                                                <li><a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#actionModal" data-action="delete">Delete</a></li>
+                                                <li><a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#actionModal" data-action="archive">Archive</a></li>
+                                            </ul>
+                                        </div>
+                                    </td>
+                                </tr>
+                            {{ end}}
+                    {{ end}}
+                    
+                    <!-- Add more rows as needed -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Action Modal -->
+    <div class="modal fade" id="actionModal" tabindex="-1" aria-labelledby="actionModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="actionModalLabel">Action Confirmation</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Please provide a reason for this action:</p>
+                    <textarea class="form-control" rows="4" placeholder="Enter your reason..."></textarea>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary">Submit</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+
+    function highlightTableRow(row) {
+      // Remove highlight from previously selected row, if any
+      const previouslySelectedRow = document.querySelector('tr.custom-selected');
+      if (previouslySelectedRow) {
+      previouslySelectedRow.classList.remove('custom-selected');
+      }
+      // Highlight the clicked row
+      row.classList.add('custom-selected');
+    }
+
+
+    
+
+    </script>
+</body>
+</html>
+
+{{ end }}
