@@ -1,13 +1,10 @@
 package handlers
 
 import (
-	"bytes"
 	"case/internal/models"
 	"database/sql"
 	"fmt"
 	"log/slog"
-	"net/http"
-	"net/http/httptest"
 	"os"
 	"path/filepath"
 	"reflect"
@@ -15,7 +12,6 @@ import (
 	"text/template"
 	"time"
 
-	"github.com/gin-gonic/gin"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/session"
 	"github.com/gorilla/schema"
@@ -50,7 +46,6 @@ type TemplateData struct {
 	Items           []interface{}
 	Optionz         map[string]map[string]string
 	Flash           string
-	Menuz           string
 	IsAuthenticated bool
 	CSRFToken       string // Add a CSRFToken field.
 }
@@ -75,7 +70,6 @@ var functions = template.FuncMap{
 	"seq":                  Seq,
 	"GetOptionField":       GetOptionField,
 	"GetDBOptions":         GetDBOptions,
-	"GetDBLabel":           GetDBLabel,
 }
 
 func GetOptionField(table, field, labs, defaultString string, defaultvalue, whole int64) string {
@@ -124,95 +118,16 @@ func GetOptionField(table, field, labs, defaultString string, defaultvalue, whol
 			      </select>`
 	}
 
-	if table == "pos" {
-		if defaultString == "pos" {
-			zaDefa1 = "selected"
-		}
-
-		if defaultString == "neg" {
-			zaDefa2 = "selected"
-		}
-
-		if defaultString == "nd" {
-			zaDefa3 = "selected"
-		}
-
-		optionz = `<option value=""> -- select -- </option>
-					<option value="pos" ` + zaDefa1 + `>Pos</option>
-					<option value="neg" ` + zaDefa2 + `>Neg</option>
-					<option value="nd"  ` + zaDefa3 + `>ND</option>`
-		zaField = `<select class="form-control-sm patient-input form-select" name="` + field + `" id="` + field + `" aria-label="` + labs + `">
-					` + optionz + `
-			      </select>`
-	}
-
-	if table == "po" {
-		if defaultString == "pos" {
-			zaDefa1 = "selected"
-		}
-
-		if defaultString == "neg" {
-			zaDefa2 = "selected"
-		}
-
-		optionz = `<option value=""> -- select -- </option>
-					<option value="pos" ` + zaDefa1 + `>Pos</option>
-					<option value="neg" ` + zaDefa2 + `>Neg</option>`
-		zaField = `<select class="form-control-sm patient-input form-select" name="` + field + `" id="` + field + `" aria-label="` + labs + `">
-					` + optionz + `
-			      </select>`
-	}
-
-	if table == "posx" {
-		if defaultString == "pos" {
-			zaDefa1 = "selected"
-		}
-
-		if defaultString == "neg" {
-			zaDefa2 = "selected"
-		}
-
-		if defaultString == "indeterminate" {
-			zaDefa3 = "selected"
-		}
-
-		optionz = `<option value=""> -- select -- </option>
-					<option value="pos" ` + zaDefa1 + `>Pos</option>
-					<option value="neg" ` + zaDefa2 + `>Neg</option>
-					<option value="indeterminate"  ` + zaDefa3 + `>Indeterminate</option>`
-		zaField = `<select class="form-control-sm patient-input form-select" name="` + field + `" id="` + field + `" aria-label="` + labs + `">
-					` + optionz + `
-			      </select>`
-	}
-
-	if table == "yn" {
-		if defaultvalue == 1 {
-			zaDefa1 = "selected"
-		}
-
-		if defaultvalue == 2 {
-			zaDefa2 = "selected"
-		}
-
-		optionz = `<option value=""> -- select -- </option>
-					<option value="1" ` + zaDefa1 + `>Yes</option>
-					<option value="2" ` + zaDefa2 + `>No</option>`
-
-		zaField = `<select class="form-control-sm patient-input form-select" name="` + field + `" id="` + field + `" aria-label="` + labs + `">
-					` + optionz + `
-			      </select>`
-	}
-
 	if table == "YN" {
-		if defaultvalue == 1 {
+		if defaultString == "Suspect" {
 			zaDefa1 = "selected"
 		}
 
-		if defaultvalue == 2 {
+		if defaultString == "Case" {
 			zaDefa2 = "selected"
 		}
 
-		if defaultvalue == 3 {
+		if defaultString == "Other" {
 			zaDefa3 = "selected"
 		}
 
@@ -220,72 +135,6 @@ func GetOptionField(table, field, labs, defaultString string, defaultvalue, whol
 					<option value="1" ` + zaDefa1 + `>Yes</option>
 					<option value="2" ` + zaDefa2 + `>No</option>
 					<option value="3" ` + zaDefa3 + `>Unknown</option>`
-		zaField = `<select class="form-control-sm patient-input form-select" name="` + field + `" id="` + field + `" aria-label="` + labs + `">
-					` + optionz + `
-			      </select>`
-	}
-
-	if table == "e_rdt" {
-		if defaultString == "Not Done" {
-			zaDefa1 = "selected"
-		}
-
-		if defaultString == "Oraquick" {
-			zaDefa2 = "selected"
-		}
-
-		if defaultString == "Others" {
-			zaDefa3 = "selected"
-		}
-
-		optionz = `<option value=""> -- select -- </option>
-					<option value="Not Done" ` + zaDefa1 + `>Not Done</option>
-					<option value="Oraquick" ` + zaDefa2 + `>Oraquick</option>
-					<option value="Others" ` + zaDefa3 + `>Others</option>`
-		zaField = `<select class="form-control-sm patient-input form-select" name="` + field + `" id="` + field + `" aria-label="` + labs + `">
-					` + optionz + `
-			      </select>`
-	}
-
-	if table == "blood" {
-		if defaultString == "ND" {
-			zaDefa1 = "selected"
-		}
-
-		if defaultString == "Arterial" {
-			zaDefa2 = "selected"
-		}
-
-		if defaultString == "Others" {
-			zaDefa3 = "selected"
-		}
-
-		optionz = `<option value=""> -- select -- </option>
-					<option value="ND" ` + zaDefa1 + `>ND</option>
-					<option value="Arterial" ` + zaDefa2 + `>Arterial</option>
-					<option value="Venous" ` + zaDefa3 + `>Venous</option>`
-		zaField = `<select class="form-control-sm patient-input form-select" name="` + field + `" id="` + field + `" aria-label="` + labs + `">
-					` + optionz + `
-			      </select>`
-	}
-
-	if table == "e_pcr" {
-		if defaultString == "Not Done" {
-			zaDefa1 = "selected"
-		}
-
-		if defaultString == "GeneXpert" {
-			zaDefa2 = "selected"
-		}
-
-		if defaultString == "Others" {
-			zaDefa3 = "selected"
-		}
-
-		optionz = `<option value=""> -- select -- </option>
-					<option value="Not Done" ` + zaDefa1 + `>Not Done</option>
-					<option value="GeneXpert" ` + zaDefa2 + `>GeneXpert</option>
-					<option value="Others" ` + zaDefa3 + `>Others</option>`
 		zaField = `<select class="form-control-sm patient-input form-select" name="` + field + `" id="` + field + `" aria-label="` + labs + `">
 					` + optionz + `
 			      </select>`
@@ -306,31 +155,17 @@ func GetUser(c *fiber.Ctx, sl *slog.Logger, store *session.Store) (int, string) 
 	userID, ok := sess.Get("user").(int)
 	if !ok {
 		fmt.Println("Failed to convert session value to int")
-		return 0, ""
+	} else {
+		fmt.Println("User ID:", userID)
 	}
 
 	username, ok := sess.Get("username").(string)
 	if !ok {
 		fmt.Println("Failed to convert session value to string")
-		return 0, ""
+	} else {
+		fmt.Println("Username:", username)
 	}
-
 	return userID, username
-}
-
-func GetCurrentFacility(c *fiber.Ctx, db *sql.DB, sl *slog.Logger, store *session.Store) int {
-	sqlstr := ` SELECT
-					facility
-				FROM public.users u, public.employee e
-				WHERE u.user_employee = e.employee_id AND u.user_id= $1`
-
-	userID, _ := GetUser(c, sl, store)
-
-	var facility int
-	if err := db.QueryRowContext(c.Context(), sqlstr, userID).Scan(&facility); err != nil {
-		return 0
-	}
-	return facility
 }
 
 func HumanDate(t time.Time) string {
@@ -573,7 +408,6 @@ func Get_Client_Optionz() (opt map[string]map[string]string) {
 	opt = make(map[string]map[string]string)
 	// Add data to the map of maps
 	opt["sex"] = map[string]string{"": " -- ", "1": "Male", "2": "Female"}
-	opt["sex2"] = map[string]string{"": " -- ", "Male": "Male", "Female": "Female"}
 	opt["occup"] = map[string]string{"": " -- ", "1": "Healthcare worker", "2": "Non-Healthcare worker"}
 	opt["yn"] = map[string]string{"": " -- ", "1": "Yes", "2": "No"}
 	opt["yn_extra"] = map[string]string{"": " -- ", "1": "Yes", "2": "No", "3": "Unknown"}
@@ -607,9 +441,6 @@ func GetDBOptions(table, cat, deflt, fld_name, fld_lab string, deflt_int int64) 
 
 	case "function":
 		sql = "SELECT function_id as code, function_name as lab FROM public.function"
-	case "site":
-		sql = "SELECT facility_id as code, facility_name as lab FROM public.facility"
-	case "test":
 	case "meta":
 		sql = "Select meta_id as code, meta_name as lab from meta, meta_category WHERE meta.meta_category=meta_category.meta_category_id AND meta_category_name='" + cat + "'"
 	}
@@ -660,51 +491,6 @@ func GetClientOptionLabel(arrayKey, mapKey string) string {
 	return "" // Return an empty string if the keys are not found
 }
 
-func GetDBLabel(table, namesFld, indexFld string, indexID int64) string {
-	// Use parameterized query to prevent SQL injection
-	query := fmt.Sprintf("SELECT %s FROM %s WHERE %s = $1", namesFld, table, indexFld)
-	var label string
-	label = ""
-	err := dbG.QueryRowContext(CtxG.Context(), query, indexID).Scan(&label)
-	if err != nil {
-		if err == sql.ErrNoRows {
-			fmt.Println("No rows found for ID:", indexID)
-			return ""
-		}
-		fmt.Println("Error executing query:", err)
-		return ""
-	}
-	return label
-}
-
-func GetDBInt(table, namesFld, indexFld, whereString string, indexID int64) int64 {
-	// Use parameterized query to prevent SQL injection
-	query := ""
-	var label int
-	label = 0
-
-	var err error
-
-	if whereString == "" {
-		query = fmt.Sprintf("SELECT %s FROM %s WHERE %s = $1", namesFld, table, indexFld)
-		err = dbG.QueryRowContext(CtxG.Context(), query, indexID).Scan(&label)
-	} else {
-		query = fmt.Sprintf("SELECT %s FROM %s WHERE %s", namesFld, table, whereString)
-		err = dbG.QueryRowContext(CtxG.Context(), query).Scan(&label)
-	}
-
-	if err != nil {
-		if err == sql.ErrNoRows {
-			fmt.Println("No rows found for ID:", indexID)
-			return 0
-		}
-		fmt.Println("Error executing query:", err)
-		return 0
-	}
-	return int64(label)
-
-}
-
 func ParseNullString(value string) sql.NullString {
 	if value == "" {
 		return sql.NullString{Valid: false}
@@ -745,65 +531,4 @@ func ParseNullTime(value string) sql.NullTime {
 		return sql.NullTime{Valid: false}
 	}
 	return sql.NullTime{Time: t, Valid: true}
-}
-
-// Convert interface{} to sql.NullInt64
-func ParseNullInt2(value interface{}) sql.NullInt64 {
-	if value == nil {
-		return sql.NullInt64{Valid: false}
-	}
-
-	switch v := value.(type) {
-	case float64: // JSON numbers are decoded as float64
-		return sql.NullInt64{Int64: int64(v), Valid: true}
-	case string:
-		if num, err := strconv.ParseInt(v, 10, 64); err == nil {
-			return sql.NullInt64{Int64: num, Valid: true}
-		}
-	}
-
-	return sql.NullInt64{Valid: false}
-}
-
-// Convert interface{} to sql.NullString
-func ParseNullString2(value interface{}) sql.NullString {
-	if value == nil {
-		return sql.NullString{Valid: false}
-	}
-
-	if str, ok := value.(string); ok && str != "" {
-		return sql.NullString{String: str, Valid: true}
-	}
-
-	return sql.NullString{Valid: false}
-}
-
-// ConvertFiberToGin converts a Fiber context to a Gin context
-func ConvertFiberToGin(fctx *fiber.Ctx) (*gin.Context, error) {
-	// Create a new HTTP request using Fiber's request data
-	req := fctx.Request()
-
-	// Convert Fiber request to standard *http.Request
-	httpReq, err := http.NewRequest(
-		string(req.Header.Method()),
-		fctx.OriginalURL(),
-		bytes.NewReader(req.Body()),
-	)
-	if err != nil {
-		return nil, err
-	}
-
-	// Copy headers from Fiber to the new request
-	req.Header.VisitAll(func(key, value []byte) {
-		httpReq.Header.Set(string(key), string(value))
-	})
-
-	// Create a new Gin response recorder
-	w := httptest.NewRecorder()
-
-	// Create a new Gin context
-	ginCtx, _ := gin.CreateTestContext(w)
-	ginCtx.Request = httpReq
-
-	return ginCtx, nil
 }

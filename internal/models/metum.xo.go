@@ -14,7 +14,6 @@ type Metum struct {
 	MetaName        sql.NullString `json:"meta_name"`        // meta_name
 	MetaOrder       sql.NullInt64  `json:"meta_order"`       // meta_order
 	MetaDescription sql.NullString `json:"meta_description"` // meta_description
-	MetaLink        sql.NullString `json:"meta_link"`        // meta_link
 	// xo fields
 	_exists, _deleted bool
 }
@@ -40,13 +39,13 @@ func (m *Metum) Insert(ctx context.Context, db DB) error {
 	}
 	// insert (primary key generated and returned by database)
 	const sqlstr = `INSERT INTO public.meta (` +
-		`meta_category, meta_name, meta_order, meta_description, meta_link` +
+		`meta_category, meta_name, meta_order, meta_description` +
 		`) VALUES (` +
-		`$1, $2, $3, $4, $5` +
+		`$1, $2, $3, $4` +
 		`) RETURNING meta_id`
 	// run
-	logf(sqlstr, m.MetaCategory, m.MetaName, m.MetaOrder, m.MetaDescription, m.MetaLink)
-	if err := db.QueryRowContext(ctx, sqlstr, m.MetaCategory, m.MetaName, m.MetaOrder, m.MetaDescription, m.MetaLink).Scan(&m.MetaID); err != nil {
+	logf(sqlstr, m.MetaCategory, m.MetaName, m.MetaOrder, m.MetaDescription)
+	if err := db.QueryRowContext(ctx, sqlstr, m.MetaCategory, m.MetaName, m.MetaOrder, m.MetaDescription).Scan(&m.MetaID); err != nil {
 		return logerror(err)
 	}
 	// set exists
@@ -64,11 +63,11 @@ func (m *Metum) Update(ctx context.Context, db DB) error {
 	}
 	// update with composite primary key
 	const sqlstr = `UPDATE public.meta SET ` +
-		`meta_category = $1, meta_name = $2, meta_order = $3, meta_description = $4, meta_link = $5 ` +
-		`WHERE meta_id = $6`
+		`meta_category = $1, meta_name = $2, meta_order = $3, meta_description = $4 ` +
+		`WHERE meta_id = $5`
 	// run
-	logf(sqlstr, m.MetaCategory, m.MetaName, m.MetaOrder, m.MetaDescription, m.MetaLink, m.MetaID)
-	if _, err := db.ExecContext(ctx, sqlstr, m.MetaCategory, m.MetaName, m.MetaOrder, m.MetaDescription, m.MetaLink, m.MetaID); err != nil {
+	logf(sqlstr, m.MetaCategory, m.MetaName, m.MetaOrder, m.MetaDescription, m.MetaID)
+	if _, err := db.ExecContext(ctx, sqlstr, m.MetaCategory, m.MetaName, m.MetaOrder, m.MetaDescription, m.MetaID); err != nil {
 		return logerror(err)
 	}
 	return nil
@@ -90,16 +89,16 @@ func (m *Metum) Upsert(ctx context.Context, db DB) error {
 	}
 	// upsert
 	const sqlstr = `INSERT INTO public.meta (` +
-		`meta_id, meta_category, meta_name, meta_order, meta_description, meta_link` +
+		`meta_id, meta_category, meta_name, meta_order, meta_description` +
 		`) VALUES (` +
-		`$1, $2, $3, $4, $5, $6` +
+		`$1, $2, $3, $4, $5` +
 		`)` +
 		` ON CONFLICT (meta_id) DO ` +
 		`UPDATE SET ` +
-		`meta_category = EXCLUDED.meta_category, meta_name = EXCLUDED.meta_name, meta_order = EXCLUDED.meta_order, meta_description = EXCLUDED.meta_description, meta_link = EXCLUDED.meta_link `
+		`meta_category = EXCLUDED.meta_category, meta_name = EXCLUDED.meta_name, meta_order = EXCLUDED.meta_order, meta_description = EXCLUDED.meta_description `
 	// run
-	logf(sqlstr, m.MetaID, m.MetaCategory, m.MetaName, m.MetaOrder, m.MetaDescription, m.MetaLink)
-	if _, err := db.ExecContext(ctx, sqlstr, m.MetaID, m.MetaCategory, m.MetaName, m.MetaOrder, m.MetaDescription, m.MetaLink); err != nil {
+	logf(sqlstr, m.MetaID, m.MetaCategory, m.MetaName, m.MetaOrder, m.MetaDescription)
+	if _, err := db.ExecContext(ctx, sqlstr, m.MetaID, m.MetaCategory, m.MetaName, m.MetaOrder, m.MetaDescription); err != nil {
 		return logerror(err)
 	}
 	// set exists
@@ -134,7 +133,7 @@ func (m *Metum) Delete(ctx context.Context, db DB) error {
 func MetumByMetaID(ctx context.Context, db DB, metaID int) (*Metum, error) {
 	// query
 	const sqlstr = `SELECT ` +
-		`meta_id, meta_category, meta_name, meta_order, meta_description, meta_link ` +
+		`meta_id, meta_category, meta_name, meta_order, meta_description ` +
 		`FROM public.meta ` +
 		`WHERE meta_id = $1`
 	// run
@@ -142,7 +141,7 @@ func MetumByMetaID(ctx context.Context, db DB, metaID int) (*Metum, error) {
 	m := Metum{
 		_exists: true,
 	}
-	if err := db.QueryRowContext(ctx, sqlstr, metaID).Scan(&m.MetaID, &m.MetaCategory, &m.MetaName, &m.MetaOrder, &m.MetaDescription, &m.MetaLink); err != nil {
+	if err := db.QueryRowContext(ctx, sqlstr, metaID).Scan(&m.MetaID, &m.MetaCategory, &m.MetaName, &m.MetaOrder, &m.MetaDescription); err != nil {
 		return nil, logerror(err)
 	}
 	return &m, nil

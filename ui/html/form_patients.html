@@ -105,6 +105,7 @@
             <div class="col-md-3 side-menu">
                 {{if .IsIDPos }}
                 <a href="/cases/encounters/new/{{.Form.ID}}/0" class="menu-item">New Encounter</a>
+                <a href="/cases/encounters/list/{{.Form.ID}}" class="menu-item">Encounters</a>
                 <a href="/cases/discharge/{{.Form.ID}}" class="menu-item">Discharge</a>
                 <a href="/cases/patientreport/{{.Form.ID}}" class="menu-item">Report</a>
                 {{end}}
@@ -124,10 +125,10 @@
                             <a class="nav-link" id="encounter-tab" data-toggle="tab" href="#encounter" role="tab" aria-controls="encounter" aria-selected="false">Encounters</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" id="labs-tab" data-toggle="tab" href="#labs" role="tab" aria-controls="labs" aria-selected="false">Status</a>
+                            <a class="nav-link" id="labs-tab" data-toggle="tab" href="#labs" role="tab" aria-controls="labs" aria-selected="false">Labs</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" id="dis-tab" data-toggle="tab" href="#dis" role="tab" aria-controls="dis" aria-selected="false">Discharge</a>
+                            <a class="nav-link" id="treat-tab" data-toggle="tab" href="#treat" role="tab" aria-controls="treat" aria-selected="false">Treatment</a>
                         </li>
                     </ul>
                     <div class="tab-content" id="myTabContent">
@@ -597,12 +598,13 @@
 
                         </div>
                         <div class="tab-pane fade" id="encounter" role="tabpanel" aria-labelledby="encounter-tab">
+                            <p>Encounters </p> 
                             <div class="container-fluid">
                                 <div class="row">
                                     <!-- Left Side: Scrollable Table -->
                                     <div class="col-md-6">
                                         <div class="card">
-                                            <div class="card-header">Encounter List</div>
+                                            <div class="card-header">Encounter List <a href="#" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#dataEntryModal">New</a></div>
                                             <div class="card-body" style="max-height: 400px; overflow-y: auto;">
                                                 <table class="table table-striped">
                                                     <thead>
@@ -612,27 +614,18 @@
                                                             <th>Date</th>
                                                             <th>Time</th>
                                                             <th>Type</th>
-                                                            <th>Action</th>
                                                         </tr>
                                                     </thead>
                                                     <tbody>
-                                                        
                                                         <!-- Dynamically load encounter rows here -->
-                                                        {{ if .FormChild1 }}
-                                                            {{ range $key, $value := .FormChild1 }}
-                                                            <tr>
-                                                                <td> <button class="btn btn-warning btn-sm" id="fetchButton" data-id="{{ $value.EncounterID }}">Preview</button></td>
-                                                                <td>{{ $value.EmployeeFname }} {{ $value.EmployeeLname }}</td>
-                                                                <td>{{ $value.EncounterDate }}</td>
-                                                                <td>{{ $value.EncounterTime }}</td>
-                                                                <td>{{ $value.EncounterType }}</td>
-                                                                <td><button class="btn btn-primary btn-sm" onclick="window.location.href='/cases/encounters/new/{{ $value.ClientID}}/{{ $value.EncounterID }}'" >Edit</button></td>
-                                                            </tr>
-                                                            {{ end }}
-                                                        {{ end }}
+                                                         <tr>
+                                                            <td>1</td><td>Mbaka</td><td>14Mar2024</td><td>Morning</td><td>Baseline</td>
+                                                         </tr>
+                                                         <tr>
+                                                            <td>2</td><td>Iqbal</td><td>15Apr2024</td><td>Evening</td><td>Follow-up</td>
+                                                         </tr>
                                                     </tbody>
                                                 </table>
-                                                
                                             </div>
                                         </div>
                                     </div>
@@ -642,9 +635,88 @@
                                         <div class="card">
                                             <div class="card-header">Encounter Details</div>
                                             <div class="card-body">
-                                                <div class="paper-look" id="result_encounter">
+                                                <div class="paper-look">
                                                    
-                                                        
+                                                        Symptomms<br/>
+                                                        <table class="full-width" border="1">
+                                                            <tr>
+                                                                <td valign="top">
+                                                                    Fever:<br/>
+                                                                    Fatigue:<br/>
+                                                                    Weakness:<br/>
+                                                                    Malaise:<br/>
+                                                                    Myalgia:<br/>
+                                                                    Anorexia:<br/>
+                                                                    Sore throat
+                                                                </td>
+                                                                <td valign="top">
+                                                                    Headache:<br/> 
+                                                                    Nausea:<br/> 
+                                                                    Chest pain:<br/> 
+                                                                    Joint Pain:<br/> 
+                                                                    Hiccups:<br/>
+                                                                    Cough:<br/>
+                                                                </td>
+                                                                <td valign="top">
+                                                                    Chest pain:<br/>
+                                                                    Difficulty breathing:<br/>
+                                                                    Difficulty swallowing:<br/> 
+                                                                    Abdominal pain:<br/> 
+                                                                    Diarrhoea:<br/>
+                                                                    Vomiting:<br/>
+                                                                    Irritability / Confusion:<br/> 
+                                                                </td>
+                                                            </tr>
+                                                        </table>
+
+                                                        <br/>
+                                                        Signs<br/>
+                                                        <table class="full-width" border="1">
+                                                            <tr>
+                                                                <td valign="top">
+                                                                    Pharyngeal erythema:<br/>  
+                                                                    Pharyngeal exudate:<br/>  
+                                                                    Conjunctival injection/bleeding:<br/>  
+                                                                    Oedema of face/neck:<br/> 
+                                                                    Tender abdomen:<br/> 
+                                                                    Sunken eyes or fontanelle:<br/>  
+                                                                    Tenting on skin pinch:<br/>  
+                                                                    Palpable liver:<br/> 
+                                                                    Palpable spleen Rash:<br/> 
+                                                                    Jaundice:<br/> 
+
+                                                                </td>
+                                                                <td valign="top">
+                                                                    Enlarged lymph nodes:<br/>
+                                                                    Lower extremity oedema :<br/> 
+                                                                    Bleeding:<br/> 
+                                                                </td>
+                                                            </tr>
+                                                        </table>
+                                                        <br/>
+                                                        Specimen <br/>
+                                                        <table class="full-width" border="1">
+                                                            <tr>
+                                                                <td valign="top">
+                                                                </td>
+                                                            </tr>
+                                                        </table>
+                                                        <br/>
+                                                        Lab Results <br/>
+                                                        <table class="full-width" border="1">
+                                                            <tr>
+                                                                <td valign="top">
+                                                                </td>
+                                                            </tr>
+                                                        </table>
+                                                        <br/>
+                                                        Medications <br/>
+                                                        <table class="full-width" border="1">
+                                                            <tr>
+                                                                <td valign="top">
+                                                                </td>
+                                                            </tr>
+                                                        </table>
                                                 </div>                                                
                                             </div>
                                         </div>
@@ -655,143 +727,11 @@
                         </div>
 
                         <div class="tab-pane fade" id="labs" role="tabpanel" aria-labelledby="labs-tab">
-                            <p>Status</p>
-                            <table class="table table-striped">
-                                <thead>
-                                    <tr>
-                                        <th>#</th>
-                                        <th>Entered by</th>
-                                        <th>Date</th>
-                                        <th>Status</th>
-                                        <th>Remarks</th>
-                                        <th>Action</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="status-table-body">
-                                    
-                                </tbody>
-                                <tfoot>
-                                    <tr>
-                                        <td colspan="6"></td>
-                                    </tr>
-                                </tfoot>
-                            </table>
+                            <p>Labs</p>
                         </div>
 
-                        <div class="tab-pane fade" id="dis" role="tabpanel" aria-labelledby="dis-tab">
-                            <p>
-
-                            </p>
-                        <form action="#" method="post>
-                            <div class="container-fluid">
-                                <div class="row registration-input-row">
-                                    <div class="col-md-12">
-                                        <div class="row">
-                                            <label class="col-sm-5 col-form-label col-form-label-sm" for="discharge_date">
-                                                Date of Discharge/Transfer from Health Facility/Death
-                                            </label>
-                                            <div class="col-sm-5">
-                                                <input class="form-control form-control-sm" value="" id="discharge_date" name="discharge_date" type="date"/>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <hr width="100%">
-                                <div class="row registration-input-row">
-                                    <div class="col-md-12">
-                                        <div class="row">
-                                            <label class="col-sm-5 col-form-label col-form-label-sm">Final Diagnosis:</label>
-                                            <div class="col-sm-5">
-                                                <label class="col-form-label col-form-label-sm"><input type="radio" name="final_diagnosis" value="Ebola virus disease"> Ebola virus disease</label>
-                                                <label class="col-form-label col-form-label-sm"><input type="radio" name="final_diagnosis" value="Others"> Others</label>
-                                                <br />
-                                                Specify: <input class="form-control form-control-sm" value="" id="final_diagnosis_other" name="final_diagnosis_other" type="text"/>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <hr width="100%">
-                                <div class="row registration-input-row">
-                                    <div class="col-md-12">
-                                        <div class="row">
-                                            <label class="col-form-label col-form-label-sm">Outcome at Discharge:</label>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="row registration-input-row">
-                                    <div class="col-md-12">
-                                        <div class="row">
-                                            <div class="col-sm-6">
-                                                <label class="col-form-label col-form-label-sm">
-                                                    <input type="radio" name="discharge_outcome" value="full_recovery_no_sequelae"> Full recovery WITHOUT sequelae</label> <br />
-                                                
-                                                <label class="col-form-label col-form-label-sm">
-                                                    <input type="radio" name="discharge_outcome" value="dead"> Dead</label> <br />
-                                                <label class="col-form-label col-form-label-sm">
-                                                    <input type="radio" name="discharge_outcome" value="referred"> Referred to another facility, specify                                                      
-                                                </label> <input class="form-control form-control-sm" type="text" id="discharge_facility" name="discharge_facility" value=""><br />
-                                                <label class="col-form-label col-form-label-sm">
-                                                    <input type="radio" name="discharge_outcome" value="left_ama"> Left against medical advice</label> <br />
-                                            </div>
-                                            <div class="col-sm-6">
-                                                <label class="col-form-label col-form-label-sm">
-                                                    <input type="radio" name="discharge_outcome" value="full_recovery_with_sequelae"> Full recovery WITH sequelae</label> <br />
-                                                <label class="col-form-label col-form-label-sm">
-                                                    Select all that apply: <br>
-                                                    <input type="checkbox" name="discharge_seq_heari" id="discharge_seq_heari" value="1"> hearing loss	<br />
-                                                    <input type="checkbox" name="discharge_seq_pregna" id="discharge_seq_pregn" value="1"> if pregnant, spontaneous abortion	<br />
-                                                    <input type="checkbox" name="discharge_seq_ocula" id="discharge_seq_ocula" value="1"> ocular complications <br />
-                                                    <input type="checkbox" name="discharge_seq_extre" id="discharge_seq_extre" value="1"> extreme fatigue <br />
-                                                    <input type="checkbox" name="discharge_seq_arthr" id="discharge_seq_arthr" value="1"> arthralgia	<br />
-                                                    <input type="checkbox" name="discharge_seq_neuro" id="discharge_seq_neuro" value="1"> neurologic complications, specify <input type="text"> <br />
-                                                    <input type="checkbox" name="discharge_seq_others" id="discharge_seq_others" value="1"> other: 
-                                                    <input type="text" name="discharge_seq_others_aza" id="discharge_seq_others_aza" value=""> <br />
-
-                                                </label>
-                                            </div>
-                                        </div>
-                                        
-                                    </div>
-                                </div>
-                                <hr width="100%">
-                                <div class="row registration-input-row">
-                                    <div class="col-md-12">
-                                        <div class="row">
-                                            <label class="col-sm-5 col-form-label col-form-label-sm" for="counselling_provided">Survivor Counselling Provided:</label>
-                                            <div class="col-sm-5">
-                                                <input class="form-control form-control-sm" value="" id="counselling_provided" name="counselling_provided" type="text"/>
-                                                
-                                            </div>
-                                        </div>
-                                        
-                                    </div>
-                                </div>
-                                <hr width="100%">
-                                <div class="row registration-input-row">
-                                    <div class="col-md-12">
-                                        <div class="row">
-                                            <label class="col-sm-5 col-form-label col-form-label-sm" for="discharging_officer">Discharging Officer:</label>
-                                            <div class="col-sm-5">
-                                                <input class="form-control form-control-sm" value="" id="discharging_officer" name="discharging_officer" type="text"/>
-                                            </div>
-                                        </row>                                        
-                                    </div>
-                                </div>
-                                
-
-                            </div>
-                            <hr width="100%">
-                                <button type="submit" id="discharge_Button" class="btn btn-sm btn-success mt-3">Save Discharge Details</button>
-                                <button type="button" id="print_Button" class="btn btn-sm btn-success mt-3">
-                                <input type="hidden" name="discharge_id" id="discharge_id" value="" />"
-                                    Print Discharge Certificate
-                                </button>
-                                <script>
-                                    document.getElementById("print_Button").addEventListener("click", function() {
-                                        window.open("/discharge/certificate/?who={{.Form.ID}}", "_blank");
-                                    });
-                                </script>
-                        </form>
+                        <div class="tab-pane fade" id="treat" role="tabpanel" aria-labelledby="treat-tab">
+                            <p>treatment</p>
                         </div>
 
                     </div>
@@ -800,383 +740,222 @@
             </div>
         </div>
     </div>
-    
+    <!-- Modal -->
+    <div class="modal fade" id="dataEntryModal" tabindex="-1" aria-labelledby="dataEntryModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="dataEntryModalLabel">Encounter Form</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form method="post" action="/cases/save" id="caseEncounterForm">
+                        <div class="row registration-input-row">
+                            <div class="col-lg-3">
+                                <label class="col-sm-3 col-form-label col-form-label-sm" for="etu">Type: <span class="text-danger">*</span></label>
+                                <div class="col-sm-7">
+                                    <input class="form-control form-control-sm patient-input" value="" id="etype" name="etype" type="text" required/>
+                                </div>
+                            </div>
+                            <div class="col-lg-3">
+                                <label class="col-sm-3 col-form-label col-form-label-sm" for="etu">Encounter Date: <span class="text-danger">*</span></label>
+                                <div class="col-sm-7">
+                                    <input class="form-control form-control-sm patient-input" value="" id="edate" name="edate" type="text" required/>
+                                </div>
+                            </div>
+                            <div class="col-lg-3">
+                                <label class="col-sm-3 col-form-label col-form-label-sm" for="etu">Time: <span class="text-danger">*</span></label>
+                                <div class="col-sm-7">
+                                    <input class="form-control form-control-sm patient-input" value="" id="etime" name="etu" type="etime" required/>
+                                </div>
+                            </div>
+                            <div class="col-lg-3">
+                                <label class="col-sm-3 col-form-label col-form-label-sm" for="etu">Clinician: <span class="text-danger">*</span></label>
+                                <div class="col-sm-7">
+                                    <input class="form-control form-control-sm patient-input" value="" id="clinician" name="clinician" type="text" required/>
+                                </div>
+                            </div>
+                            
+                        </div>
+                        <div class="row registration-input-row">    
+                            <div class="col-lg-4">
+                                <div class="row">
+                                    <label class="col-sm-3 col-form-label col-form-label-sm" for="firstname">Heart rate (bpm): <span class="text-danger">*</span></label>
+                                    <div class="col-sm-7">
+                                        <input class="form-control form-control-sm patient-input" value="" id="heart" name="heart" type="text" required/>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <label class="col-sm-3 col-form-label col-form-label-sm" for="lastname">BP (systolic) (mmHg): </label>
+                                    <div class="col-sm-7">
+                                        <input class="form-control form-control-sm patient-input" value="" id="systolic" name="systolic" type="text" required/>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <label class="col-sm-3 col-form-label col-form-label-sm" for="othername">BP (diastolic) (mmHg): </label>
+                                    <div class="col-sm-7">
+                                        <input class="form-control form-control-sm patient-input" value="" id="diastolic" name="diastolic" type="text"/>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <label class="col-sm-3 col-form-label col-form-label-sm" for="gender">Capillary refill > 3 sec? </label>
+                                    <div class="col-sm-7">
+                                        <select class="form-control-sm patient-input form-select"  name="refill" id="refill" aria-label="Capillary refill" required>
+                                            {{ range $key, $value := index .Optionz "yn" }}  
+                                                <option value="{{ $key }}">{{ $value }}</option>
+                                            {{ end }}
+                                        </select>
+                                        <script>
+                                        document.addEventListener("DOMContentLoaded", function() {
+                                            document.getElementById("refill").value = "";
+                                        });
+                                        </script>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-4">
+                                <div class="row">
+                                    <label class="col-sm-3 col-form-label col-form-label-sm" for="respiratory">Respiratory Rate (/min):</label>
+                                    <div class="col-sm-7">
+                                        <input class="form-control form-control-sm patient-input" value="" id="respiratory" name="respiratory" type="text"/>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <label class="col-sm-3 col-form-label col-form-label-sm" for="air">O2 saturation room air (%):</label>
+                                    <div class="col-sm-7">
+                                        <input class="form-control form-control-sm patient-input" value="" id="air" name="air" type="text"/>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <label class="col-sm-3 col-form-label col-form-label-sm" for="marital">Weight (kg): </label>
+                                    <div class="col-sm-7">
+                                        <input class="form-control form-control-sm patient-input" value="" id="weight" name="weight" type="text"/>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <label class="col-sm-3 col-form-label col-form-label-sm" for="height">Self-reported height (cm): </label>
+                                    <div class="col-sm-7">
+                                        <input class="form-control form-control-sm patient-input" value="" id="height" name="height" type="text"/>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-4">
+                                <div class="row">
+                                    <label class="col-sm-3 col-form-label col-form-label-sm" for="nationality">Temperature (°C): </label>
+                                    <div class="col-sm-7">
+                                        <input class="form-control form-control-sm patient-input" value="" id="temp" name="temp" type="text"/>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <label class="col-sm-3 col-form-label col-form-label-sm" for="adm_date">Mental status: </label>
+                                    <div class="col-sm-7">
+                                        <input class="form-control form-control-sm patient-input" value="" id="mental" name="adm_date" type="text"/>
+                                    
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <label class="col-sm-3 col-form-label col-form-label-sm" for="transfer">MUAC) (mm) </label>
+                                    <div class="col-sm-7">
+                                        <input class="form-control form-control-sm patient-input" value="" id="muac" name="muac" type="text"/>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <label class="col-sm-3 col-form-label col-form-label-sm" for="adm_from">.</label>
+                                    <div class="col-sm-7">
+                                        .
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <hr style="width: 100%;"/>  
+                        <input type="hidden" name="clientid" id="clientid" value="">
+                        <input type="hidden" name="eid" id="eid" value="">
+                        <input type="hidden" name="efrom" id="efrom" value="">
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary">Submit</button>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
 
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="/static/app/cdn/js/jquery-3.6.0.min.js"></script>
     <script src="/static/js/bootstrap.bundle.min.js"></script>
     <script src="/static/app/cdn/js/flatpickr.min.js"></script>
     <script src="/static/app/cdn/js/select2.min.js"></script>
 
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
     <script>
+        document.addEventListener("DOMContentLoaded", function() {
 
-        $(document).ready(function() {
-            let clientId = $("#id").val(); 
+            const today = new Date();
+            const formattedDate = today.toISOString().split('T')[0];
 
-            if (!clientId) {
-                clientId = 0
-            }
-
-            // Function to load status records
-            function loadStatusRecords(clientId) {
-                
-                $.ajax({
-                    url: "/api/status/list",
-                    type: "GET",
-                    data: { client_id: clientId },
-                    dataType: "json",
-                    success: function(response) {
-                        
-                        if (Array.isArray(response)) {
-                            populateStatusTable(response);
-                        } else {
-                            console.error("Unexpected response format", response);
-                            showError("Invalid response from server.");
-                        }
-                    },
-                    error: function(xhr, status, error) {
-                        if (xhr.status === 401) {
-                            // Session expired, redirect to login
-                            alert("Session expired. Redirecting to login...");
-                            window.location.href = "/login";
-                        } else {
-                            // General error handling
-                            console.error("Fetch error:", error);
-                            showError("Failed to fetch status records. Please try again.");
-                        }
-                    }
-                });
-            }
-
-            // Load status records on page load
-            loadStatusRecords(clientId);            
-
-            // Handle row click to populate form
-            $(document).on("click", ".edit-btn", function() {
-                let row = $(this).closest("tr");
-
-                $("#status_id").val(row.data("id"));
-                $("#status_date").val(row.find("td:nth-child(3)").text());
-                $("#za_status").val(row.find("td:nth-child(4)").text());                
-                $("#status_notes").val(row.find("td:nth-child(5)").text());
-                
-            });
-
-            // Handle *New button click
-            $(document).on("click", "#new-btn", function() {
-                alert("clearly")
-                $("#status-form")[0].reset();
-                $("#status_id").val("");
-            });
-
-            $(document).on("click", "#save-btn", function() {
-                
-                let statusId = $("#status_id").val();
-                let statusDate = $("#status_date").val();
-                let zaStatus = $("#za_status").val();
-                let statusNotes = $("#status_notes").val();
-                let clientId = $("#id").val(); // Assuming `#id` is outside this form
-
-                // Construct object manually
-                let formData = {
-                    status_id: statusId,
-                    status_date: statusDate,
-                    status: zaStatus,
-                    status_notes: statusNotes,
-                    client_id: clientId
-                };
-
-                //let clientId = $("#id").val();  // Get client ID from hidden input
-                //console.log("Form Data:", formData); // Debugging
-                
-                $.ajax({
-                    url: "/api/status/save",
-                    type: "POST",
-                    //data: formData,
-                    contentType: "application/json",  // Send as JSON
-                    data: JSON.stringify(formData),  // Convert form data to JSON string
-                    success: function(response) {
-                        loadStatusRecords(clientId); // Refresh table with new data
-                        $("#status-form")[0].reset(); // Clear form after saving
-                    },
-                    error: function(xhr, status, error) {
-                        console.error("Error saving data:", error);
-                    }
-                });
-            });
-
-                   
-            // Attach click event to button
-            $('#fetchButton').on('click', function() {
-                let id = $(this).data('id'); // Get ID from button attribute
-                jQuery.ajax({
-                    url: '/api/encounter',  // Replace with your backend route
-                    type: 'GET',
-                    data: { id: id },
-                    success: function(response) {
-                        console.log('Response:', response);
-                        $('#result_encounter').html(response.message);
-                    },
-                    error: function(xhr, status, error) {
-                        console.error('Error:', error);
-                    }
-                });
-            });
-
-            // discharge
-            
-            // Populate the form when the client ID is provided
-            function populateDischargeForm(clientId) {
-                $.ajax({
-                    url: '/discharge/list', // Your backend endpoint to fetch client details
-                    type: 'GET',
-                    data: { client_id: clientId },
-                    success: function(response) {
-                        // Assuming response contains the necessary data to populate the fields
-                        console.log('Response:', response);
-                        $('#discharge_date').val(response.discharge_date ? response.discharge_date.String : "");
-                                                
-                        if (response.final_diagnosis === 1) {
-                            $('#final_diagnosis').prop('checked', true);
-                        } else {
-                            $('#final_diagnosis').prop('checked', false);
-                        }
-                        $('#final_diagnosis_other').val(response.final_diagnosis_other ? response.final_diagnosis_other.String : "");
-                        if (response.discharge_outcome === 1) {
-                            $('#discharge_outcome').prop('checked', true);
-                        } else {
-                            $('#discharge_outcome').prop('checked', false);
-                        }
-                        
-                        // Manually check/uncheck each checkbox based on the response values
-                        if (response.discharge_seq_heari === 1) {
-                            $('#discharge_seq_heari').prop('checked', true);
-                        } else {
-                            $('#discharge_seq_heari').prop('checked', false);
-                        }
-
-                        if (response.discharge_seq_pregn === 1) {
-                            $('#discharge_seq_pregn').prop('checked', true);
-                        } else {
-                            $('#discharge_seq_pregn').prop('checked', false);
-                        }
-
-                        if (response.discharge_seq_ocula === 1) {
-                            $('#discharge_seq_ocula').prop('checked', true);
-                        } else {
-                            $('#discharge_seq_ocula').prop('checked', false);
-                        }
-
-                        if (response.discharge_seq_extre === 1) {
-                            $('#discharge_seq_extre').prop('checked', true);
-                        } else {
-                            $('#discharge_seq_extre').prop('checked', false);
-                        }
-
-                        if (response.discharge_seq_arthr === 1) {
-                            $('#discharge_seq_arthr').prop('checked', true);
-                        } else {
-                            $('#discharge_seq_arthr').prop('checked', false);
-                        }
-
-                        if (response.discharge_seq_neuro === 1) {
-                            $('#discharge_seq_neuro').prop('checked', true);
-                        } else {
-                            $('#discharge_seq_neuro').prop('checked', false);
-                        }
-
-                        if (response.discharge_seq_others === 1) {
-                            $('#discharge_seq_others').prop('checked', true);
-                        } else {
-                            $('#discharge_seq_others').prop('checked', false);
-                        }                        
-
-
-
-                        $('#counselling_provided').val(response.counselling_provided.Valid ? response.counselling_provided.String : "");
-                        $('#discharging_officer').val(response.discharging_officer ? response.discharging_officer.String : "");
-                        $('#discharge_facility').val(response.discharge_facility ? response.discharge_facility.String : "");
-                        $('#discharge_seq_others_aza').val(response.discharge_seq_others_aza ? response.discharge_seq_others_aza.String : "");
-
-                        $('#discharge_id').val(response.discharge_id);
-                    },
-                    error: function() {
-                        alert("Error fetching discharge details.");
-                    }
-                });
-            }
-
-        // Handle form submission via AJAX
-        $('#discharge_Button').click(function(e) {
-            e.preventDefault();  // Prevent default form submission
-
-            var formData = {
-                discharge_date: $('#discharge_date').val(),
-                final_diagnosis: $('input[name="final_diagnosis"]:checked').val(),
-                final_diagnosis_other: $('#final_diagnosis_other').val(),
-                discharge_outcome: $('input[name="discharge_outcome"]:checked').val(),
-                discharge_seq_heari: $('#discharge_seq_heari').is(':checked') ? 1 : 0,
-                discharge_seq_pregn: $('#discharge_seq_pregn').is(':checked') ? 1 : 0,
-                discharge_seq_ocula: $('#discharge_seq_ocula').is(':checked') ? 1 : 0,
-                discharge_seq_extre: $('#discharge_seq_extre').is(':checked') ? 1 : 0,
-                discharge_seq_arthr: $('#discharge_seq_arthr').is(':checked') ? 1 : 0,
-                discharge_seq_neuro: $('#discharge_seq_neuro').is(':checked') ? 1 : 0,
-                discharge_seq_others: $('#discharge_seq_others').is(':checked') ? 1 : 0,
-                counselling_provided: $('#counselling_provided').val(),
-                discharging_officer: $('#discharging_officer').val(),
-                discharge_facility: $('#discharge_facility').val(),
-                discharge_seq_others_aza: $('#discharge_seq_others_aza').val(),
-                discharge_id: $('#discharge_id').val(),
-                client_id: $('#id').val()
-            };
-
-            $.ajax({
-                url: '/discharge/save',  // Your backend endpoint to save form data
-                type: 'POST',
-                //data: formData,
-                contentType: "application/json",  // Send as JSON
-                data: JSON.stringify(formData),  // Convert form data to JSON string
-                success: function(response) {
-                    alert('Discharge details saved successfully!');                    
-                },
-                error: function() {
-                    alert('Error submitting discharge details.');
-                }
+            flatpickr(".datetimepicker", {
+                enableTime: false, 
+                dateFormat: "Y-m-d",
+                defaultDate: formattedDate,
+                disableMobile: true
             });
         });
 
-        // Example: Call this function with the client ID to populate the form
-       
-        populateDischargeForm(clientId);
+        document.addEventListener("DOMContentLoaded", function () {
+    const form = document.getElementById("caseForm"); // Replace with your form ID
+    const submitButton = document.getElementById("submitButton"); // Replace with your submit button ID
+    const save_cButton = document.getElementById("save_cButton");
+    const helpButton   = document.getElementById("helpButton");
+    const cancelButton = document.getElementById("cancelButton"); // Replace with your cancel button ID
 
-            //end discharge
-        });
-
-    // Function to populate the table with data
-    function populateStatusTable(data) {
-        let rows = `<tr>
-                        <form id="status-form">
-                            <td><input type="hidden" id="status_id" name="status_id"></td>
-                            <td>
-                                
-                            </td>
-                            <td><input type="date" id="status_date" name="status_date"></td>
-                            <td>
-                                <select id="za_status" name="za_status">
-                                    <option value="">-no status-</option>
-                                    <option value="Admitted">Admitted</option>
-                                    <option value="Cured">Cured</option>
-                                    <option value="Died">Died</option>
-                                    <option value="Run Away">Run Away</option>
-                                </select>
-                            </td>
-                            <td><input type="text" id="status_notes" name="status_notes"></td>
-                            <td>
-                                <button type="button" id="save-btn" class="btn btn-success btn-sm">Save</button>
-                                <button type="button" id="new-btn" class="btn btn-warning btn-sm">*New</button>
-                            </td>
-                        </form>
-                    </tr>
-                    <tr>
-                        <td></td>
-                        <td colspan="5"></td>
-                    </tr>`;
-
-        if (data.length === 0) {
-            rows += `<tr><td colspan="6" class="text-center">No records found</td></tr>`;
-        } else {
-            data.forEach((item, index) => {
-                let status = item.ZeStatus;
-
-                rows += `
-                    <tr data-id="${status.status_id}">
-                        <td>${index + 1}</td>
-                        <td>${item.FName.Valid ? item.FName.String : ""} ${item.LName.Valid ? item.LName.String : ""}</td>
-                        <td>${status.status_date.Valid ? status.status_date.String : ""}</td>
-                        <td>${status.status.Valid ? status.status.String : ""}</td>
-                        <td>${status.status_notes.Valid ? status.status_notes.String : ""}</td>
-                        <td><button class="edit-btn btn btn-primary btn-sm">Edit</button></td>
-                    </tr>
-                `;
-            });
-        }
-        $("#status-table-body").html(rows);
-    }
-
-
-    // Function to display errors
-    function showError(message) {
-        $("#error-message").text(message).show();
-    }
-
-
-
-    document.addEventListener("DOMContentLoaded", function() {
-
-        const today = new Date();
-        const formattedDate = today.toISOString().split('T')[0];
-
-        flatpickr(".datetimepicker", {
-            enableTime: false, 
-            dateFormat: "Y-m-d",
-            defaultDate: formattedDate,
-            disableMobile: true
-        });
-    });
-
-    document.addEventListener("DOMContentLoaded", function () {
-        const form = document.getElementById("caseForm"); // Replace with your form ID
-        const submitButton = document.getElementById("submitButton"); // Replace with your submit button ID
-        const save_cButton = document.getElementById("save_cButton");
-        const helpButton   = document.getElementById("helpButton");
-        const cancelButton = document.getElementById("cancelButton"); // Replace with your cancel button ID
-        
-        //console.log("Form Data as JSON:", formDataJSON);
-
-        if (submitButton) {
-            submitButton.addEventListener("click", function (event) {
-                event.preventDefault(); // Prevent default form submission
-                
-                if (validateForm()) {
-                    form.submit(); // Submit the form only if validation passes
-                } else {
-                    alert("Please fill out all required fields correctly.");
-                }
-            });
-        }
-
-        if (cancelButton) {
-            cancelButton.addEventListener("click", function () {
-                window.location.href = "/cases"; // Replace with the correct URL
-            });
-        }
-
-        function validateForm() {
-            let isValid = true;
-            
-            return isValid;
-        }
-
-        function getFormDataAsJSON(formElement) {
-            const formData = new FormData(formElement);
-            const jsonObject = {};
-
-            formData.forEach((value, key) => {
-                jsonObject[key] = value;
-            });
-
-            return jsonObject;
-        }
     
-     });
+    
+    //console.log("Form Data as JSON:", formDataJSON);
 
+    if (submitButton) {
+        submitButton.addEventListener("click", function (event) {
+            event.preventDefault(); // Prevent default form submission
+            
+            if (validateForm()) {
+                form.submit(); // Submit the form only if validation passes
+            } else {
+                alert("Please fill out all required fields correctly.");
+            }
+        });
+    }
 
-</script>
+    if (cancelButton) {
+        cancelButton.addEventListener("click", function () {
+            window.location.href = "/cases"; // Replace with the correct URL
+        });
+    }
 
+    function validateForm() {
+        let isValid = true;
+        
+        return isValid;
+    }
 
+    function getFormDataAsJSON(formElement) {
+        const formData = new FormData(formElement);
+        const jsonObject = {};
+
+        formData.forEach((value, key) => {
+            jsonObject[key] = value;
+        });
+
+        return jsonObject;
+    }
+});
+
+    </script>
 </body>
 </html>
 

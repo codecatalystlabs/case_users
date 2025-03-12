@@ -55,7 +55,7 @@ func main() {
 // connect to database
 func getDB(config handlers.Config, sl *slog.Logger) *sql.DB {
 	connStr := "host=localhost user=" + config.Ux + " password='" + config.Px + "' dbname=" + config.Dx + " sslmode=disable"
-
+	println(connStr)
 	db, err := sql.Open("postgres", connStr)
 	if err != nil {
 		fmt.Println("Cannot reach db:", err.Error())

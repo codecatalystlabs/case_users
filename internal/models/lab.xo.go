@@ -9,72 +9,52 @@ import (
 
 // Lab represents a row from 'public.lab'.
 type Lab struct {
-	LabID                 int             `json:"lab_id"`                  // lab_id
-	EncounterID           sql.NullInt64   `json:"encounter_id"`            // encounter_id
-	Specimen              sql.NullInt64   `json:"specimen"`                // specimen
-	SampleBlood           sql.NullInt64   `json:"sample_blood"`            // sample_blood
-	SampleUrine           sql.NullInt64   `json:"sample_urine"`            // sample_urine
-	SampleSwab            sql.NullInt64   `json:"sample_swab"`             // sample_swab
-	SampleAza             sql.NullString  `json:"sample_aza"`              // sample_aza
-	EbolaRdt              sql.NullInt64   `json:"ebola_rdt"`               // ebola_rdt
-	EbolaRdtDate          sql.NullString  `json:"ebola_rdt_date"`          // ebola_rdt_date
-	EbolaRdtResults       sql.NullInt64   `json:"ebola_rdt_results"`       // ebola_rdt_results
-	EbolaPcr              sql.NullInt64   `json:"ebola_pcr"`               // ebola_pcr
-	EbolaPcrAza           sql.NullString  `json:"ebola_pcr_aza"`           // ebola_pcr_aza
-	EbolaPcrDate          sql.NullString  `json:"ebola_pcr_date"`          // ebola_pcr_date
-	EbolaPcrGp            sql.NullInt64   `json:"ebola_pcr_gp"`            // ebola_pcr_gp
-	EbolaPcrGpCt          sql.NullFloat64 `json:"ebola_pcr_gp_ct"`         // ebola_pcr_gp_ct
-	EbolaPcrNp            sql.NullInt64   `json:"ebola_pcr_np"`            // ebola_pcr_np
-	EbolaPcrNpCt          sql.NullFloat64 `json:"ebola_pcr_np_ct"`         // ebola_pcr_np_ct
-	EbolaPcrIndeterminate sql.NullInt64   `json:"ebola_pcr_indeterminate"` // ebola_pcr_indeterminate
-	MalariaRdtDate        sql.NullString  `json:"malaria_rdt_date"`        // malaria_rdt_date
-	MalariaRdtResult      sql.NullInt64   `json:"malaria_rdt_result"`      // malaria_rdt_result
-	BloodCultureDate      sql.NullString  `json:"blood_culture_date"`      // blood_culture_date
-	BloodCultureResult    sql.NullInt64   `json:"blood_culture_result"`    // blood_culture_result
-	TestPosInfection      sql.NullInt64   `json:"test_pos_infection"`      // test_pos_infection
-	TestPosInfectionAza   sql.NullString  `json:"test_pos_infection_aza"`  // test_pos_infection_aza
-	Haemoglobinuria       sql.NullInt64   `json:"haemoglobinuria"`         // haemoglobinuria
-	Proteinuria           sql.NullInt64   `json:"proteinuria"`             // proteinuria
-	Hematuria             sql.NullInt64   `json:"hematuria"`               // hematuria
-	BloodGas              sql.NullInt64   `json:"blood_gas"`               // blood_gas
-	Ph                    sql.NullFloat64 `json:"ph"`                      // ph
-	Pco2                  sql.NullFloat64 `json:"pco2"`                    // pco2
-	Pao2                  sql.NullFloat64 `json:"pao2"`                    // pao2
-	Hco3                  sql.NullFloat64 `json:"hco3"`                    // hco3
-	OxygenTherapy         sql.NullFloat64 `json:"oxygen_therapy"`          // oxygen_therapy
-	AltSgpt               sql.NullFloat64 `json:"alt_sgpt"`                // alt_sgpt
-	AstSgo                sql.NullFloat64 `json:"ast_sgo"`                 // ast_sgo
-	Creatinine            sql.NullFloat64 `json:"creatinine"`              // creatinine
-	Potassium             sql.NullFloat64 `json:"potassium"`               // potassium
-	Urea                  sql.NullFloat64 `json:"urea"`                    // urea
-	CreatinineKinase      sql.NullFloat64 `json:"creatinine_kinase"`       // creatinine_kinase
-	Calcium               sql.NullFloat64 `json:"calcium"`                 // calcium
-	Sodium                sql.NullFloat64 `json:"sodium"`                  // sodium
-	AltSgptNd             sql.NullInt64   `json:"alt_sgpt_nd"`             // alt_sgpt_nd
-	AstSgoNd              sql.NullInt64   `json:"ast_sgo_nd"`              // ast_sgo_nd
-	CreatinineNd          sql.NullInt64   `json:"creatinine_nd"`           // creatinine_nd
-	PotassiumNd           sql.NullInt64   `json:"potassium_nd"`            // potassium_nd
-	UreaNd                sql.NullInt64   `json:"urea_nd"`                 // urea_nd
-	CreatinineKinaseNd    sql.NullInt64   `json:"creatinine_kinase_nd"`    // creatinine_kinase_nd
-	CalciumNd             sql.NullInt64   `json:"calcium_nd"`              // calcium_nd
-	SodiumNd              sql.NullInt64   `json:"sodium_nd"`               // sodium_nd
-	Glucose               sql.NullFloat64 `json:"glucose"`                 // glucose
-	Lactate               sql.NullFloat64 `json:"lactate"`                 // lactate
-	Haemoglobin           sql.NullFloat64 `json:"haemoglobin"`             // haemoglobin
-	TotalBilirubin        sql.NullFloat64 `json:"total_bilirubin"`         // total_bilirubin
-	WbcCount              sql.NullFloat64 `json:"wbc_count"`               // wbc_count
-	Platelets             sql.NullFloat64 `json:"platelets"`               // platelets
-	Pt                    sql.NullFloat64 `json:"pt"`                      // pt
-	Aptt                  sql.NullFloat64 `json:"aptt"`                    // aptt
-	GlucoseNd             sql.NullInt64   `json:"glucose_nd"`              // glucose_nd
-	LactateNd             sql.NullInt64   `json:"lactate_nd"`              // lactate_nd
-	HaemoglobinNd         sql.NullInt64   `json:"haemoglobin_nd"`          // haemoglobin_nd
-	TotalBilirubinNd      sql.NullInt64   `json:"total_bilirubin_nd"`      // total_bilirubin_nd
-	WbcCountNd            sql.NullInt64   `json:"wbc_count_nd"`            // wbc_count_nd
-	PlateletsNd           sql.NullInt64   `json:"platelets_nd"`            // platelets_nd
-	PtNd                  sql.NullInt64   `json:"pt_nd"`                   // pt_nd
-	ApttNd                sql.NullInt64   `json:"aptt_nd"`                 // aptt_nd
-	EbolaRdtAza           sql.NullString  `json:"ebola_rdt_aza"`           // ebola_rdt_aza
+	ID                int             `json:"id"`                  // id
+	EncounterID       sql.NullInt64   `json:"encounter_id"`        // encounter_id
+	LabDate           sql.NullTime    `json:"lab_date"`            // lab_date
+	Test              sql.NullInt64   `json:"test"`                // test
+	Results           sql.NullFloat64 `json:"results"`             // results
+	Done              sql.NullInt64   `json:"done"`                // done
+	Alt               sql.NullFloat64 `json:"alt"`                 // alt
+	Ast               sql.NullFloat64 `json:"ast"`                 // ast
+	Creatinine        sql.NullFloat64 `json:"creatinine"`          // creatinine
+	Potassium         sql.NullFloat64 `json:"potassium"`           // potassium
+	Urea              sql.NullFloat64 `json:"urea"`                // urea
+	CreatinineKinase  sql.NullFloat64 `json:"creatinine_kinase"`   // creatinine_kinase
+	Calcium           sql.NullFloat64 `json:"calcium"`             // calcium
+	Sodium            sql.NullFloat64 `json:"sodium"`              // sodium
+	Crp               sql.NullFloat64 `json:"crp"`                 // crp
+	Glucose           sql.NullFloat64 `json:"glucose"`             // glucose
+	Lactate           sql.NullFloat64 `json:"lactate"`             // lactate
+	Haemoglobin       sql.NullFloat64 `json:"haemoglobin"`         // haemoglobin
+	Total             sql.NullFloat64 `json:"total"`               // total
+	Wbc               sql.NullFloat64 `json:"wbc"`                 // wbc
+	Platelets         sql.NullFloat64 `json:"platelets"`           // platelets
+	Prothrombin       sql.NullFloat64 `json:"prothrombin"`         // prothrombin
+	Activated         sql.NullFloat64 `json:"activated"`           // activated
+	Other             sql.NullFloat64 `json:"other"`               // other
+	OtherSpecifyName  sql.NullFloat64 `json:"other_specify_name"`  // other_specify_name
+	OtherSpecifyValue sql.NullFloat64 `json:"other_specify_value"` // other_specify_value
+	Alt1              sql.NullInt64   `json:"alt_1"`               // alt_1
+	Ast1              sql.NullInt64   `json:"ast_1"`               // ast_1
+	Creatinine1       sql.NullInt64   `json:"creatinine_1"`        // creatinine_1
+	Potassium1        sql.NullInt64   `json:"potassium_1"`         // potassium_1
+	Urea1             sql.NullInt64   `json:"urea_1"`              // urea_1
+	CreatinineKinase1 sql.NullInt64   `json:"creatinine_kinase_1"` // creatinine_kinase_1
+	Calcium1          sql.NullInt64   `json:"calcium_1"`           // calcium_1
+	Sodium1           sql.NullInt64   `json:"sodium_1"`            // sodium_1
+	Crp1              sql.NullInt64   `json:"crp_1"`               // crp_1
+	Glucose1          sql.NullInt64   `json:"glucose_1"`           // glucose_1
+	Lactate1          sql.NullInt64   `json:"lactate_1"`           // lactate_1
+	Haemoglobin1      sql.NullInt64   `json:"haemoglobin_1"`       // haemoglobin_1
+	Total1            sql.NullInt64   `json:"total_1"`             // total_1
+	Wbc1              sql.NullInt64   `json:"wbc_1"`               // wbc_1
+	Platelets1        sql.NullInt64   `json:"platelets_1"`         // platelets_1
+	Prothrombin1      sql.NullInt64   `json:"prothrombin_1"`       // prothrombin_1
+	Activated1        sql.NullInt64   `json:"activated_1"`         // activated_1
+	Other1            sql.NullInt64   `json:"other_1"`             // other_1
+	EnterBy           sql.NullInt64   `json:"enter_by"`            // enter_by
+	EnterOn           sql.NullTime    `json:"enter_on"`            // enter_on
 	// xo fields
 	_exists, _deleted bool
 }
@@ -100,13 +80,13 @@ func (l *Lab) Insert(ctx context.Context, db DB) error {
 	}
 	// insert (primary key generated and returned by database)
 	const sqlstr = `INSERT INTO public.lab (` +
-		`encounter_id, specimen, sample_blood, sample_urine, sample_swab, sample_aza, ebola_rdt, ebola_rdt_date, ebola_rdt_results, ebola_pcr, ebola_pcr_aza, ebola_pcr_date, ebola_pcr_gp, ebola_pcr_gp_ct, ebola_pcr_np, ebola_pcr_np_ct, ebola_pcr_indeterminate, malaria_rdt_date, malaria_rdt_result, blood_culture_date, blood_culture_result, test_pos_infection, test_pos_infection_aza, haemoglobinuria, proteinuria, hematuria, blood_gas, ph, pco2, pao2, hco3, oxygen_therapy, alt_sgpt, ast_sgo, creatinine, potassium, urea, creatinine_kinase, calcium, sodium, alt_sgpt_nd, ast_sgo_nd, creatinine_nd, potassium_nd, urea_nd, creatinine_kinase_nd, calcium_nd, sodium_nd, glucose, lactate, haemoglobin, total_bilirubin, wbc_count, platelets, pt, aptt, glucose_nd, lactate_nd, haemoglobin_nd, total_bilirubin_nd, wbc_count_nd, platelets_nd, pt_nd, aptt_nd, ebola_rdt_aza` +
+		`encounter_id, lab_date, test, results, done, alt, ast, creatinine, potassium, urea, creatinine_kinase, calcium, sodium, crp, glucose, lactate, haemoglobin, total, wbc, platelets, prothrombin, activated, other, other_specify_name, other_specify_value, alt_1, ast_1, creatinine_1, potassium_1, urea_1, creatinine_kinase_1, calcium_1, sodium_1, crp_1, glucose_1, lactate_1, haemoglobin_1, total_1, wbc_1, platelets_1, prothrombin_1, activated_1, other_1, enter_by, enter_on` +
 		`) VALUES (` +
-		`$1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22, $23, $24, $25, $26, $27, $28, $29, $30, $31, $32, $33, $34, $35, $36, $37, $38, $39, $40, $41, $42, $43, $44, $45, $46, $47, $48, $49, $50, $51, $52, $53, $54, $55, $56, $57, $58, $59, $60, $61, $62, $63, $64, $65` +
-		`) RETURNING lab_id`
+		`$1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22, $23, $24, $25, $26, $27, $28, $29, $30, $31, $32, $33, $34, $35, $36, $37, $38, $39, $40, $41, $42, $43, $44, $45` +
+		`) RETURNING id`
 	// run
-	logf(sqlstr, l.EncounterID, l.Specimen, l.SampleBlood, l.SampleUrine, l.SampleSwab, l.SampleAza, l.EbolaRdt, l.EbolaRdtDate, l.EbolaRdtResults, l.EbolaPcr, l.EbolaPcrAza, l.EbolaPcrDate, l.EbolaPcrGp, l.EbolaPcrGpCt, l.EbolaPcrNp, l.EbolaPcrNpCt, l.EbolaPcrIndeterminate, l.MalariaRdtDate, l.MalariaRdtResult, l.BloodCultureDate, l.BloodCultureResult, l.TestPosInfection, l.TestPosInfectionAza, l.Haemoglobinuria, l.Proteinuria, l.Hematuria, l.BloodGas, l.Ph, l.Pco2, l.Pao2, l.Hco3, l.OxygenTherapy, l.AltSgpt, l.AstSgo, l.Creatinine, l.Potassium, l.Urea, l.CreatinineKinase, l.Calcium, l.Sodium, l.AltSgptNd, l.AstSgoNd, l.CreatinineNd, l.PotassiumNd, l.UreaNd, l.CreatinineKinaseNd, l.CalciumNd, l.SodiumNd, l.Glucose, l.Lactate, l.Haemoglobin, l.TotalBilirubin, l.WbcCount, l.Platelets, l.Pt, l.Aptt, l.GlucoseNd, l.LactateNd, l.HaemoglobinNd, l.TotalBilirubinNd, l.WbcCountNd, l.PlateletsNd, l.PtNd, l.ApttNd, l.EbolaRdtAza)
-	if err := db.QueryRowContext(ctx, sqlstr, l.EncounterID, l.Specimen, l.SampleBlood, l.SampleUrine, l.SampleSwab, l.SampleAza, l.EbolaRdt, l.EbolaRdtDate, l.EbolaRdtResults, l.EbolaPcr, l.EbolaPcrAza, l.EbolaPcrDate, l.EbolaPcrGp, l.EbolaPcrGpCt, l.EbolaPcrNp, l.EbolaPcrNpCt, l.EbolaPcrIndeterminate, l.MalariaRdtDate, l.MalariaRdtResult, l.BloodCultureDate, l.BloodCultureResult, l.TestPosInfection, l.TestPosInfectionAza, l.Haemoglobinuria, l.Proteinuria, l.Hematuria, l.BloodGas, l.Ph, l.Pco2, l.Pao2, l.Hco3, l.OxygenTherapy, l.AltSgpt, l.AstSgo, l.Creatinine, l.Potassium, l.Urea, l.CreatinineKinase, l.Calcium, l.Sodium, l.AltSgptNd, l.AstSgoNd, l.CreatinineNd, l.PotassiumNd, l.UreaNd, l.CreatinineKinaseNd, l.CalciumNd, l.SodiumNd, l.Glucose, l.Lactate, l.Haemoglobin, l.TotalBilirubin, l.WbcCount, l.Platelets, l.Pt, l.Aptt, l.GlucoseNd, l.LactateNd, l.HaemoglobinNd, l.TotalBilirubinNd, l.WbcCountNd, l.PlateletsNd, l.PtNd, l.ApttNd, l.EbolaRdtAza).Scan(&l.LabID); err != nil {
+	logf(sqlstr, l.EncounterID, l.LabDate, l.Test, l.Results, l.Done, l.Alt, l.Ast, l.Creatinine, l.Potassium, l.Urea, l.CreatinineKinase, l.Calcium, l.Sodium, l.Crp, l.Glucose, l.Lactate, l.Haemoglobin, l.Total, l.Wbc, l.Platelets, l.Prothrombin, l.Activated, l.Other, l.OtherSpecifyName, l.OtherSpecifyValue, l.Alt1, l.Ast1, l.Creatinine1, l.Potassium1, l.Urea1, l.CreatinineKinase1, l.Calcium1, l.Sodium1, l.Crp1, l.Glucose1, l.Lactate1, l.Haemoglobin1, l.Total1, l.Wbc1, l.Platelets1, l.Prothrombin1, l.Activated1, l.Other1, l.EnterBy, l.EnterOn)
+	if err := db.QueryRowContext(ctx, sqlstr, l.EncounterID, l.LabDate, l.Test, l.Results, l.Done, l.Alt, l.Ast, l.Creatinine, l.Potassium, l.Urea, l.CreatinineKinase, l.Calcium, l.Sodium, l.Crp, l.Glucose, l.Lactate, l.Haemoglobin, l.Total, l.Wbc, l.Platelets, l.Prothrombin, l.Activated, l.Other, l.OtherSpecifyName, l.OtherSpecifyValue, l.Alt1, l.Ast1, l.Creatinine1, l.Potassium1, l.Urea1, l.CreatinineKinase1, l.Calcium1, l.Sodium1, l.Crp1, l.Glucose1, l.Lactate1, l.Haemoglobin1, l.Total1, l.Wbc1, l.Platelets1, l.Prothrombin1, l.Activated1, l.Other1, l.EnterBy, l.EnterOn).Scan(&l.ID); err != nil {
 		return logerror(err)
 	}
 	// set exists
@@ -124,11 +104,11 @@ func (l *Lab) Update(ctx context.Context, db DB) error {
 	}
 	// update with composite primary key
 	const sqlstr = `UPDATE public.lab SET ` +
-		`encounter_id = $1, specimen = $2, sample_blood = $3, sample_urine = $4, sample_swab = $5, sample_aza = $6, ebola_rdt = $7, ebola_rdt_date = $8, ebola_rdt_results = $9, ebola_pcr = $10, ebola_pcr_aza = $11, ebola_pcr_date = $12, ebola_pcr_gp = $13, ebola_pcr_gp_ct = $14, ebola_pcr_np = $15, ebola_pcr_np_ct = $16, ebola_pcr_indeterminate = $17, malaria_rdt_date = $18, malaria_rdt_result = $19, blood_culture_date = $20, blood_culture_result = $21, test_pos_infection = $22, test_pos_infection_aza = $23, haemoglobinuria = $24, proteinuria = $25, hematuria = $26, blood_gas = $27, ph = $28, pco2 = $29, pao2 = $30, hco3 = $31, oxygen_therapy = $32, alt_sgpt = $33, ast_sgo = $34, creatinine = $35, potassium = $36, urea = $37, creatinine_kinase = $38, calcium = $39, sodium = $40, alt_sgpt_nd = $41, ast_sgo_nd = $42, creatinine_nd = $43, potassium_nd = $44, urea_nd = $45, creatinine_kinase_nd = $46, calcium_nd = $47, sodium_nd = $48, glucose = $49, lactate = $50, haemoglobin = $51, total_bilirubin = $52, wbc_count = $53, platelets = $54, pt = $55, aptt = $56, glucose_nd = $57, lactate_nd = $58, haemoglobin_nd = $59, total_bilirubin_nd = $60, wbc_count_nd = $61, platelets_nd = $62, pt_nd = $63, aptt_nd = $64, ebola_rdt_aza = $65 ` +
-		`WHERE lab_id = $66`
+		`encounter_id = $1, lab_date = $2, test = $3, results = $4, done = $5, alt = $6, ast = $7, creatinine = $8, potassium = $9, urea = $10, creatinine_kinase = $11, calcium = $12, sodium = $13, crp = $14, glucose = $15, lactate = $16, haemoglobin = $17, total = $18, wbc = $19, platelets = $20, prothrombin = $21, activated = $22, other = $23, other_specify_name = $24, other_specify_value = $25, alt_1 = $26, ast_1 = $27, creatinine_1 = $28, potassium_1 = $29, urea_1 = $30, creatinine_kinase_1 = $31, calcium_1 = $32, sodium_1 = $33, crp_1 = $34, glucose_1 = $35, lactate_1 = $36, haemoglobin_1 = $37, total_1 = $38, wbc_1 = $39, platelets_1 = $40, prothrombin_1 = $41, activated_1 = $42, other_1 = $43, enter_by = $44, enter_on = $45 ` +
+		`WHERE id = $46`
 	// run
-	logf(sqlstr, l.EncounterID, l.Specimen, l.SampleBlood, l.SampleUrine, l.SampleSwab, l.SampleAza, l.EbolaRdt, l.EbolaRdtDate, l.EbolaRdtResults, l.EbolaPcr, l.EbolaPcrAza, l.EbolaPcrDate, l.EbolaPcrGp, l.EbolaPcrGpCt, l.EbolaPcrNp, l.EbolaPcrNpCt, l.EbolaPcrIndeterminate, l.MalariaRdtDate, l.MalariaRdtResult, l.BloodCultureDate, l.BloodCultureResult, l.TestPosInfection, l.TestPosInfectionAza, l.Haemoglobinuria, l.Proteinuria, l.Hematuria, l.BloodGas, l.Ph, l.Pco2, l.Pao2, l.Hco3, l.OxygenTherapy, l.AltSgpt, l.AstSgo, l.Creatinine, l.Potassium, l.Urea, l.CreatinineKinase, l.Calcium, l.Sodium, l.AltSgptNd, l.AstSgoNd, l.CreatinineNd, l.PotassiumNd, l.UreaNd, l.CreatinineKinaseNd, l.CalciumNd, l.SodiumNd, l.Glucose, l.Lactate, l.Haemoglobin, l.TotalBilirubin, l.WbcCount, l.Platelets, l.Pt, l.Aptt, l.GlucoseNd, l.LactateNd, l.HaemoglobinNd, l.TotalBilirubinNd, l.WbcCountNd, l.PlateletsNd, l.PtNd, l.ApttNd, l.EbolaRdtAza, l.LabID)
-	if _, err := db.ExecContext(ctx, sqlstr, l.EncounterID, l.Specimen, l.SampleBlood, l.SampleUrine, l.SampleSwab, l.SampleAza, l.EbolaRdt, l.EbolaRdtDate, l.EbolaRdtResults, l.EbolaPcr, l.EbolaPcrAza, l.EbolaPcrDate, l.EbolaPcrGp, l.EbolaPcrGpCt, l.EbolaPcrNp, l.EbolaPcrNpCt, l.EbolaPcrIndeterminate, l.MalariaRdtDate, l.MalariaRdtResult, l.BloodCultureDate, l.BloodCultureResult, l.TestPosInfection, l.TestPosInfectionAza, l.Haemoglobinuria, l.Proteinuria, l.Hematuria, l.BloodGas, l.Ph, l.Pco2, l.Pao2, l.Hco3, l.OxygenTherapy, l.AltSgpt, l.AstSgo, l.Creatinine, l.Potassium, l.Urea, l.CreatinineKinase, l.Calcium, l.Sodium, l.AltSgptNd, l.AstSgoNd, l.CreatinineNd, l.PotassiumNd, l.UreaNd, l.CreatinineKinaseNd, l.CalciumNd, l.SodiumNd, l.Glucose, l.Lactate, l.Haemoglobin, l.TotalBilirubin, l.WbcCount, l.Platelets, l.Pt, l.Aptt, l.GlucoseNd, l.LactateNd, l.HaemoglobinNd, l.TotalBilirubinNd, l.WbcCountNd, l.PlateletsNd, l.PtNd, l.ApttNd, l.EbolaRdtAza, l.LabID); err != nil {
+	logf(sqlstr, l.EncounterID, l.LabDate, l.Test, l.Results, l.Done, l.Alt, l.Ast, l.Creatinine, l.Potassium, l.Urea, l.CreatinineKinase, l.Calcium, l.Sodium, l.Crp, l.Glucose, l.Lactate, l.Haemoglobin, l.Total, l.Wbc, l.Platelets, l.Prothrombin, l.Activated, l.Other, l.OtherSpecifyName, l.OtherSpecifyValue, l.Alt1, l.Ast1, l.Creatinine1, l.Potassium1, l.Urea1, l.CreatinineKinase1, l.Calcium1, l.Sodium1, l.Crp1, l.Glucose1, l.Lactate1, l.Haemoglobin1, l.Total1, l.Wbc1, l.Platelets1, l.Prothrombin1, l.Activated1, l.Other1, l.EnterBy, l.EnterOn, l.ID)
+	if _, err := db.ExecContext(ctx, sqlstr, l.EncounterID, l.LabDate, l.Test, l.Results, l.Done, l.Alt, l.Ast, l.Creatinine, l.Potassium, l.Urea, l.CreatinineKinase, l.Calcium, l.Sodium, l.Crp, l.Glucose, l.Lactate, l.Haemoglobin, l.Total, l.Wbc, l.Platelets, l.Prothrombin, l.Activated, l.Other, l.OtherSpecifyName, l.OtherSpecifyValue, l.Alt1, l.Ast1, l.Creatinine1, l.Potassium1, l.Urea1, l.CreatinineKinase1, l.Calcium1, l.Sodium1, l.Crp1, l.Glucose1, l.Lactate1, l.Haemoglobin1, l.Total1, l.Wbc1, l.Platelets1, l.Prothrombin1, l.Activated1, l.Other1, l.EnterBy, l.EnterOn, l.ID); err != nil {
 		return logerror(err)
 	}
 	return nil
@@ -150,16 +130,16 @@ func (l *Lab) Upsert(ctx context.Context, db DB) error {
 	}
 	// upsert
 	const sqlstr = `INSERT INTO public.lab (` +
-		`lab_id, encounter_id, specimen, sample_blood, sample_urine, sample_swab, sample_aza, ebola_rdt, ebola_rdt_date, ebola_rdt_results, ebola_pcr, ebola_pcr_aza, ebola_pcr_date, ebola_pcr_gp, ebola_pcr_gp_ct, ebola_pcr_np, ebola_pcr_np_ct, ebola_pcr_indeterminate, malaria_rdt_date, malaria_rdt_result, blood_culture_date, blood_culture_result, test_pos_infection, test_pos_infection_aza, haemoglobinuria, proteinuria, hematuria, blood_gas, ph, pco2, pao2, hco3, oxygen_therapy, alt_sgpt, ast_sgo, creatinine, potassium, urea, creatinine_kinase, calcium, sodium, alt_sgpt_nd, ast_sgo_nd, creatinine_nd, potassium_nd, urea_nd, creatinine_kinase_nd, calcium_nd, sodium_nd, glucose, lactate, haemoglobin, total_bilirubin, wbc_count, platelets, pt, aptt, glucose_nd, lactate_nd, haemoglobin_nd, total_bilirubin_nd, wbc_count_nd, platelets_nd, pt_nd, aptt_nd, ebola_rdt_aza` +
+		`id, encounter_id, lab_date, test, results, done, alt, ast, creatinine, potassium, urea, creatinine_kinase, calcium, sodium, crp, glucose, lactate, haemoglobin, total, wbc, platelets, prothrombin, activated, other, other_specify_name, other_specify_value, alt_1, ast_1, creatinine_1, potassium_1, urea_1, creatinine_kinase_1, calcium_1, sodium_1, crp_1, glucose_1, lactate_1, haemoglobin_1, total_1, wbc_1, platelets_1, prothrombin_1, activated_1, other_1, enter_by, enter_on` +
 		`) VALUES (` +
-		`$1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22, $23, $24, $25, $26, $27, $28, $29, $30, $31, $32, $33, $34, $35, $36, $37, $38, $39, $40, $41, $42, $43, $44, $45, $46, $47, $48, $49, $50, $51, $52, $53, $54, $55, $56, $57, $58, $59, $60, $61, $62, $63, $64, $65, $66` +
+		`$1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22, $23, $24, $25, $26, $27, $28, $29, $30, $31, $32, $33, $34, $35, $36, $37, $38, $39, $40, $41, $42, $43, $44, $45, $46` +
 		`)` +
-		` ON CONFLICT (lab_id) DO ` +
+		` ON CONFLICT (id) DO ` +
 		`UPDATE SET ` +
-		`encounter_id = EXCLUDED.encounter_id, specimen = EXCLUDED.specimen, sample_blood = EXCLUDED.sample_blood, sample_urine = EXCLUDED.sample_urine, sample_swab = EXCLUDED.sample_swab, sample_aza = EXCLUDED.sample_aza, ebola_rdt = EXCLUDED.ebola_rdt, ebola_rdt_date = EXCLUDED.ebola_rdt_date, ebola_rdt_results = EXCLUDED.ebola_rdt_results, ebola_pcr = EXCLUDED.ebola_pcr, ebola_pcr_aza = EXCLUDED.ebola_pcr_aza, ebola_pcr_date = EXCLUDED.ebola_pcr_date, ebola_pcr_gp = EXCLUDED.ebola_pcr_gp, ebola_pcr_gp_ct = EXCLUDED.ebola_pcr_gp_ct, ebola_pcr_np = EXCLUDED.ebola_pcr_np, ebola_pcr_np_ct = EXCLUDED.ebola_pcr_np_ct, ebola_pcr_indeterminate = EXCLUDED.ebola_pcr_indeterminate, malaria_rdt_date = EXCLUDED.malaria_rdt_date, malaria_rdt_result = EXCLUDED.malaria_rdt_result, blood_culture_date = EXCLUDED.blood_culture_date, blood_culture_result = EXCLUDED.blood_culture_result, test_pos_infection = EXCLUDED.test_pos_infection, test_pos_infection_aza = EXCLUDED.test_pos_infection_aza, haemoglobinuria = EXCLUDED.haemoglobinuria, proteinuria = EXCLUDED.proteinuria, hematuria = EXCLUDED.hematuria, blood_gas = EXCLUDED.blood_gas, ph = EXCLUDED.ph, pco2 = EXCLUDED.pco2, pao2 = EXCLUDED.pao2, hco3 = EXCLUDED.hco3, oxygen_therapy = EXCLUDED.oxygen_therapy, alt_sgpt = EXCLUDED.alt_sgpt, ast_sgo = EXCLUDED.ast_sgo, creatinine = EXCLUDED.creatinine, potassium = EXCLUDED.potassium, urea = EXCLUDED.urea, creatinine_kinase = EXCLUDED.creatinine_kinase, calcium = EXCLUDED.calcium, sodium = EXCLUDED.sodium, alt_sgpt_nd = EXCLUDED.alt_sgpt_nd, ast_sgo_nd = EXCLUDED.ast_sgo_nd, creatinine_nd = EXCLUDED.creatinine_nd, potassium_nd = EXCLUDED.potassium_nd, urea_nd = EXCLUDED.urea_nd, creatinine_kinase_nd = EXCLUDED.creatinine_kinase_nd, calcium_nd = EXCLUDED.calcium_nd, sodium_nd = EXCLUDED.sodium_nd, glucose = EXCLUDED.glucose, lactate = EXCLUDED.lactate, haemoglobin = EXCLUDED.haemoglobin, total_bilirubin = EXCLUDED.total_bilirubin, wbc_count = EXCLUDED.wbc_count, platelets = EXCLUDED.platelets, pt = EXCLUDED.pt, aptt = EXCLUDED.aptt, glucose_nd = EXCLUDED.glucose_nd, lactate_nd = EXCLUDED.lactate_nd, haemoglobin_nd = EXCLUDED.haemoglobin_nd, total_bilirubin_nd = EXCLUDED.total_bilirubin_nd, wbc_count_nd = EXCLUDED.wbc_count_nd, platelets_nd = EXCLUDED.platelets_nd, pt_nd = EXCLUDED.pt_nd, aptt_nd = EXCLUDED.aptt_nd, ebola_rdt_aza = EXCLUDED.ebola_rdt_aza `
+		`encounter_id = EXCLUDED.encounter_id, lab_date = EXCLUDED.lab_date, test = EXCLUDED.test, results = EXCLUDED.results, done = EXCLUDED.done, alt = EXCLUDED.alt, ast = EXCLUDED.ast, creatinine = EXCLUDED.creatinine, potassium = EXCLUDED.potassium, urea = EXCLUDED.urea, creatinine_kinase = EXCLUDED.creatinine_kinase, calcium = EXCLUDED.calcium, sodium = EXCLUDED.sodium, crp = EXCLUDED.crp, glucose = EXCLUDED.glucose, lactate = EXCLUDED.lactate, haemoglobin = EXCLUDED.haemoglobin, total = EXCLUDED.total, wbc = EXCLUDED.wbc, platelets = EXCLUDED.platelets, prothrombin = EXCLUDED.prothrombin, activated = EXCLUDED.activated, other = EXCLUDED.other, other_specify_name = EXCLUDED.other_specify_name, other_specify_value = EXCLUDED.other_specify_value, alt_1 = EXCLUDED.alt_1, ast_1 = EXCLUDED.ast_1, creatinine_1 = EXCLUDED.creatinine_1, potassium_1 = EXCLUDED.potassium_1, urea_1 = EXCLUDED.urea_1, creatinine_kinase_1 = EXCLUDED.creatinine_kinase_1, calcium_1 = EXCLUDED.calcium_1, sodium_1 = EXCLUDED.sodium_1, crp_1 = EXCLUDED.crp_1, glucose_1 = EXCLUDED.glucose_1, lactate_1 = EXCLUDED.lactate_1, haemoglobin_1 = EXCLUDED.haemoglobin_1, total_1 = EXCLUDED.total_1, wbc_1 = EXCLUDED.wbc_1, platelets_1 = EXCLUDED.platelets_1, prothrombin_1 = EXCLUDED.prothrombin_1, activated_1 = EXCLUDED.activated_1, other_1 = EXCLUDED.other_1, enter_by = EXCLUDED.enter_by, enter_on = EXCLUDED.enter_on `
 	// run
-	logf(sqlstr, l.LabID, l.EncounterID, l.Specimen, l.SampleBlood, l.SampleUrine, l.SampleSwab, l.SampleAza, l.EbolaRdt, l.EbolaRdtDate, l.EbolaRdtResults, l.EbolaPcr, l.EbolaPcrAza, l.EbolaPcrDate, l.EbolaPcrGp, l.EbolaPcrGpCt, l.EbolaPcrNp, l.EbolaPcrNpCt, l.EbolaPcrIndeterminate, l.MalariaRdtDate, l.MalariaRdtResult, l.BloodCultureDate, l.BloodCultureResult, l.TestPosInfection, l.TestPosInfectionAza, l.Haemoglobinuria, l.Proteinuria, l.Hematuria, l.BloodGas, l.Ph, l.Pco2, l.Pao2, l.Hco3, l.OxygenTherapy, l.AltSgpt, l.AstSgo, l.Creatinine, l.Potassium, l.Urea, l.CreatinineKinase, l.Calcium, l.Sodium, l.AltSgptNd, l.AstSgoNd, l.CreatinineNd, l.PotassiumNd, l.UreaNd, l.CreatinineKinaseNd, l.CalciumNd, l.SodiumNd, l.Glucose, l.Lactate, l.Haemoglobin, l.TotalBilirubin, l.WbcCount, l.Platelets, l.Pt, l.Aptt, l.GlucoseNd, l.LactateNd, l.HaemoglobinNd, l.TotalBilirubinNd, l.WbcCountNd, l.PlateletsNd, l.PtNd, l.ApttNd, l.EbolaRdtAza)
-	if _, err := db.ExecContext(ctx, sqlstr, l.LabID, l.EncounterID, l.Specimen, l.SampleBlood, l.SampleUrine, l.SampleSwab, l.SampleAza, l.EbolaRdt, l.EbolaRdtDate, l.EbolaRdtResults, l.EbolaPcr, l.EbolaPcrAza, l.EbolaPcrDate, l.EbolaPcrGp, l.EbolaPcrGpCt, l.EbolaPcrNp, l.EbolaPcrNpCt, l.EbolaPcrIndeterminate, l.MalariaRdtDate, l.MalariaRdtResult, l.BloodCultureDate, l.BloodCultureResult, l.TestPosInfection, l.TestPosInfectionAza, l.Haemoglobinuria, l.Proteinuria, l.Hematuria, l.BloodGas, l.Ph, l.Pco2, l.Pao2, l.Hco3, l.OxygenTherapy, l.AltSgpt, l.AstSgo, l.Creatinine, l.Potassium, l.Urea, l.CreatinineKinase, l.Calcium, l.Sodium, l.AltSgptNd, l.AstSgoNd, l.CreatinineNd, l.PotassiumNd, l.UreaNd, l.CreatinineKinaseNd, l.CalciumNd, l.SodiumNd, l.Glucose, l.Lactate, l.Haemoglobin, l.TotalBilirubin, l.WbcCount, l.Platelets, l.Pt, l.Aptt, l.GlucoseNd, l.LactateNd, l.HaemoglobinNd, l.TotalBilirubinNd, l.WbcCountNd, l.PlateletsNd, l.PtNd, l.ApttNd, l.EbolaRdtAza); err != nil {
+	logf(sqlstr, l.ID, l.EncounterID, l.LabDate, l.Test, l.Results, l.Done, l.Alt, l.Ast, l.Creatinine, l.Potassium, l.Urea, l.CreatinineKinase, l.Calcium, l.Sodium, l.Crp, l.Glucose, l.Lactate, l.Haemoglobin, l.Total, l.Wbc, l.Platelets, l.Prothrombin, l.Activated, l.Other, l.OtherSpecifyName, l.OtherSpecifyValue, l.Alt1, l.Ast1, l.Creatinine1, l.Potassium1, l.Urea1, l.CreatinineKinase1, l.Calcium1, l.Sodium1, l.Crp1, l.Glucose1, l.Lactate1, l.Haemoglobin1, l.Total1, l.Wbc1, l.Platelets1, l.Prothrombin1, l.Activated1, l.Other1, l.EnterBy, l.EnterOn)
+	if _, err := db.ExecContext(ctx, sqlstr, l.ID, l.EncounterID, l.LabDate, l.Test, l.Results, l.Done, l.Alt, l.Ast, l.Creatinine, l.Potassium, l.Urea, l.CreatinineKinase, l.Calcium, l.Sodium, l.Crp, l.Glucose, l.Lactate, l.Haemoglobin, l.Total, l.Wbc, l.Platelets, l.Prothrombin, l.Activated, l.Other, l.OtherSpecifyName, l.OtherSpecifyValue, l.Alt1, l.Ast1, l.Creatinine1, l.Potassium1, l.Urea1, l.CreatinineKinase1, l.Calcium1, l.Sodium1, l.Crp1, l.Glucose1, l.Lactate1, l.Haemoglobin1, l.Total1, l.Wbc1, l.Platelets1, l.Prothrombin1, l.Activated1, l.Other1, l.EnterBy, l.EnterOn); err != nil {
 		return logerror(err)
 	}
 	// set exists
@@ -177,10 +157,10 @@ func (l *Lab) Delete(ctx context.Context, db DB) error {
 	}
 	// delete with single primary key
 	const sqlstr = `DELETE FROM public.lab ` +
-		`WHERE lab_id = $1`
+		`WHERE id = $1`
 	// run
-	logf(sqlstr, l.LabID)
-	if _, err := db.ExecContext(ctx, sqlstr, l.LabID); err != nil {
+	logf(sqlstr, l.ID)
+	if _, err := db.ExecContext(ctx, sqlstr, l.ID); err != nil {
 		return logerror(err)
 	}
 	// set deleted
@@ -188,21 +168,21 @@ func (l *Lab) Delete(ctx context.Context, db DB) error {
 	return nil
 }
 
-// LabByLabID retrieves a row from 'public.lab' as a [Lab].
+// LabByID retrieves a row from 'public.lab' as a [Lab].
 //
-// Generated from index 'lab_pkey1'.
-func LabByLabID(ctx context.Context, db DB, labID int) (*Lab, error) {
+// Generated from index 'lab_pkey'.
+func LabByID(ctx context.Context, db DB, id int) (*Lab, error) {
 	// query
 	const sqlstr = `SELECT ` +
-		`lab_id, encounter_id, specimen, sample_blood, sample_urine, sample_swab, sample_aza, ebola_rdt, ebola_rdt_date, ebola_rdt_results, ebola_pcr, ebola_pcr_aza, ebola_pcr_date, ebola_pcr_gp, ebola_pcr_gp_ct, ebola_pcr_np, ebola_pcr_np_ct, ebola_pcr_indeterminate, malaria_rdt_date, malaria_rdt_result, blood_culture_date, blood_culture_result, test_pos_infection, test_pos_infection_aza, haemoglobinuria, proteinuria, hematuria, blood_gas, ph, pco2, pao2, hco3, oxygen_therapy, alt_sgpt, ast_sgo, creatinine, potassium, urea, creatinine_kinase, calcium, sodium, alt_sgpt_nd, ast_sgo_nd, creatinine_nd, potassium_nd, urea_nd, creatinine_kinase_nd, calcium_nd, sodium_nd, glucose, lactate, haemoglobin, total_bilirubin, wbc_count, platelets, pt, aptt, glucose_nd, lactate_nd, haemoglobin_nd, total_bilirubin_nd, wbc_count_nd, platelets_nd, pt_nd, aptt_nd, ebola_rdt_aza ` +
+		`id, encounter_id, lab_date, test, results, done, alt, ast, creatinine, potassium, urea, creatinine_kinase, calcium, sodium, crp, glucose, lactate, haemoglobin, total, wbc, platelets, prothrombin, activated, other, other_specify_name, other_specify_value, alt_1, ast_1, creatinine_1, potassium_1, urea_1, creatinine_kinase_1, calcium_1, sodium_1, crp_1, glucose_1, lactate_1, haemoglobin_1, total_1, wbc_1, platelets_1, prothrombin_1, activated_1, other_1, enter_by, enter_on ` +
 		`FROM public.lab ` +
-		`WHERE lab_id = $1`
+		`WHERE id = $1`
 	// run
-	logf(sqlstr, labID)
+	logf(sqlstr, id)
 	l := Lab{
 		_exists: true,
 	}
-	if err := db.QueryRowContext(ctx, sqlstr, labID).Scan(&l.LabID, &l.EncounterID, &l.Specimen, &l.SampleBlood, &l.SampleUrine, &l.SampleSwab, &l.SampleAza, &l.EbolaRdt, &l.EbolaRdtDate, &l.EbolaRdtResults, &l.EbolaPcr, &l.EbolaPcrAza, &l.EbolaPcrDate, &l.EbolaPcrGp, &l.EbolaPcrGpCt, &l.EbolaPcrNp, &l.EbolaPcrNpCt, &l.EbolaPcrIndeterminate, &l.MalariaRdtDate, &l.MalariaRdtResult, &l.BloodCultureDate, &l.BloodCultureResult, &l.TestPosInfection, &l.TestPosInfectionAza, &l.Haemoglobinuria, &l.Proteinuria, &l.Hematuria, &l.BloodGas, &l.Ph, &l.Pco2, &l.Pao2, &l.Hco3, &l.OxygenTherapy, &l.AltSgpt, &l.AstSgo, &l.Creatinine, &l.Potassium, &l.Urea, &l.CreatinineKinase, &l.Calcium, &l.Sodium, &l.AltSgptNd, &l.AstSgoNd, &l.CreatinineNd, &l.PotassiumNd, &l.UreaNd, &l.CreatinineKinaseNd, &l.CalciumNd, &l.SodiumNd, &l.Glucose, &l.Lactate, &l.Haemoglobin, &l.TotalBilirubin, &l.WbcCount, &l.Platelets, &l.Pt, &l.Aptt, &l.GlucoseNd, &l.LactateNd, &l.HaemoglobinNd, &l.TotalBilirubinNd, &l.WbcCountNd, &l.PlateletsNd, &l.PtNd, &l.ApttNd, &l.EbolaRdtAza); err != nil {
+	if err := db.QueryRowContext(ctx, sqlstr, id).Scan(&l.ID, &l.EncounterID, &l.LabDate, &l.Test, &l.Results, &l.Done, &l.Alt, &l.Ast, &l.Creatinine, &l.Potassium, &l.Urea, &l.CreatinineKinase, &l.Calcium, &l.Sodium, &l.Crp, &l.Glucose, &l.Lactate, &l.Haemoglobin, &l.Total, &l.Wbc, &l.Platelets, &l.Prothrombin, &l.Activated, &l.Other, &l.OtherSpecifyName, &l.OtherSpecifyValue, &l.Alt1, &l.Ast1, &l.Creatinine1, &l.Potassium1, &l.Urea1, &l.CreatinineKinase1, &l.Calcium1, &l.Sodium1, &l.Crp1, &l.Glucose1, &l.Lactate1, &l.Haemoglobin1, &l.Total1, &l.Wbc1, &l.Platelets1, &l.Prothrombin1, &l.Activated1, &l.Other1, &l.EnterBy, &l.EnterOn); err != nil {
 		return nil, logerror(err)
 	}
 	return &l, nil

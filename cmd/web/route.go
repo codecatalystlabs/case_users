@@ -2,6 +2,7 @@ package main
 
 import (
 	"database/sql"
+	"fmt"
 	"log/slog"
 
 	"github.com/gofiber/fiber/v2"
@@ -14,34 +15,26 @@ import (
 func SetRoute(app *fiber.App, db *sql.DB, store *session.Store, sl *slog.Logger, config handlers.Config) {
 	RouteHome(app, db, sl, store, config)
 
-	app.Use(func(c *fiber.Ctx) error {
-		return c.Next()
-	})
-
 	// Main application routes
 	appGroup := app.Group("/")
 	appGroup.Use(AuthRequired(store)) // Apply middleware for protected routes
 	{
+		println("auth worked")
 		// Home route
 		appGroup.Get("/", func(c *fiber.Ctx) error { return handlers.HandlerHome(c, db, sl, store, config) })
-
+		println("auth done")
 		// Add more routes as needed...
 
 		api := app.Group("/api") // Group for all API routes
-
-		enk := api.Group("/encounter")
 		sym := api.Group("/sym")
 		mob := api.Group("/mob")
 		rus := api.Group("/rush")
-		lab := api.Group("/lab")
-		sta := api.Group("/status")
-
-		emp := app.Group("/employees") // Employees
-		usr := app.Group("/users")     // users
-		hfs := app.Group("/secure")    // Health facilities
+		lab := api.Group("/lab")    // Employees
+		usr := app.Group("/users")  // users
+		hfs := app.Group("/secure") // Health facilities
 		cse := app.Group("/cases")
 
-		//enc := app.Group("/encounter")
+		enc := app.Group("/encounter")
 		dis := app.Group("/discharge")
 
 		// Additional routes
@@ -53,14 +46,8 @@ func SetRoute(app *fiber.App, db *sql.DB, store *session.Store, sl *slog.Logger,
 		RouteRush(rus, db, sl, config)
 		RouteLab(lab, db, sl, config)
 
-		RouteEmployees(emp, db, sl, config)
-		RouteDischarge(dis, db, sl, config)
-
-		//RouteLab(enc, db, sl, config)
-		//RouteLab(lab, db, sl, config)
-
-		RouteAPIEncounter(enk, db, sl, config)
-		RouteAPIStatus(sta, db, sl, config)
+		RouteLab(enc, db, sl, config)
+		RouteLab(dis, db, sl, config)
 	}
 }
 
@@ -75,27 +62,12 @@ func AuthRequired(store *session.Store) fiber.Handler {
 			return c.Redirect("/login", 302)
 		}
 
+		fmt.Println("Authentication required: ", userID)
 		// Store user ID in Fiber Locals for later use
 		c.Locals("userID", userID)
 
 		return c.Next()
 	}
-}
-
-func RouteAPIEncounter(v fiber.Router, db *sql.DB, sl *slog.Logger, config handlers.Config) {
-	v.Get("/", func(c *fiber.Ctx) error { return handlers.HandlerAPIGetEncounter(c, db, sl, store, config) })
-}
-
-func RouteAPIStatus(v fiber.Router, db *sql.DB, sl *slog.Logger, config handlers.Config) {
-	v.Get("/list", func(c *fiber.Ctx) error { return handlers.HandlerAPIGetStatuses(c, db, sl, store, config) })
-	v.Post("/save", func(c *fiber.Ctx) error { return handlers.HandlerAPIPostStatus(c, db, sl, store, config) })
-}
-
-func RouteDischarge(v fiber.Router, db *sql.DB, sl *slog.Logger, config handlers.Config) {
-	v.Get("/list", func(c *fiber.Ctx) error { return handlers.GetDischarge(c, db, sl, store, config) })
-	v.Get("/certificate", func(c *fiber.Ctx) error { return handlers.Certificate(c, db, sl, store, config) })
-	v.Get("/verify", func(c *fiber.Ctx) error { return handlers.VerifyDischarge(c, db, sl, store, config) })
-	v.Post("/save", func(c *fiber.Ctx) error { return handlers.Discharge(c, db, sl, store, config) })
 }
 
 func RouteHome(app *fiber.App, db *sql.DB, sl *slog.Logger, store *session.Store, config handlers.Config) {
@@ -124,14 +96,6 @@ func RouteUsers(v fiber.Router, db *sql.DB, sl *slog.Logger, config handlers.Con
 	v.Get("/", func(c *fiber.Ctx) error { return handlers.HandlerUserList(c, db, sl, store, config) })
 }
 
-func RouteEmployees(v fiber.Router, db *sql.DB, sl *slog.Logger, config handlers.Config) {
-	v.Get("/new/:i", func(c *fiber.Ctx) error { return handlers.HandlerEmployeeForm(c, db, sl, store, config) })
-	v.Post("/save", func(c *fiber.Ctx) error { return handlers.HandlerEmployeeSubmit(c, db, sl, store, config) })
-	v.Post("/filter", func(c *fiber.Ctx) error { return handlers.HandlerEmployeeList(c, db, sl, store, config) })
-	v.Get("/list", func(c *fiber.Ctx) error { return handlers.HandlerEmployeeList(c, db, sl, store, config) })
-	v.Get("/", func(c *fiber.Ctx) error { return handlers.HandlerEmployeeList(c, db, sl, store, config) })
-}
-
 func RouteCases(v fiber.Router, db *sql.DB, sl *slog.Logger, config handlers.Config) {
 
 	v.Get("/new/:i", func(c *fiber.Ctx) error { return handlers.HandlerCasesForm(c, db, sl, store, config) })
@@ -142,9 +106,9 @@ func RouteCases(v fiber.Router, db *sql.DB, sl *slog.Logger, config handlers.Con
 
 	///cases/encounters/list/1
 
-	v.Get("/encounters/list/:i", func(c *fiber.Ctx) error { return handlers.HandlerCaseEncounterForm(c, db, sl, store, config) })   //+
-	v.Get("/encounters/new/:i/:j", func(c *fiber.Ctx) error { return handlers.HandlerCaseEncounterForm(c, db, sl, store, config) }) //+
-	v.Post("/encounters/save", func(c *fiber.Ctx) error { return handlers.HandlerCaseEncounterSubmit(c, db, sl, store, config) })   //+
+	v.Get("/encounters/list/:i", func(c *fiber.Ctx) error { return handlers.HandlerCaseEncounterForm(c, db, sl, store, config) })       //+
+	v.Get("/encounters/new/:i/:j", func(c *fiber.Ctx) error { return handlers.HandlerCaseEncounterForm(c, db, sl, store, config) })     //+
+	v.Post("/encounters/save/:i/:j", func(c *fiber.Ctx) error { return handlers.HandlerCaseEncounterSubmit(c, db, sl, store, config) }) //+
 }
 
 func RouteCaseDischarge(v fiber.Router, db *sql.DB, sl *slog.Logger, config handlers.Config) { //+

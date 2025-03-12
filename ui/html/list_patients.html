@@ -127,22 +127,22 @@
                                             
                                             <p class="m-0 p-0">
                                               <small>
-                                                <span class="td-detail-param param-blue"><strong>Name</strong></span>: 
+                                                <span class="td-detail-param param-blue">Name</span>: 
                                                 <span class="td-detail-val"> {{ $value.Firstname.String }} {{ $value.Lastname.String }}</span>
                                               </small>
                                             </p>
                                             <p class="m-0 p-0">
                                               <small>
-                                                <span class="td-detail-param param-blue"><strong>Sex</strong></span>: 
+                                                <span class="td-detail-param param-blue">Gender</span>: 
                                                 <span class="td-detail-val"> {{ GetClientOptionLabel "sex" (printf "%d" $value.Gender.Int64) }} </span>
                                               </small>
                                             </p>
                                             <p class="m-0 p-0">
                                               <small>
-                                                <span class="td-detail-param param-blue"><strong>DoB</strong></span>: 
+                                                <span class="td-detail-param param-blue">DoB</span>: 
                                                 <span class="td-detail-val"> {{ $value.DateOfBirth.String }}</span>
                                                 <span class="vert-line"></span> (
-                                                <span class="td-detail-param param-blue"><strong>Age</strong></span>: 
+                                                <span class="td-detail-param param-blue">Age</span>: 
                                                 <span class="td-detail-val">{{ $value.Age.Float64 }}</span> )
                                               </small>
                                             </p>
@@ -153,19 +153,19 @@
                                         <div class="row p-0 td-detail-row col-1-margin">
                                             <p class="m-0 p-0">
                                                 <small>
-                                                  <span class="td-detail-param param-red"><strong>Site</strong></span>: 
-                                                  <span class="td-detail-val">  {{ GetDBLabel "facility" "facility_name" "facility_id" $value.Site.Int64 }}</span>
+                                                  <span class="td-detail-param param-red">Site</span>: 
+                                                  <span class="td-detail-val">  {{ $value.Site.Int64 }}</span>
                                                 </small> 
                                             </p>
                                             <p class="m-0 p-0">
                                               <small>
-                                                <span class="td-detail-param param-red"><strong>Ward</strong></span>: 
+                                                <span class="td-detail-param param-red">Ward</span>: 
                                                 <span class="td-detail-val"> {{ GetClientOptionLabel "ward" $value.AdmWard.String }}</span>
                                               </small> 
                                             </p>
                                             <p class="m-0 p-0">
                                               <small>
-                                                <span class="td-detail-param param-blue"><strong>Adm Date</strong></span>: 
+                                                <span class="td-detail-param param-blue">Adm Date</span>: 
                                                 <span class="td-detail-val"> {{ $value.AdmDate.String }} </span>
                                               </small>
                                             </p>
@@ -176,19 +176,19 @@
                                         <div class="row p-0 td-detail-row col-1-margin">
                                             <p class="m-0 p-0">
                                                 <small>
-                                                  <span class="td-detail-param param-red"><strong>Occupation</strong></span>: 
+                                                  <span class="td-detail-param param-red">Occupation</span>: 
                                                   <span class="td-detail-val">  {{ GetClientOptionLabel "occup" (printf "%d" $value.Occupation.Int64) }}</span>
                                                 </small> 
                                             </p>
                                             <p class="m-0 p-0">
                                               <small>
-                                                <span class="td-detail-param param-red"><strong>Symptom onset</strong></span>: 
+                                                <span class="td-detail-param param-red">Symptom onset</span>: 
                                                 <span class="td-detail-val"> {{ $value.DateSymptomOnset.String }} </span>
                                               </small> 
                                             </p>
                                             <p class="m-0 p-0">
                                               <small>
-                                                <span class="td-detail-param param-blue"><strong>Pregnant</strong></span>: 
+                                                <span class="td-detail-param param-blue">Pregnant</span>: 
                                                 <span class="td-detail-val"> {{ GetClientOptionLabel "preg" (printf "%d" $value.Pregnant.Int64) }} </span>
                                               </small>
                                             </p>

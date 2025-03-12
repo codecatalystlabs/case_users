@@ -6,6 +6,7 @@ import (
 	"database/sql"
 	"fmt"
 	"log/slog"
+	"strconv"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/session"
@@ -16,22 +17,14 @@ func HandlerHome(c *fiber.Ctx, db *sql.DB, sl *slog.Logger, store *session.Store
 	fmt.Println("starting home")
 
 	userID, userName := GetUser(c, sl, store)
+
 	role := security.GetRoles(userID, "admin")
 
-	data := NewTemplateData(c, store)
-	data.User = userName
-	data.Role = role
-	sID := fmt.Sprintf("%d", userID)
-	metums, _ := models.Metums(c.Context(), db, " user_id = "+sID) //meta_category = 3 AND
-
-	zamenu := ""
-	for _, menu := range metums {
-		zamenu = zamenu + "<a href='" + menu.MetaLink.String + "' class='menu-item'>" + menu.MetaDescription.String + "</a>"
+	data := map[string]string{
+		"Title":    "Home Page",
+		"Username": userName,
+		"role":     strconv.Itoa(role),
 	}
-
-	data.Form = metums
-	data.Menuz = zamenu
-
 	fmt.Println("loading home page")
 	return GenerateHTML(c, data, "home")
 
@@ -40,7 +33,7 @@ func HandlerHome(c *fiber.Ctx, db *sql.DB, sl *slog.Logger, store *session.Store
 func HandlerLoginForm(c *fiber.Ctx, sl *slog.Logger, store *session.Store, config Config) error {
 
 	sess, err := store.Get(c)
-
+	fmt.Println("oba 0")
 	if err == nil {
 		userID := sess.Get("user")
 		if userID != nil {
@@ -49,12 +42,16 @@ func HandlerLoginForm(c *fiber.Ctx, sl *slog.Logger, store *session.Store, confi
 		}
 	}
 
+	fmt.Println("oba 1")
+
 	// load page
+
 	data := map[string]string{"Title": "Login Page"}
 	return GenerateHTML(c, data, "login")
 }
 
 func HandlerLoginSubmit(c *fiber.Ctx, db *sql.DB, sl *slog.Logger, store *session.Store, config Config) error {
+	fmt.Println("oba 3")
 
 	sess, err := store.Get(c)
 	if err == nil {
@@ -64,7 +61,7 @@ func HandlerLoginSubmit(c *fiber.Ctx, db *sql.DB, sl *slog.Logger, store *sessio
 			return c.Redirect("/", 302)
 		}
 	}
-
+	fmt.Println("oba 4")
 	// Extract form values
 	username := c.FormValue("username")
 	password := c.FormValue("password")
@@ -74,13 +71,14 @@ func HandlerLoginSubmit(c *fiber.Ctx, db *sql.DB, sl *slog.Logger, store *sessio
 		c.Status(fiber.StatusBadRequest)      // Set HTTP 400 status
 		return c.Redirect("/login?error=400") // Redirect to login page
 	}
+	fmt.Println("oba 5")
 
 	id, er := models.Authenticate(c.Context(), db, username, password)
 	if er != nil {
 		fmt.Println("Failed Authentication: ", er.Error())
 		return c.Redirect("/login?error=afail")
 	}
-
+	fmt.Println(id)
 	if id > 0 {
 		// Get session
 		sess, err := store.Get(c)
@@ -89,7 +87,7 @@ func HandlerLoginSubmit(c *fiber.Ctx, db *sql.DB, sl *slog.Logger, store *sessio
 			sl.Info("Session error")
 			return c.Redirect("/login?serror")
 		}
-
+		fmt.Println(id)
 		// Set session variables
 		sess.Set("user", id) // Example: Set user ID
 		sess.Set("username", username)
@@ -101,7 +99,8 @@ func HandlerLoginSubmit(c *fiber.Ctx, db *sql.DB, sl *slog.Logger, store *sessio
 			sl.Info("Failed to save session")
 			return c.Redirect("/login?sfail")
 		}
-
+		fmt.Println(sess.Get("user"))
+		fmt.Println(sess.Get("username"))
 		// Redirect to dashboard
 		return c.Redirect("/?goodnes=1")
 	}
