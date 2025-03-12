@@ -6,7 +6,6 @@ import (
 	"database/sql"
 	"fmt"
 	"log/slog"
-	"strconv"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/session"
@@ -17,14 +16,22 @@ func HandlerHome(c *fiber.Ctx, db *sql.DB, sl *slog.Logger, store *session.Store
 	fmt.Println("starting home")
 
 	userID, userName := GetUser(c, sl, store)
-
 	role := security.GetRoles(userID, "admin")
 
-	data := map[string]string{
-		"Title":    "Home Page",
-		"Username": userName,
-		"role":     strconv.Itoa(role),
+	data := NewTemplateData(c, store)
+	data.User = userName
+	data.Role = role
+	sID := fmt.Sprintf("%d", userID)
+	metums, _ := models.Metums(c.Context(), db, " user_id = "+sID) //meta_category = 3 AND
+
+	zamenu := ""
+	for _, menu := range metums {
+		zamenu = zamenu + "<a href='" + menu.MetaLink.String + "' class='menu-item'>" + menu.MetaDescription.String + "</a>"
 	}
+
+	data.Form = metums
+	data.Menuz = zamenu
+
 	fmt.Println("loading home page")
 	return GenerateHTML(c, data, "home")
 
@@ -78,6 +85,7 @@ func HandlerLoginSubmit(c *fiber.Ctx, db *sql.DB, sl *slog.Logger, store *sessio
 		fmt.Println("Failed Authentication: ", er.Error())
 		return c.Redirect("/login?error=afail")
 	}
+
 	fmt.Println(id)
 	if id > 0 {
 		// Get session

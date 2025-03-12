@@ -99,36 +99,34 @@
                     <h1>User Form</h1>
                     <form method="post" action="/users/save" id="userForm">
                         <div class="row registration-input-row">    
-                            <div class="col-lg-4">
+                            <div class="col-lg-6">
                                 <div class="row">
-                                    <label class="col-sm-5 col-form-label col-form-label-sm" for="user_employee">Employee</label>
+                                    <label class="col-sm-5 col-form-label col-form-label-sm" for="user_employee" required >Employee</label>
                                     <div class="col-sm-5">
                                         {{ GetDBOptions "Employee" "" "" "user_employee" "Employee" .Form.UserEmployee.Int64}}
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-lg-4">
+                            <div class="col-lg-6">
                                 <div class="row">
-                                    <label class="col-sm-5 col-form-label col-form-label-sm" for="encounter_date">Username</label>
-                                    <div class="col-sm-5">
-                                        <input class="form-control form-control-sm patient-input" value="{{.Form.UserName.String}}" id="username" name="username" type="text" required/>
+                                    <label class="col-sm-4 col-form-label col-form-label-sm" for="user_name">Username</label>
+                                    <div class="col-sm-6">
+                                        <input class="form-control form-control-sm patient-input" value="{{.Form.UserName.String}}" id="user_name" name="user_name" type="text" required/>
                                     </div>
                                 </div>
                             </div>                        
                         </div>
-                        <div class="row registration-input-row">  
-                            <div class="col-lg-4">
+                        <div class="row registration-input-row"> 
+                            <div class="col-lg-12">
                                 <div class="row">
-                                    <label class="col-sm-5 col-form-label col-form-label-sm" for="encounter_type">Password</label>
-                                    <div class="col-sm-5">
-                                        <input class="form-control form-control-sm patient-input" id="password" name="password" type="password" required/>
+                                    <label class="col-sm-4 col-form-label col-form-label-sm" for=""></label>
+                                    <div class="col-sm-6">
                                     </div>
-                                </div>
-                                <div class="row">
-                                    <label class="col-sm-5 col-form-label col-form-label-sm" for=""></label>
-                                </div>
+                                </div> 
+
                             </div>
-                        </div> 
+                        </div>
+                        
                         <div class="row registration-input-row">
                             <br>
                             <table class="table table-bordered" border="1" cellspacing="0">
@@ -143,78 +141,39 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr>
-                                        <td>Admin</td>
-                                        <td>{{ GetDBOptions "meta" "Function Scope" "" "function_scope" "Function Scope" 0}}</td>
-                                        <td><input type="checkbox" name="input[admin][view][]" id="" value="1"></td>
-                                        <td><input type="checkbox" name="input[admin][add][]" id="" value="1"></td>
-                                        <td><input type="checkbox" name="input[admin][edit][]" id="" value="1"></td>
-                                        <td><input type="checkbox" name="input[admin][execute][]" id="" value="1"></td>
-                                    </tr>
-                                    <tr>
-                                        <td>Settings</td>
-                                        <td></td>
-                                        <td><input type="checkbox" name="input[settings][view][]" id="" value="1"></td>
-                                        <td><input type="checkbox" name="input[settings][add][]" id="" value="1"></td>
-                                        <td><input type="checkbox" name="input[settings][edit][]" id="" value="1"></td>
-                                        <td><input type="checkbox" name="input[settings][execute][]" id="" value="1"></td>
-                                    </tr>
-                                    <tr>
-                                        <td>Cases</td>
-                                        <td></td>
-                                        <td><input type="checkbox" name="input[cases][view][]" id="" value="1"></td>
-                                        <td><input type="checkbox" name="input[cases][add][]" id="" value="1"></td>
-                                        <td><input type="checkbox" name="input[cases][edit][]" id="" value="1"></td>
-                                        <td><input type="checkbox" name="input[cases][execute][]" id="" value="1"></td>
-                                    </tr>
-                                    <tr>
-                                        <td>Alerts</td>
-                                        <td></td>
-                                        <td><input type="checkbox" name="input[alerts][view][]" id="" value="1"></td>
-                                        <td><input type="checkbox" name="input[alerts][add][]" id="" value="1"></td>
-                                        <td><input type="checkbox" name="input[alerts][edit][]" id="" value="1"></td>
-                                        <td><input type="checkbox" name="input[alerts][execute][]" id="" value="1"></td>
-                                    </tr>
-                                    <tr>
-                                        <td>Contacts</td>
-                                        <td></td>
-                                        <td><input type="checkbox" name="input[contacts][view][]" id="" value="1"></td>
-                                        <td><input type="checkbox" name="input[contacts][add][]" id="" value="1"></td>
-                                        <td><input type="checkbox" name="input[contacts][edit][]" id="" value="1"></td>
-                                        <td><input type="checkbox" name="input[contacts][execute][]" id="" value="1"></td>
-                                    </tr>
-                                    <tr>
-                                        <td>Quaratine</td>
-                                        <td></td>
-                                        <td><input type="checkbox" name="input[quaratine][view][]" id="" value="1"></td>
-                                        <td><input type="checkbox" name="input[quaratine][add][]" id="" value="1"></td>
-                                        <td><input type="checkbox" name="input[quaratine][edit][]" id="" value="1"></td>
-                                        <td><input type="checkbox" name="input[quaratine][execute][]" id="" value="1"></td>
-                                    </tr>
-                                    <tr>
-                                        <td>CIF</td>
-                                        <td></td>
-                                        <td><input type="checkbox" name="input[cif][view][]" id="" value="1"></td>
-                                        <td><input type="checkbox" name="input[cif][add][]" id="" value="1"></td>
-                                        <td><input type="checkbox" name="input[cif][edit][]" id="" value="1"></td>
-                                        <td><input type="checkbox" name="input[cif][execute][]" id="" value="1"></td>
-                                    </tr>
-                                    <tr>
-                                        <td>Deployment</td>
-                                        <td></td>
-                                        <td><input type="checkbox" name="input[deployment][view][]" id="" value="1"></td>
-                                        <td><input type="checkbox" name="input[deployment][add][]" id="" value="1"></td>
-                                        <td><input type="checkbox" name="input[deployment][edit][]" id="" value="1"></td>
-                                        <td><input type="checkbox" name="input[deployment][execute][]" id="" value="1"></td>
-                                    </tr>
+                                    {{ if .FormChild1 }}
+                                        {{ range $key, $value := .FormChild1 }}
+                                    
+                                        <tr>
+                                            <td>
+                                                {{ $value.MetaName }} 
+                                                <input type="hidden" name="input_fid_id_{{ $value.MetaName }}" value="{{ $value.FID.Int64 }}">
+                                                <input type="hidden" name="input_meta_id_{{ $value.MetaName }}" value="{{ $value.MetaID.Int64 }}">
+                                            </td>
+                                            {{ $inputName := printf "input_scope_%s" $value.MetaName }}
+                                            <td>{{ GetDBOptions "meta" "Function Scope" "" $inputName "Function Scope" $value.FScope.Int64 }}</td>
+                                            <td><input type="checkbox" {{ if eq $value.FView.Int64 1 }}checked{{ end }} name="input_view_{{ $value.MetaName }}" value="1"></td>
+                                            <td><input type="checkbox" {{ if eq $value.FCreate.Int64 1 }}checked{{ end }} name="input_add_{{ $value.MetaName }}" value="1"></td>
+                                            <td><input type="checkbox" {{ if eq $value.FEdit.Int64 1 }}checked{{ end }} name="input_edit_{{ $value.MetaName }}" value="1"></td>
+                                            <td><input type="checkbox" {{ if eq $value.FRemove.Int64 1 }}checked{{ end }} name="input_execute_{{ $value.MetaName }}" value="1"></td>
+                                        </tr>
+
+                                        {{ end }}
+                                    {{ end }}
+                                    
+                                    
                                 </tbody>
                             </table>
                         </div>  
                         
                         <input type="hidden" name="csrf_token" id="csrf_token" value="">
-                        <input type="hidden" name="id" id="id" value="{{.Form.ID}}">
+                        <input type="hidden" name="id" id="id" value="{{.Form.UserID}}">
                         <input type="hidden" name="from" id="from" value="">
 
+                        <button type="submit" id="submitButton" class="btn btn-sm btn-success mt-3">Save</button>
+                        <button type="button" id="save_cButton" class="btn btn-sm btn-success mt-3">Save & Close</button>
+                        <button type="button" id="cancelButton" class="btn btn-sm btn-success mt-3">Cancel</button>
+                        <button type="button" id="helpButton"   class="btn btn-sm btn-success mt-3">Help</button>
                     </form>                    
                 </div>                
             </div>
@@ -244,7 +203,7 @@
         });
 
         document.addEventListener("DOMContentLoaded", function () {
-    const form = document.getElementById("caseForm"); // Replace with your form ID
+    const form = document.getElementById("userForm"); // Replace with your form ID
     const submitButton = document.getElementById("submitButton"); // Replace with your submit button ID
     const save_cButton = document.getElementById("save_cButton");
     const helpButton   = document.getElementById("helpButton");
@@ -257,9 +216,7 @@
     if (submitButton) {
         submitButton.addEventListener("click", function (event) {
             event.preventDefault(); // Prevent default form submission
-            alert(document.getElementById("age").value)
-            const formDataJSON = getFormDataAsJSON(form);
-            alert(JSON.stringify(formDataJSON, null, 2))
+            
             if (validateForm()) {
                 form.submit(); // Submit the form only if validation passes
             } else {
@@ -270,7 +227,7 @@
 
     if (cancelButton) {
         cancelButton.addEventListener("click", function () {
-            window.location.href = "/cases"; // Replace with the correct URL
+            window.location.href = "/users"; // Replace with the correct URL
         });
     }
 

@@ -1,10 +1,13 @@
 package handlers
 
 import (
+	"bytes"
 	"case/internal/models"
 	"database/sql"
 	"fmt"
 	"log/slog"
+	"net/http"
+	"net/http/httptest"
 	"os"
 	"path/filepath"
 	"reflect"
@@ -12,6 +15,7 @@ import (
 	"text/template"
 	"time"
 
+	"github.com/gin-gonic/gin"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/session"
 	"github.com/gorilla/schema"
@@ -46,6 +50,7 @@ type TemplateData struct {
 	Items           []interface{}
 	Optionz         map[string]map[string]string
 	Flash           string
+	Menuz           string
 	IsAuthenticated bool
 	CSRFToken       string // Add a CSRFToken field.
 }
@@ -118,16 +123,95 @@ func GetOptionField(table, field, labs, defaultString string, defaultvalue, whol
 			      </select>`
 	}
 
-	if table == "YN" {
-		if defaultString == "Suspect" {
+	if table == "pos" {
+		if defaultString == "pos" {
 			zaDefa1 = "selected"
 		}
 
-		if defaultString == "Case" {
+		if defaultString == "neg" {
 			zaDefa2 = "selected"
 		}
 
-		if defaultString == "Other" {
+		if defaultString == "nd" {
+			zaDefa3 = "selected"
+		}
+
+		optionz = `<option value=""> -- select -- </option>
+					<option value="pos" ` + zaDefa1 + `>Pos</option>
+					<option value="neg" ` + zaDefa2 + `>Neg</option>
+					<option value="nd"  ` + zaDefa3 + `>ND</option>`
+		zaField = `<select class="form-control-sm patient-input form-select" name="` + field + `" id="` + field + `" aria-label="` + labs + `">
+					` + optionz + `
+			      </select>`
+	}
+
+	if table == "po" {
+		if defaultString == "pos" {
+			zaDefa1 = "selected"
+		}
+
+		if defaultString == "neg" {
+			zaDefa2 = "selected"
+		}
+
+		optionz = `<option value=""> -- select -- </option>
+					<option value="pos" ` + zaDefa1 + `>Pos</option>
+					<option value="neg" ` + zaDefa2 + `>Neg</option>`
+		zaField = `<select class="form-control-sm patient-input form-select" name="` + field + `" id="` + field + `" aria-label="` + labs + `">
+					` + optionz + `
+			      </select>`
+	}
+
+	if table == "posx" {
+		if defaultString == "pos" {
+			zaDefa1 = "selected"
+		}
+
+		if defaultString == "neg" {
+			zaDefa2 = "selected"
+		}
+
+		if defaultString == "indeterminate" {
+			zaDefa3 = "selected"
+		}
+
+		optionz = `<option value=""> -- select -- </option>
+					<option value="pos" ` + zaDefa1 + `>Pos</option>
+					<option value="neg" ` + zaDefa2 + `>Neg</option>
+					<option value="indeterminate"  ` + zaDefa3 + `>Indeterminate</option>`
+		zaField = `<select class="form-control-sm patient-input form-select" name="` + field + `" id="` + field + `" aria-label="` + labs + `">
+					` + optionz + `
+			      </select>`
+	}
+
+	if table == "yn" {
+		if defaultvalue == 1 {
+			zaDefa1 = "selected"
+		}
+
+		if defaultvalue == 2 {
+			zaDefa2 = "selected"
+		}
+
+		optionz = `<option value=""> -- select -- </option>
+					<option value="1" ` + zaDefa1 + `>Yes</option>
+					<option value="2" ` + zaDefa2 + `>No</option>`
+
+		zaField = `<select class="form-control-sm patient-input form-select" name="` + field + `" id="` + field + `" aria-label="` + labs + `">
+					` + optionz + `
+			      </select>`
+	}
+
+	if table == "YN" {
+		if defaultvalue == 1 {
+			zaDefa1 = "selected"
+		}
+
+		if defaultvalue == 2 {
+			zaDefa2 = "selected"
+		}
+
+		if defaultvalue == 3 {
 			zaDefa3 = "selected"
 		}
 
@@ -166,6 +250,21 @@ func GetUser(c *fiber.Ctx, sl *slog.Logger, store *session.Store) (int, string) 
 		fmt.Println("Username:", username)
 	}
 	return userID, username
+}
+
+func GetCurrentFacility(c *fiber.Ctx, db *sql.DB, sl *slog.Logger, store *session.Store) int {
+	sqlstr := ` SELECT
+					facility
+				FROM public.users u, public.employee e
+				WHERE u.user_employee = e.employee_id AND u.user_id= $1`
+
+	userID, _ := GetUser(c, sl, store)
+
+	var facility int
+	if err := db.QueryRowContext(c.Context(), sqlstr, userID).Scan(&facility); err != nil {
+		return 0
+	}
+	return facility
 }
 
 func HumanDate(t time.Time) string {
@@ -531,4 +630,34 @@ func ParseNullTime(value string) sql.NullTime {
 		return sql.NullTime{Valid: false}
 	}
 	return sql.NullTime{Time: t, Valid: true}
+}
+
+// ConvertFiberToGin converts a Fiber context to a Gin context
+func ConvertFiberToGin(fctx *fiber.Ctx) (*gin.Context, error) {
+	// Create a new HTTP request using Fiber's request data
+	req := fctx.Request()
+
+	// Convert Fiber request to standard *http.Request
+	httpReq, err := http.NewRequest(
+		string(req.Header.Method()),
+		fctx.OriginalURL(),
+		bytes.NewReader(req.Body()),
+	)
+	if err != nil {
+		return nil, err
+	}
+
+	// Copy headers from Fiber to the new request
+	req.Header.VisitAll(func(key, value []byte) {
+		httpReq.Header.Set(string(key), string(value))
+	})
+
+	// Create a new Gin response recorder
+	w := httptest.NewRecorder()
+
+	// Create a new Gin context
+	ginCtx, _ := gin.CreateTestContext(w)
+	ginCtx.Request = httpReq
+
+	return ginCtx, nil
 }

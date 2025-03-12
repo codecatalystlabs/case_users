@@ -15,6 +15,11 @@ import (
 func SetRoute(app *fiber.App, db *sql.DB, store *session.Store, sl *slog.Logger, config handlers.Config) {
 	RouteHome(app, db, sl, store, config)
 
+	app.Use(func(c *fiber.Ctx) error {
+		fmt.Println("Current route:", c.Path()) // Logs the requested path
+		return c.Next()
+	})
+
 	// Main application routes
 	appGroup := app.Group("/")
 	appGroup.Use(AuthRequired(store)) // Apply middleware for protected routes
@@ -26,6 +31,7 @@ func SetRoute(app *fiber.App, db *sql.DB, store *session.Store, sl *slog.Logger,
 		// Add more routes as needed...
 
 		api := app.Group("/api") // Group for all API routes
+		enk := api.Group("/encounter")
 		sym := api.Group("/sym")
 		mob := api.Group("/mob")
 		rus := api.Group("/rush")
@@ -48,6 +54,8 @@ func SetRoute(app *fiber.App, db *sql.DB, store *session.Store, sl *slog.Logger,
 
 		RouteLab(enc, db, sl, config)
 		RouteLab(dis, db, sl, config)
+
+		RouteAPIEncounter(enk, db, sl, config)
 	}
 }
 
@@ -68,6 +76,10 @@ func AuthRequired(store *session.Store) fiber.Handler {
 
 		return c.Next()
 	}
+}
+
+func RouteAPIEncounter(v fiber.Router, db *sql.DB, sl *slog.Logger, config handlers.Config) {
+	v.Get("/", func(c *fiber.Ctx) error { return handlers.HandlerAPIGetEncounter(c, db, sl, store, config) })
 }
 
 func RouteHome(app *fiber.App, db *sql.DB, sl *slog.Logger, store *session.Store, config handlers.Config) {
@@ -106,9 +118,9 @@ func RouteCases(v fiber.Router, db *sql.DB, sl *slog.Logger, config handlers.Con
 
 	///cases/encounters/list/1
 
-	v.Get("/encounters/list/:i", func(c *fiber.Ctx) error { return handlers.HandlerCaseEncounterForm(c, db, sl, store, config) })       //+
-	v.Get("/encounters/new/:i/:j", func(c *fiber.Ctx) error { return handlers.HandlerCaseEncounterForm(c, db, sl, store, config) })     //+
-	v.Post("/encounters/save/:i/:j", func(c *fiber.Ctx) error { return handlers.HandlerCaseEncounterSubmit(c, db, sl, store, config) }) //+
+	v.Get("/encounters/list/:i", func(c *fiber.Ctx) error { return handlers.HandlerCaseEncounterForm(c, db, sl, store, config) })   //+
+	v.Get("/encounters/new/:i/:j", func(c *fiber.Ctx) error { return handlers.HandlerCaseEncounterForm(c, db, sl, store, config) }) //+
+	v.Post("/encounters/save", func(c *fiber.Ctx) error { return handlers.HandlerCaseEncounterSubmit(c, db, sl, store, config) })   //+
 }
 
 func RouteCaseDischarge(v fiber.Router, db *sql.DB, sl *slog.Logger, config handlers.Config) { //+

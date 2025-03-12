@@ -47,6 +47,8 @@ func Authenticate(ctx context.Context, db DB, email, password string) (id int, e
 			return 0, err
 		}
 
+		fmt.Printf("Username: %s\n Password: %s\n E-Pass 1: %s\n E-Pass DB: %s", email, password, Encrypt(password), hashedPassword)
+
 		if Encrypt(password) != hashedPassword {
 			fmt.Println("fake password: ")
 			return 0, ErrInvalidCredentials
@@ -68,13 +70,16 @@ func ConfirmAvailabilityOfUser(ctx context.Context, db DB) (int, error) {
 		return 1, err
 	}
 	defer rows.Close()
-
+	fmt.Println("j0: ")
 	if rows.Next() {
 		err = rows.Scan(&count)
 
 		if err != nil {
+			fmt.Println("jj: " + err.Error())
 			return 1, err
 		}
+
+		fmt.Println("Records: " + strconv.Itoa(count))
 
 		if count == 0 {
 
@@ -88,6 +93,7 @@ func ConfirmAvailabilityOfUser(ctx context.Context, db DB) (int, error) {
 			err := employee.Insert(ctx, db)
 
 			if err != nil {
+				fmt.Println("j1: " + err.Error())
 				emp = 0
 			} else {
 				emp = int64(employee.EmployeeID)
@@ -100,11 +106,13 @@ func ConfirmAvailabilityOfUser(ctx context.Context, db DB) (int, error) {
 
 			err = user.Insert(ctx, db)
 			if err != nil {
+				fmt.Println("j2: ")
 				return 1, err
 			}
-
+			fmt.Println("j3: ")
 			return 0, nil
 		}
+		fmt.Println("j4: ")
 		return 0, nil
 	}
 

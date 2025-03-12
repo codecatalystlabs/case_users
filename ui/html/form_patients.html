@@ -105,7 +105,6 @@
             <div class="col-md-3 side-menu">
                 {{if .IsIDPos }}
                 <a href="/cases/encounters/new/{{.Form.ID}}/0" class="menu-item">New Encounter</a>
-                <a href="/cases/encounters/list/{{.Form.ID}}" class="menu-item">Encounters</a>
                 <a href="/cases/discharge/{{.Form.ID}}" class="menu-item">Discharge</a>
                 <a href="/cases/patientreport/{{.Form.ID}}" class="menu-item">Report</a>
                 {{end}}
@@ -598,13 +597,12 @@
 
                         </div>
                         <div class="tab-pane fade" id="encounter" role="tabpanel" aria-labelledby="encounter-tab">
-                            <p>Encounters </p> 
                             <div class="container-fluid">
                                 <div class="row">
                                     <!-- Left Side: Scrollable Table -->
                                     <div class="col-md-6">
                                         <div class="card">
-                                            <div class="card-header">Encounter List <a href="#" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#dataEntryModal">New</a></div>
+                                            <div class="card-header">Encounter List</div>
                                             <div class="card-body" style="max-height: 400px; overflow-y: auto;">
                                                 <table class="table table-striped">
                                                     <thead>
@@ -614,18 +612,27 @@
                                                             <th>Date</th>
                                                             <th>Time</th>
                                                             <th>Type</th>
+                                                            <th>Action</th>
                                                         </tr>
                                                     </thead>
                                                     <tbody>
+                                                        
                                                         <!-- Dynamically load encounter rows here -->
-                                                         <tr>
-                                                            <td>1</td><td>Mbaka</td><td>14Mar2024</td><td>Morning</td><td>Baseline</td>
-                                                         </tr>
-                                                         <tr>
-                                                            <td>2</td><td>Iqbal</td><td>15Apr2024</td><td>Evening</td><td>Follow-up</td>
-                                                         </tr>
+                                                        {{ if .FormChild1 }}
+                                                            {{ range $key, $value := .FormChild1 }}
+                                                            <tr>
+                                                                <td> <button class="btn btn-warning btn-sm" id="fetchButton" data-id="{{ $value.EncounterID }}">Preview</button></td>
+                                                                <td>{{ $value.EmployeeFname }} {{ $value.EmployeeLname }}</td>
+                                                                <td>{{ $value.EncounterDate }}</td>
+                                                                <td>{{ $value.EncounterTime }}</td>
+                                                                <td>{{ $value.EncounterType }}</td>
+                                                                <td><button class="btn btn-primary btn-sm" onclick="window.location.href='/cases/encounters/new/{{ $value.ClientID}}/{{ $value.EncounterID }}'" >Edit</button></td>
+                                                            </tr>
+                                                            {{ end }}
+                                                        {{ end }}
                                                     </tbody>
                                                 </table>
+                                                
                                             </div>
                                         </div>
                                     </div>
@@ -635,88 +642,9 @@
                                         <div class="card">
                                             <div class="card-header">Encounter Details</div>
                                             <div class="card-body">
-                                                <div class="paper-look">
+                                                <div class="paper-look" id="result_encounter">
                                                    
-                                                        Symptomms<br/>
-                                                        <table class="full-width" border="1">
-                                                            <tr>
-                                                                <td valign="top">
-                                                                    Fever:<br/>
-                                                                    Fatigue:<br/>
-                                                                    Weakness:<br/>
-                                                                    Malaise:<br/>
-                                                                    Myalgia:<br/>
-                                                                    Anorexia:<br/>
-                                                                    Sore throat
-                                                                </td>
-                                                                <td valign="top">
-                                                                    Headache:<br/> 
-                                                                    Nausea:<br/> 
-                                                                    Chest pain:<br/> 
-                                                                    Joint Pain:<br/> 
-                                                                    Hiccups:<br/>
-                                                                    Cough:<br/>
-                                                                </td>
-                                                                <td valign="top">
-                                                                    Chest pain:<br/>
-                                                                    Difficulty breathing:<br/>
-                                                                    Difficulty swallowing:<br/> 
-                                                                    Abdominal pain:<br/> 
-                                                                    Diarrhoea:<br/>
-                                                                    Vomiting:<br/>
-                                                                    Irritability / Confusion:<br/> 
-                                                                </td>
-                                                            </tr>
-                                                        </table>
-
-                                                        <br/>
-                                                        Signs<br/>
-                                                        <table class="full-width" border="1">
-                                                            <tr>
-                                                                <td valign="top">
-                                                                    Pharyngeal erythema:<br/>  
-                                                                    Pharyngeal exudate:<br/>  
-                                                                    Conjunctival injection/bleeding:<br/>  
-                                                                    Oedema of face/neck:<br/> 
-                                                                    Tender abdomen:<br/> 
-                                                                    Sunken eyes or fontanelle:<br/>  
-                                                                    Tenting on skin pinch:<br/>  
-                                                                    Palpable liver:<br/> 
-                                                                    Palpable spleen Rash:<br/> 
-                                                                    Jaundice:<br/> 
-
-                                                                </td>
-                                                                <td valign="top">
-                                                                    Enlarged lymph nodes:<br/>
-                                                                    Lower extremity oedema :<br/> 
-                                                                    Bleeding:<br/> 
-                                                                </td>
-                                                            </tr>
-                                                        </table>
-                                                        <br/>
-                                                        Specimen <br/>
-                                                        <table class="full-width" border="1">
-                                                            <tr>
-                                                                <td valign="top">
-                                                                </td>
-                                                            </tr>
-                                                        </table>
-                                                        <br/>
-                                                        Lab Results <br/>
-                                                        <table class="full-width" border="1">
-                                                            <tr>
-                                                                <td valign="top">
-                                                                </td>
-                                                            </tr>
-                                                        </table>
-                                                        <br/>
-                                                        Medications <br/>
-                                                        <table class="full-width" border="1">
-                                                            <tr>
-                                                                <td valign="top">
-                                                                </td>
-                                                            </tr>
-                                                        </table>
+                                                        
                                                 </div>                                                
                                             </div>
                                         </div>
@@ -740,161 +668,39 @@
             </div>
         </div>
     </div>
-    <!-- Modal -->
-    <div class="modal fade" id="dataEntryModal" tabindex="-1" aria-labelledby="dataEntryModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="dataEntryModalLabel">Encounter Form</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <form method="post" action="/cases/save" id="caseEncounterForm">
-                        <div class="row registration-input-row">
-                            <div class="col-lg-3">
-                                <label class="col-sm-3 col-form-label col-form-label-sm" for="etu">Type: <span class="text-danger">*</span></label>
-                                <div class="col-sm-7">
-                                    <input class="form-control form-control-sm patient-input" value="" id="etype" name="etype" type="text" required/>
-                                </div>
-                            </div>
-                            <div class="col-lg-3">
-                                <label class="col-sm-3 col-form-label col-form-label-sm" for="etu">Encounter Date: <span class="text-danger">*</span></label>
-                                <div class="col-sm-7">
-                                    <input class="form-control form-control-sm patient-input" value="" id="edate" name="edate" type="text" required/>
-                                </div>
-                            </div>
-                            <div class="col-lg-3">
-                                <label class="col-sm-3 col-form-label col-form-label-sm" for="etu">Time: <span class="text-danger">*</span></label>
-                                <div class="col-sm-7">
-                                    <input class="form-control form-control-sm patient-input" value="" id="etime" name="etu" type="etime" required/>
-                                </div>
-                            </div>
-                            <div class="col-lg-3">
-                                <label class="col-sm-3 col-form-label col-form-label-sm" for="etu">Clinician: <span class="text-danger">*</span></label>
-                                <div class="col-sm-7">
-                                    <input class="form-control form-control-sm patient-input" value="" id="clinician" name="clinician" type="text" required/>
-                                </div>
-                            </div>
-                            
-                        </div>
-                        <div class="row registration-input-row">    
-                            <div class="col-lg-4">
-                                <div class="row">
-                                    <label class="col-sm-3 col-form-label col-form-label-sm" for="firstname">Heart rate (bpm): <span class="text-danger">*</span></label>
-                                    <div class="col-sm-7">
-                                        <input class="form-control form-control-sm patient-input" value="" id="heart" name="heart" type="text" required/>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <label class="col-sm-3 col-form-label col-form-label-sm" for="lastname">BP (systolic) (mmHg): </label>
-                                    <div class="col-sm-7">
-                                        <input class="form-control form-control-sm patient-input" value="" id="systolic" name="systolic" type="text" required/>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <label class="col-sm-3 col-form-label col-form-label-sm" for="othername">BP (diastolic) (mmHg): </label>
-                                    <div class="col-sm-7">
-                                        <input class="form-control form-control-sm patient-input" value="" id="diastolic" name="diastolic" type="text"/>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <label class="col-sm-3 col-form-label col-form-label-sm" for="gender">Capillary refill > 3 sec? </label>
-                                    <div class="col-sm-7">
-                                        <select class="form-control-sm patient-input form-select"  name="refill" id="refill" aria-label="Capillary refill" required>
-                                            {{ range $key, $value := index .Optionz "yn" }}  
-                                                <option value="{{ $key }}">{{ $value }}</option>
-                                            {{ end }}
-                                        </select>
-                                        <script>
-                                        document.addEventListener("DOMContentLoaded", function() {
-                                            document.getElementById("refill").value = "";
-                                        });
-                                        </script>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-lg-4">
-                                <div class="row">
-                                    <label class="col-sm-3 col-form-label col-form-label-sm" for="respiratory">Respiratory Rate (/min):</label>
-                                    <div class="col-sm-7">
-                                        <input class="form-control form-control-sm patient-input" value="" id="respiratory" name="respiratory" type="text"/>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <label class="col-sm-3 col-form-label col-form-label-sm" for="air">O2 saturation room air (%):</label>
-                                    <div class="col-sm-7">
-                                        <input class="form-control form-control-sm patient-input" value="" id="air" name="air" type="text"/>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <label class="col-sm-3 col-form-label col-form-label-sm" for="marital">Weight (kg): </label>
-                                    <div class="col-sm-7">
-                                        <input class="form-control form-control-sm patient-input" value="" id="weight" name="weight" type="text"/>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <label class="col-sm-3 col-form-label col-form-label-sm" for="height">Self-reported height (cm): </label>
-                                    <div class="col-sm-7">
-                                        <input class="form-control form-control-sm patient-input" value="" id="height" name="height" type="text"/>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-lg-4">
-                                <div class="row">
-                                    <label class="col-sm-3 col-form-label col-form-label-sm" for="nationality">Temperature (°C): </label>
-                                    <div class="col-sm-7">
-                                        <input class="form-control form-control-sm patient-input" value="" id="temp" name="temp" type="text"/>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <label class="col-sm-3 col-form-label col-form-label-sm" for="adm_date">Mental status: </label>
-                                    <div class="col-sm-7">
-                                        <input class="form-control form-control-sm patient-input" value="" id="mental" name="adm_date" type="text"/>
-                                    
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <label class="col-sm-3 col-form-label col-form-label-sm" for="transfer">MUAC) (mm) </label>
-                                    <div class="col-sm-7">
-                                        <input class="form-control form-control-sm patient-input" value="" id="muac" name="muac" type="text"/>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <label class="col-sm-3 col-form-label col-form-label-sm" for="adm_from">.</label>
-                                    <div class="col-sm-7">
-                                        .
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <hr style="width: 100%;"/>  
-                        <input type="hidden" name="clientid" id="clientid" value="">
-                        <input type="hidden" name="eid" id="eid" value="">
-                        <input type="hidden" name="efrom" id="efrom" value="">
-                    </form>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary">Submit</button>
-                </div>
-            </div>
-        </div>
-    </div>
+    
 </div>
 
 
-    <script src="/static/app/cdn/js/jquery-3.6.0.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="/static/js/bootstrap.bundle.min.js"></script>
     <script src="/static/app/cdn/js/flatpickr.min.js"></script>
     <script src="/static/app/cdn/js/select2.min.js"></script>
 
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
     <script>
+        $(document).ready(function() {
+            
+            // Attach click event to button
+            $('#fetchButton').on('click', function() {
+                let id = $(this).data('id'); // Get ID from button attribute
+                jQuery.ajax({
+                    url: '/api/encounter',  // Replace with your backend route
+                    type: 'GET',
+                    data: { id: id },
+                    success: function(response) {
+                        console.log('Response:', response);
+                        $('#result_encounter').html(response.message);
+                    },
+                    error: function(xhr, status, error) {
+                        console.error('Error:', error);
+                    }
+                });
+            });
+        });
+
         document.addEventListener("DOMContentLoaded", function() {
 
             const today = new Date();

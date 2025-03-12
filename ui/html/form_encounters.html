@@ -102,6 +102,7 @@
 
             <!-- Main Content -->
             <div class="col-md-9">
+                <form method="post" action="/cases/encounters/save" name="encounterForm" id="encounterForm">
                 <div class="container-fluid">
                     
                     <h1>Encounter Form</h1>
@@ -119,7 +120,7 @@
                             <div class="row">
                                 <label class="col-sm-5 col-form-label col-form-label-sm" for="encounter_date">Encounter Date</label>
                                 <div class="col-sm-5">
-                                    <input class="form-control form-control-sm patient-input" value="{{.Form.EncounterDate.String}}" id="encounter_date" name="encounter_date" type="text" required/>
+                                    <input class="form-control form-control-sm patient-input datetimepicker" value="{{.Form.EncounterDate.String}}" id="encounter_date" name="encounter_date" type="text" placeholder="yyyy-mm-dd" data-options='{"disableMobile":true,"dateFormat":"Y-m-d"}' required/>
                                 </div>
                             </div>
                         </div>
@@ -127,7 +128,7 @@
                             <div class="row">
                                 <label class="col-sm-5 col-form-label col-form-label-sm" for="encounter_time">Time</label>
                                 <div class="col-sm-5">
-                                    <input class="form-control form-control-sm patient-input" value="{{.Form.EncounterTime.String}}" id="otherencounter_timename" name="encounter_time" type="text"/>
+                                    <input class="form-control form-control-sm patient-input" value="{{.Form.EncounterTime.String}}" id="encounter_time" name="encounter_time" type="text"/>
                                 </div>
                             </div>
                         </div>
@@ -179,7 +180,7 @@
                             <a class="nav-link" id="complications-tab" data-toggle="tab" href="#complications" role="tab" aria-controls="complications" aria-selected="false">Complications</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" id="lab-tab" data-toggle="tab" href="#treat" role="lab" aria-controls="lab" aria-selected="false">Lab</a>
+                            <a class="nav-link" id="lab-tab" data-toggle="tab" href="#lab" role="lab" aria-controls="lab" aria-selected="false">Lab</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" id="treat-tab" data-toggle="tab" href="#treat" role="tab" aria-controls="treat" aria-selected="false">Treatment</a>
@@ -279,7 +280,7 @@
                                         </div>
                                     </div>
                                     <div class="row">
-                                        <label class="col-sm-6 col-form-label col-form-label-sm" for="adm_from">.</label>
+                                        <label class="col-sm-6 col-form-label col-form-label-sm" for="adm_from"></label>
                                         <div class="col-sm-4">
                                             .
                                         </div>
@@ -322,15 +323,15 @@
                                         </div>
                                     </div>
                                     <div class="row">
-                                        <label class="col-sm-4 col-form-label col-form-label-sm" for="fever">Anorexia</label>
+                                        <label class="col-sm-4 col-form-label col-form-label-sm" for="anorexia">Anorexia</label>
                                         <div class="col-sm-6">
                                             {{ GetOptionField "YN" "anorexia" "Anorexia" "" .FormChild1.Anorexia.Int64 1 }}
                                         </div>
                                     </div>
                                     <div class="row">
-                                        <label class="col-sm-4 col-form-label col-form-label-sm" for="adm_date">Sore Throat</label>
+                                        <label class="col-sm-4 col-form-label col-form-label-sm" for="sore_throat">Sore Throat</label>
                                         <div class="col-sm-6">
-                                            {{ GetOptionField "YN" "sorethroat" "Sore throat" "" .FormChild1.SoreThroat.Int64 1 }}
+                                            {{ GetOptionField "YN" "sore_throat" "Sore throat" "" .FormChild1.SoreThroat.Int64 1 }}
                                         </div>
                                     </div>
                                 </div>
@@ -492,9 +493,9 @@
                                         </div>
                                     </div>
                                     <div class="row">
-                                        <label class="col-sm-4 col-form-label col-form-label-sm" for="conjunctival_injection">Bleeding:</label>
+                                        <label class="col-sm-4 col-form-label col-form-label-sm" for="clinical_bleeding">Bleeding:</label>
                                         <div class="col-sm-6">
-                                            {{ GetOptionField "YN" "conjunctival_injection" "Bleeding" "" .FormChild1.ConjunctivalInjection.Int64 1 }}
+                                            {{ GetOptionField "YN" "clinical_bleeding" "Bleeding" "" .FormChild1.Bleeding.Int64 1 }}
                                         </div>
                                     </div>
                                     <div class="row">
@@ -536,7 +537,6 @@
                                 </div>
                             </div>
                         </div>
-
                         <div class="tab-pane fade" id="complications" role="tabpanel" aria-labelledby="complications-tab">
                             <p>Complications</p>
                             <div class="row registration-input-row"> 
@@ -607,6 +607,169 @@
 
                         <div class="tab-pane fade" id="lab" role="tabpanel" aria-labelledby="lab-tab">
                             <p>Labs</p>
+                            <style>
+                                table {
+                                    width: 100%;
+                                    border: 1px solid black;
+                                    border-collapse: collapse;
+                                }
+                                th, td {
+                                    border: 1px solid black;
+                                    padding: 1px;
+                                    text-align: left;
+                                }
+                            </style>
+                            <table>
+                                <tr>
+                                   <td colspan="6"><div class="row"><label class="col-sm-4 col-form-label col-form-label-sm" >Specimen collection done for EVD patients?</label> <div class="col-sm-1">{{ GetOptionField "yn" "bleeding" "Bleeding" "" .FormChild2.Bleeding.Int64 1 }}</div> If yes, what samples? • Blood	• Urine	• Buccal swab Other	</div>  </td> 
+                                </tr>
+                                <tr>
+                                    <td colspan="2">Ebola testing</td> 
+                                    <td>Collection date</td>
+                                    <td colspan="3">Result</td> 
+                                </tr>
+                                <tr>
+                                    <td colspan="2">Ebola RDT: </td> 
+                                    <td></td>
+                                    <td colspan="3"><div class="row"> <div class="col-sm-3">{{ GetOptionField "posx" "bleeding" "Bleeding" "" .FormChild2.Bleeding.Int64 1 }}</div></div> </td>
+                                </tr>
+                                <tr>
+                                    <td rowspan="2" colspan="2">Ebola PCR (admission</td> 
+                                    <td rowspan="2"></td>
+                                    <td>GP</td>
+                                    <td>NP</td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <div class="row"> <div class="col-sm-6">{{ GetOptionField "po" "bleeding" "Bleeding" "" .FormChild2.Bleeding.Int64 1 }}</div></div>
+                                        <br /> CT: <input size="5" type="text">
+                                    </td>
+                                    <td>
+                                        <div class="row"> <div class="col-sm-6">{{ GetOptionField "po" "bleeding" "Bleeding" "" .FormChild2.Bleeding.Int64 1 }}</div></div>
+                                        <br /> CT: <input size="5" type="text">
+                                    </td>
+                                    <td><input type="checkbox" value="1">indeterminate</td>
+                                </tr>
+                                <tr>
+                                    <td colspan="2">Malaria RDT</td> 
+                                    <td></td>
+                                    <td colspan="3"><div class="row"> <div class="col-sm-3">{{ GetOptionField "posx" "bleeding" "Bleeding" "" .FormChild2.Bleeding.Int64 1 }}</div></div> </td> 
+                                </tr>
+                                <tr>
+                                    <td colspan="2">Blood culture</td> 
+                                    <td></td>
+                                    <td colspan="3"><div class="row"> <div class="col-sm-3">{{ GetOptionField "posx" "bleeding" "Bleeding" "" .FormChild2.Bleeding.Int64 1 }}</div></div> </td> 
+                                </tr>
+                                <tr>
+                                    <td colspan="6">
+                                        <div class="row">
+                                            <label class="col-sm-4 col-form-label col-form-label-sm" >Did patient test positive for any other infection?</label> 
+                                            <div class="col-sm-1">{{ GetOptionField "yn" "bleeding" "Bleeding" "" .FormChild2.Bleeding.Int64 1 }}</div> 
+                                            <label class="col-sm-4 col-form-label col-form-label-sm" >If Yes, specify</label> 
+                                            <div class="col-sm-3"><input type="text"></div>
+                                        </div>
+                                    </td> 
+                                </tr>
+                                <tr>
+                                    <td colspan="6">Other clinical laboratory tests done on admission (ND = not done)</td> 
+                                </tr>
+                                <tr>
+                                    <td colspan="2">Haemoglobinuria</td> 
+                                    <td>{{ GetOptionField "pos" "bleeding" "Bleeding" "" .FormChild2.Bleeding.Int64 1 }} </td>
+                                    <td colspan="2">Blood Gas</td> 
+                                    <td></td> 
+                                    
+                                </tr>
+                                <tr>
+                                    <td colspan="2">Proteinuria</td> 
+                                    <td>{{ GetOptionField "pos" "bleeding" "Bleeding" "" .FormChild2.Bleeding.Int64 1 }} </td>
+                                    <td colspan="3">Results: pH	, pCO2	, PaO2 	HCO3	</td> 
+                                    
+                                </tr>
+                                <tr>
+                                    <td colspan="2">Hematuria</td> 
+                                    <td>{{ GetOptionField "pos" "bleeding" "Bleeding" "" .FormChild2.Bleeding.Int64 1 }} </td>
+                                    <td colspan="2">Oxygen therapy at time of blood gas (L/min)</td> 
+                                    <td></td> 
+                                    
+                                </tr>
+                                <tr>
+                                    <td colspan="6">Laboratory tests on admission or Hospital Day 1(HD1). (ND = not done)</td> 
+                                </tr>
+                                <tr>
+                                    <td>Biochemistry</td>
+                                    <td>Values</td>
+                                    <td>Not Done</td>
+                                    <td>CBC & Clotting panel</td>
+                                    <td>Values</td>
+                                    <td>Not Done</td>
+                                </tr>
+                                <tr>
+                                    <td>ALT/SGPT (U/L)</td>
+                                    <td></td>
+                                    <td><input type="checkbox" value="1">DN</td>
+                                    <td>Glucose (mmol/L)</td>
+                                    <td></td>
+                                    <td><input type="checkbox" value="1">DN</td>
+                                </tr>
+                                <tr>
+                                    <td>AST/SGO (U/L)</td>
+                                    <td></td>
+                                    <td><input type="checkbox" value="1">DN</td>
+                                    <td>Lactate (mmol/L)</td>
+                                    <td></td>
+                                    <td><input type="checkbox" value="1">DN</td>
+                                </tr>
+                                <tr>
+                                    <td>Creatinine (µmol/L)</td>
+                                    <td></td>
+                                    <td><input type="checkbox" value="1">DN</td>
+                                    <td>Haemoglobin (g/L)</td>
+                                    <td></td>
+                                    <td><input type="checkbox" value="1">DN</td>
+                                </tr>
+                                <tr>
+                                    <td>Potassium (mmol/L)</td>
+                                    <td></td>
+                                    <td><input type="checkbox" value="1">DN</td>
+                                    <td>Total bilirubin (µmol/L)</td>
+                                    <td></td>
+                                    <td><input type="checkbox" value="1">DN</td>
+                                </tr>
+                                <tr>
+                                    <td>Urea (mmol/L)</td>
+                                    <td></td>
+                                    <td><input type="checkbox" value="1">DN</td>
+                                    <td>WBC count (x109/L)</td>
+                                    <td></td>
+                                    <td><input type="checkbox" value="1">DN</td>
+                                </tr>
+                                <tr>
+                                    <td>Creatinine kinase (U/L)</td>
+                                    <td></td>
+                                    <td><input type="checkbox" value="1">DN</td>
+                                    <td>Platelets (x109/L)</td>
+                                    <td></td>
+                                    <td><input type="checkbox" value="1">DN</td>
+                                </tr>
+                                <tr>
+                                    <td>Calcium (mmol/L)</td>
+                                    <td></td>
+                                    <td><input type="checkbox" value="1">DN</td>
+                                    <td>PT</td>
+                                    <td></td>
+                                    <td><input type="checkbox" value="1">DN</td>
+                                </tr>
+                                <tr>
+                                    <td>Sodium (mmol/L)</td>
+                                    <td></td>
+                                    <td><input type="checkbox" value="1">DN</td>
+                                    <td>aPTT (seconds)</td>
+                                    <td></td>
+                                    <td><input type="checkbox" value="1">DN</td>
+                                </tr>
+                            </table>
                         </div>
                         <div class="tab-pane fade" id="treat" role="tabpanel" aria-labelledby="treat-tab">
                             <p>Treatment</p>
@@ -614,7 +777,19 @@
 
                     </div>
                    
-                </div>                
+                </div> 
+                        <input type="hidden" name="vitals_id"   id="vitals_id"   value="{{ .FormChild2.VitalsID }}"  >
+                        <input type="hidden" name="clinical_id" id="clinical_id" value="{{ .FormChild1.ClinicalID }}">
+
+                        <input type="hidden" name="id" id="id" value="{{.Form.EncounterID}}">
+                        <input type="hidden" name="cid" id="cid" value="{{.Form.ClientID.Int64}}">
+                        <input type="hidden" name="from" id="from" value="">
+
+                        <button type="submit" id="submitButton" class="btn btn-sm btn-success mt-3">Save</button>
+                        <button type="button" id="save_cButton" class="btn btn-sm btn-success mt-3">Save & Close</button>
+                        <button type="button" id="cancelButton" class="btn btn-sm btn-success mt-3">Cancel</button>
+                        <button type="button" id="helpButton"   class="btn btn-sm btn-success mt-3">Help</button>
+                </form>               
             </div>
         </div>
     </div>
@@ -642,22 +817,18 @@
         });
 
         document.addEventListener("DOMContentLoaded", function () {
-    const form = document.getElementById("caseForm"); // Replace with your form ID
+    const form = document.getElementById("encounterForm"); // Replace with your form ID
     const submitButton = document.getElementById("submitButton"); // Replace with your submit button ID
     const save_cButton = document.getElementById("save_cButton");
     const helpButton   = document.getElementById("helpButton");
     const cancelButton = document.getElementById("cancelButton"); // Replace with your cancel button ID
 
-    
-    
     //console.log("Form Data as JSON:", formDataJSON);
 
     if (submitButton) {
         submitButton.addEventListener("click", function (event) {
             event.preventDefault(); // Prevent default form submission
-            alert(document.getElementById("age").value)
-            const formDataJSON = getFormDataAsJSON(form);
-            alert(JSON.stringify(formDataJSON, null, 2))
+            
             if (validateForm()) {
                 form.submit(); // Submit the form only if validation passes
             } else {
@@ -668,7 +839,7 @@
 
     if (cancelButton) {
         cancelButton.addEventListener("click", function () {
-            window.location.href = "/cases"; // Replace with the correct URL
+            window.location.href = "/cases/new/{{.FormRef.ID}}"; // Replace with the correct URL
         });
     }
 
